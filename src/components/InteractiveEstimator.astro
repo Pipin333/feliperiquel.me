@@ -1,0 +1,176 @@
+---
+// src/components/InteractiveEstimator.astro
+---
+
+<section id="cotizador" class="py-24 bg-slate-900/60 border-t border-slate-800 relative">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-xs uppercase tracking-widest font-bold text-accent-400 mb-3">Simulador Instantáneo</h2>
+      <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Calcula el alcance de tu proyecto en 30 segundos
+      </h3>
+      <p class="mt-4 text-slate-300 text-base">
+        Selecciona las características que necesitas para tu web y obtén una estimación de tiempo y estructura recomendada lista para cotizar.
+      </p>
+    </div>
+
+    <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+      <!-- Step 1: Project Type -->
+      <fieldset class="mb-8">
+        <legend class="text-sm font-bold text-white mb-4 block">1. ¿Cuál es el punto de partida?</legend>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <label class="cursor-pointer flex items-center gap-3 p-4 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-brand-500/60 transition-colors focus-within:ring-2 focus-within:ring-brand-400">
+            <input type="radio" name="project_nature" value="renovacion" class="accent-brand-500 w-4 h-4" checked />
+            <div>
+              <span class="text-sm font-semibold text-white block">Renovación de web existente</span>
+              <span class="text-xs text-slate-400">Tengo una página pero es lenta o antigua</span>
+            </div>
+          </label>
+          <label class="cursor-pointer flex items-center gap-3 p-4 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-brand-500/60 transition-colors focus-within:ring-2 focus-within:ring-brand-400">
+            <input type="radio" name="project_nature" value="nuevo" class="accent-brand-500 w-4 h-4" />
+            <div>
+              <span class="text-sm font-semibold text-white block">Sitio web nuevo desde cero</span>
+              <span class="text-xs text-slate-400">Es un nuevo negocio, servicio o marca</span>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Step 2: Format / Scope -->
+      <fieldset class="mb-8">
+        <legend class="text-sm font-bold text-white mb-4 block">2. ¿Qué estructura buscas?</legend>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <label class="cursor-pointer flex flex-col justify-between p-4 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-brand-500/60 transition-colors focus-within:ring-2 focus-within:ring-brand-400">
+            <div class="flex items-center gap-3 mb-2">
+              <input type="radio" name="site_scope" value="landing" class="accent-brand-500 w-4 h-4" checked />
+              <span class="text-sm font-semibold text-white">Landing Page</span>
+            </div>
+            <span class="text-xs text-slate-400">1 página directa al grano para captar clientes o campañas.</span>
+          </label>
+          <label class="cursor-pointer flex flex-col justify-between p-4 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-brand-500/60 transition-colors focus-within:ring-2 focus-within:ring-brand-400">
+            <div class="flex items-center gap-3 mb-2">
+              <input type="radio" name="site_scope" value="corporativo" class="accent-brand-500 w-4 h-4" />
+              <span class="text-sm font-semibold text-white">Sitio Multi-Sección</span>
+            </div>
+            <span class="text-xs text-slate-400">Inicio, Nosotros, Servicios detallados, Portafolio y Contacto.</span>
+          </label>
+          <label class="cursor-pointer flex flex-col justify-between p-4 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-brand-500/60 transition-colors focus-within:ring-2 focus-within:ring-brand-400">
+            <div class="flex items-center gap-3 mb-2">
+              <input type="radio" name="site_scope" value="pagos" class="accent-brand-500 w-4 h-4" />
+              <span class="text-sm font-semibold text-white">Catálogo & Stripe</span>
+            </div>
+            <span class="text-xs text-slate-400">Catálogo de servicios o productos con cobros con tarjeta en línea.</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Step 3: Add-ons -->
+      <fieldset class="mb-8">
+        <legend class="text-sm font-bold text-white mb-4 block">3. Integraciones deseadas (Opcional):</legend>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="cursor-pointer flex items-center gap-3 p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700">
+            <input type="checkbox" id="addon-whatsapp" class="accent-brand-500 w-4 h-4 rounded" checked />
+            <span class="text-xs text-slate-300">Botón flotante de WhatsApp directo</span>
+          </label>
+          <label class="cursor-pointer flex items-center gap-3 p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700">
+            <input type="checkbox" id="addon-seo" class="accent-brand-500 w-4 h-4 rounded" checked />
+            <span class="text-xs text-slate-300">Optimización SEO en Google e indexación</span>
+          </label>
+          <label class="cursor-pointer flex items-center gap-3 p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700">
+            <input type="checkbox" id="addon-domain" class="accent-brand-500 w-4 h-4 rounded" checked />
+            <span class="text-xs text-slate-300">Configuración de Dominio propio & SSL</span>
+          </label>
+          <label class="cursor-pointer flex items-center gap-3 p-3.5 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700">
+            <input type="checkbox" id="addon-testmail" class="accent-brand-500 w-4 h-4 rounded" />
+            <span class="text-xs text-slate-300">Pruebas de emails y notificaciones automáticas</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Result Card -->
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-brand-950/60 to-slate-900 border border-brand-500/40 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="text-xs font-semibold text-brand-300 uppercase tracking-wider block mb-1">Estimación de Entrega:</span>
+          <div id="estimator-time" class="text-xl sm:text-2xl font-bold text-white">5 a 7 días hábiles</div>
+          <p id="estimator-summary" class="text-xs text-slate-400 mt-1">Landing page optimizada con WhatsApp y SEO incluido.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <a
+            id="whatsapp-estimate-btn"
+            href="https://wa.me/?text=Hola%20Felipe,%20estoy%20interesado%20en%20cotizar%20un%20proyecto%20web"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-500 transition-colors shadow-glow"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.78 14.15c-.24.68-1.39 1.3-1.92 1.38-.49.08-1.12.11-3.23-.76-2.69-1.11-4.43-3.83-4.57-4.01-.13-.19-1.1-1.46-1.1-2.79 0-1.33.7-1.98.95-2.25.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.6.53.22.5.75 1.83.82 1.96.07.14.12.3.02.48-.09.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.32-.13.62.17.3 75 1.24 1.62 2.01 1.11.99 2.04 1.3 2.34 1.44.3.15.48.13.66-.07.18-.21.78-.91.99-1.22.21-.31.42-.26.71-.15.29.11 1.83.86 2.14 1.02.31.15.52.23.6.36.08.13.08.77-.16 1.45z"/>
+            </svg>
+            <span>Enviar por WhatsApp</span>
+          </a>
+          <a
+            href="#contacto"
+            class="inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-sm text-slate-200 bg-slate-800 hover:bg-slate-700 transition-colors"
+          >
+            Usar formulario
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function updateEstimator() {
+    const nature = (document.querySelector('input[name="project_nature"]:checked') as HTMLInputElement)?.value || 'renovacion';
+    const scope = (document.querySelector('input[name="site_scope"]:checked') as HTMLInputElement)?.value || 'landing';
+
+    const hasWhatsApp = (document.getElementById('addon-whatsapp') as HTMLInputElement)?.checked;
+    const hasSEO = (document.getElementById('addon-seo') as HTMLInputElement)?.checked;
+    const hasDomain = (document.getElementById('addon-domain') as HTMLInputElement)?.checked;
+    const hasTestmail = (document.getElementById('addon-testmail') as HTMLInputElement)?.checked;
+
+    const timeEl = document.getElementById('estimator-time');
+    const summaryEl = document.getElementById('estimator-summary');
+    const waBtn = document.getElementById('whatsapp-estimate-btn') as HTMLAnchorElement;
+
+    let timeText = '5 a 7 días hábiles';
+    let scopeName = 'Landing Page';
+
+    if (scope === 'corporativo') {
+      timeText = '8 a 14 días hábiles';
+      scopeName = 'Sitio Multi-Sección Corporativo';
+    } else if (scope === 'pagos') {
+      timeText = '10 a 18 días hábiles';
+      scopeName = 'Catálogo con Pasarela Stripe';
+    }
+
+    const natureName = nature === 'renovacion' ? 'Renovación de web' : 'Web nueva desde cero';
+
+    if (timeEl) timeEl.textContent = timeText;
+    if (summaryEl) {
+      summaryEl.textContent = `${natureName} formato ${scopeName} (${timeText}).`;
+    }
+
+    if (waBtn) {
+      let msg = `Hola Felipe, estuve usando el simulador en tu sitio feliperiquel.me:%0A%0A`;
+      msg += `• Tipo: ${encodeURIComponent(natureName)}%0A`;
+      msg += `• Estructura: ${encodeURIComponent(scopeName)}%0A`;
+      msg += `• Extras:%0A`;
+      if (hasWhatsApp) msg += `  - Botón de WhatsApp integrado%0A`;
+      if (hasSEO) msg += `  - Optimización SEO & Google%0A`;
+      if (hasDomain) msg += `  - Configuración de Dominio & SSL%0A`;
+      if (hasTestmail) msg += `  - Testing de formularios y correos%0A`;
+      msg += `%0A¿Podemos conversar para coordinar detalles y presupuesto?`;
+
+      // Fallback number or placeholder
+      waBtn.href = `https://wa.me/?text=${msg}`;
+    }
+  }
+
+  document.querySelectorAll('input[name="project_nature"], input[name="site_scope"], #addon-whatsapp, #addon-seo, #addon-domain, #addon-testmail').forEach((el) => {
+    el.addEventListener('change', updateEstimator);
+  });
+
+  updateEstimator();
+</script>

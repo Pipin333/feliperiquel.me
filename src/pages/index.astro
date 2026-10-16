@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import PainPoints from '../components/PainPoints.astro';
+import Services from '../components/Services.astro';
+import WorkShowcase from '../components/WorkShowcase.astro';
+import StudentPackPerks from '../components/StudentPackPerks.astro';
+import Process from '../components/Process.astro';
+import InteractiveEstimator from '../components/InteractiveEstimator.astro';
+import ContactGateway from '../components/ContactGateway.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Felipe Riquelme | Desarrollo & Renovación de Sitios Web"
+  description="Transformo tu presencia digital en un canal de credibilidad y ventas. Sitios web ultrarrápidos, rediseños modernos y pasarelas de pago para empresas y profesionales."
+>
+  <Header />
+  <main id="main-content" class="flex-1">
+    <Hero />
+    <PainPoints />
+    <Services />
+    <WorkShowcase />
+    <StudentPackPerks />
+    <Process />
+    <InteractiveEstimator />
+    <ContactGateway />
+  </main>
+  <Footer />
+</Layout>

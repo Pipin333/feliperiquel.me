@@ -1,0 +1,17 @@
+{
+  "name": "feliperiquel.me",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portafolio y Gateway de Servicios Web de Felipe Riquelme",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview --host"
+  },
+  "dependencies": {
+    "astro": "^5.3.0",
+    "@astrojs/tailwind": "^5.1.5",
+    "tailwindcss": "^3.4.17"
+  }
+}

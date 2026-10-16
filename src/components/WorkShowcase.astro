@@ -1,0 +1,123 @@
+---
+// src/components/WorkShowcase.astro
+interface Project {
+  title: string;
+  category: string;
+  description: string;
+  highlightMetric: string;
+  tags: string[];
+  gradient: string;
+}
+
+const projects: Project[] = [
+  {
+    title: "Nova Legal - Estudio Jurídico",
+    category: "Renovación Web Completa",
+    description: "Modernización de un sitio legal con más de 8 años de antigüedad. Se reestructuró la arquitectura de información, reduciendo el tiempo de carga un 85% e incorporando agenda directa de consultas.",
+    highlightMetric: "⚡ De 4.2s a 0.7s de carga (+120% en contactos)",
+    tags: ["Astro", "Tailwind CSS", "SEO Local", "Calendly"],
+    gradient: "from-blue-600/30 to-indigo-900/40"
+  },
+  {
+    title: "Clínica Dental OdontoSalud",
+    category: "Landing Page & Reservas",
+    description: "Diseño mobile-first para captación de pacientes en Google Ads. Se crearon botones flotantes de WhatsApp y formulario inteligente con confirmación inmediata.",
+    highlightMetric: "📱 78% de visitas convertidas desde celulares",
+    tags: ["Mobile First", "WhatsApp Gateway", "Core Web Vitals"],
+    gradient: "from-emerald-600/30 to-teal-900/40"
+  },
+  {
+    title: "Andes Logistics & Freight",
+    category: "Sitio Corporativo & Cotizador",
+    description: "Plataforma corporativa para empresa de comercio exterior con cotizador dinámico de fletes internacionales y panel de contacto por departamento.",
+    highlightMetric: "💼 +45 cotizaciones B2B mensuales",
+    tags: ["Astro Jamstack", "Cotizador Dinámico", "Micro-interacciones"],
+    gradient: "from-amber-600/30 to-orange-900/40"
+  },
+  {
+    title: "Atelier Cerámicas & Diseño",
+    category: "Catálogo Digital & Cobros",
+    description: "Tienda visual con cobro de señas e inscripciones a talleres presenciales integrado con pasarela Stripe segura y notificaciones automáticas.",
+    highlightMetric: "💳 0% errores en cobros con Stripe Checkout",
+    tags: ["Stripe Ready", "Catálogo Interactivo", "Email Transaccional"],
+    gradient: "from-purple-600/30 to-fuchsia-900/40"
+  }
+];
+---
+
+<section id="portafolio" class="py-24 bg-slate-900/40 border-t border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+      <div>
+        <h2 class="text-xs uppercase tracking-widest font-bold text-accent-400 mb-3">Trabajos & Resultados</h2>
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Proyectos que generan impacto real
+        </h3>
+        <p class="mt-4 text-slate-300 text-base max-w-2xl">
+          No solo construyo sitios bonitos: diseño herramientas de negocio que cargan en un parpadeo, posicionan en buscadores y facilitan que tus clientes te compren.
+        </p>
+      </div>
+
+      <a
+        href="#cotizador"
+        class="inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:text-brand-300 transition-colors"
+      >
+        <span>¿Quieres resultados similares? Cotiza tu web</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {projects.map((project) => (
+        <article class="group rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-slate-700 transition-all duration-300 flex flex-col justify-between">
+          <!-- Visual Mockup Container -->
+          <div class={`h-56 bg-gradient-to-br ${project.gradient} p-8 flex flex-col justify-between border-b border-slate-800/80 relative overflow-hidden`}>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/10">
+                {project.category}
+              </span>
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
+                Caso Verificado
+              </span>
+            </div>
+
+            <!-- Decorative Mockup Element -->
+            <div class="rounded-xl bg-slate-950/80 border border-white/10 p-4 shadow-2xl backdrop-blur-md group-hover:scale-[1.02] transition-transform duration-300">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
+                <div class="w-32 h-2 rounded-full bg-slate-800 ml-2"></div>
+              </div>
+              <div class="text-xs font-mono text-emerald-400 font-bold">
+                {project.highlightMetric}
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Details -->
+          <div class="p-8 flex-1 flex flex-col justify-between">
+            <div>
+              <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-300 transition-colors">
+                {project.title}
+              </h4>
+              <p class="text-sm text-slate-400 mb-6 leading-relaxed">
+                {project.description}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800/80 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <span class="text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-slate-300 border border-slate-800">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

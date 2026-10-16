@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Felipe Riquelme | Desarrollo y Renovación de Sitios Web",
+  description = "Ayudo a personas y empresas a transformar su presencia digital en un canal de credibilidad y ventas con sitios web modernos, ultrarrápidos y a medida.",
+  image = "/og-image.png"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://feliperiquel.me');
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Felipe Riquelme - Desarrollo & Renovación Web",
+  "url": "https://feliperiquel.me",
+  "founder": {
+    "@type": "Person",
+    "name": "Felipe Riquelme",
+    "jobTitle": "Desarrollador Web & Consultor Digital",
+    "url": "https://feliperiquel.me"
+  },
+  "description": description,
+  "serviceType": [
+    "Renovación de Sitios Web",
+    "Desarrollo de Landing Pages",
+    "Optimización SEO y Velocidad Web",
+    "Diseño UI/UX Responsivo"
+  ],
+  "areaServed": "Global",
+  "priceRange": "$$"
+};
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Felipe Riquelme" />
+    <meta name="theme-color" content="#0a0f1d" />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, canonicalURL)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, canonicalURL)} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen">
+    <slot />
+  </body>
+</html>
