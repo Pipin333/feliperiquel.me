@@ -2,11 +2,14 @@
 > Felipe Riquelme es Ingeniero Civil en Informática enfocado en ingeniería de software, procesamiento de audio DSP, homelab y micro-aplicaciones web de alto rendimiento.
 
 ## Información General
-- Nombre: Felipe Riquelme
-- Profesión: Ingeniero Civil en Informática
+- Nombre: Felipe Riquelme Salvo
+- Profesión: Ingeniero Civil en Informática (UNAB)
 - [Sitio web](https://feliperiquel.me): portafolio y laboratorio interactivo.
+- [Currículum Vitae (ATS)](https://feliperiquel.me/cv): versión web estructurada para reclutadores.
+- [Descargar CV en PDF](https://feliperiquel.me/cv-felipe-riquelme.pdf): documento vectorial de 8.7 KB optimizado para ATS.
 - [GitHub](https://github.com/Pipin333): repositorios open source.
-- Correo: f.riquelmesalvo@uandresbello.edu
+- [LinkedIn](https://linkedin.com/in/friquelmes): perfil profesional.
+- Correo: feliperiquelme34@gmail.com / f.riquelmesalvo@uandresbello.edu
 
 ## Proyectos Destacados (Open Source)
 - [Toodles](https://github.com/Pipin333/Toodles): Motor de streaming de audio para Discord con sistema de recomendación híbrido ML (Implicit ALS + Item2Vec), extracción nativa yt-dlp y streaming WebM/Opus directo vía FFmpeg sobre Docker ARM64.

@@ -1,5 +1,7 @@
 ---
 // src/components/Footer.astro
+import Icon from './Icon.astro';
+
 const currentYear = new Date().getFullYear();
 ---
 
@@ -27,8 +29,9 @@ const currentYear = new Date().getFullYear();
 
       <!-- Quick Nav -->
       <nav class="flex flex-wrap items-center justify-center gap-5 font-mono text-xs" aria-label="Navegación del pie de página">
-        <a href="/lab" class="text-telemetry hover:text-white transition-colors flex items-center gap-1 font-semibold">
-          <span>🧪 Laboratorio</span>
+        <a href="/lab" class="text-telemetry hover:text-white transition-colors flex items-center gap-1.5 font-semibold">
+          <Icon name="flask" class="w-3.5 h-3.5" />
+          <span>Laboratorio</span>
         </a>
         <a href="/#proyectos" class="hover:text-white transition-colors">Proyectos</a>
         <a href="/#sobre-mi" class="hover:text-white transition-colors">Sobre mí</a>

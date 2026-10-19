@@ -1,0 +1,30 @@
+---
+/**
+ * Renderiza íconos SVG inline de Bootstrap Icons en tiempo de compilación (cero fuentes web, cero CLS).
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  name: string;
+  class?: string;
+  ariaHidden?: boolean;
+}
+
+const { name, class: className = 'w-4 h-4 inline-block shrink-0', ariaHidden = true } = Astro.props;
+
+const iconPath = path.resolve(process.cwd(), 'node_modules/bootstrap-icons/icons', `${name}.svg`);
+let svgContent = '';
+
+if (fs.existsSync(iconPath)) {
+  const rawSvg = fs.readFileSync(iconPath, 'utf-8');
+  svgContent = rawSvg.replace(
+    /<svg([^>]*)>/,
+    `<svg$1 class="${className}" aria-hidden="${ariaHidden ? 'true' : 'false'}" focusable="false">`
+  );
+} else {
+  throw new Error(`Bootstrap Icon no encontrado: ${name}`);
+}
+---
+
+<Fragment set:html={svgContent} />

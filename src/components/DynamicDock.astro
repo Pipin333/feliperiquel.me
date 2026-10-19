@@ -3,7 +3,7 @@
 ---
 
 <!-- FLOATING DYNAMIC ISLAND & DOCK -->
-<div class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
+<div class="no-print fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-none">
   
   <!-- FLOATING CLI MODAL / PANEL (ANCHORED ABOVE THE DOCK) -->
   <div
@@ -78,6 +78,9 @@
       <div class="flex flex-wrap gap-1.5 mb-4" id="floating-terminal-chips">
         <button type="button" data-cmd="whoami" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
           whoami
+        </button>
+        <button type="button" data-cmd="cv" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-telemetry/60 hover:border-telemetry text-telemetry text-[11px] font-semibold transition-colors">
+          cv
         </button>
         <button type="button" data-cmd="lab" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
           lab
@@ -170,6 +173,16 @@
       >
         <span>⚙️</span>
         <span class="hidden sm:inline">Proyectos</span>
+      </a>
+
+      <!-- CV Shortcut -->
+      <a
+        href="/cv"
+        class="flex items-center gap-1 px-2.5 py-1.5 rounded-full font-mono text-xs font-medium text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors"
+        title="Ver y descargar CV (ATS)"
+      >
+        <span>📄</span>
+        <span class="hidden sm:inline">CV</span>
       </a>
 
       <!-- Contact Shortcut -->
@@ -290,7 +303,8 @@
 
   const commandResponses: Record<string, string> = {
     whoami: 'Felipe Riquelme. Ingeniero Civil en Informática especializado en desarrollo web de alto rendimiento, DSP de audio y homelab.',
-    help: 'Comandos disponibles: whoami, lab, repos, contact, clear. También puedes pulsar los botones de atajo.',
+    cv: 'Currículum Vitae (ATS-compliant): Descarga directa en PDF (8.7 KB): /cv-felipe-riquelme.pdf | Versión web: /cv | Perfil: Ingeniero Civil en Informática (UNAB), AD-BSA v2 (IEEE CEC Rank #1), J.E.J. Ingeniería (Innovación & TI), Dunkin\' (Subgerencia).',
+    help: 'Comandos disponibles: whoami, cv, lab, repos, contact, clear. También puedes pulsar los botones de atajo.',
     lab: 'El Laboratorio contiene 3 micro-apps en vivo: SonicRip Studio (Audio DSP), Retórica y Descalabro (NLP) y Cuánto Rinde (Logística). Navega a /lab para probarlas.',
     repos: 'Proyectos clave: Toodles (Discord Audio + RecSys ML), Whatsarr (WhatsApp + *Arr Stack + Plex), UniCalendar AI (Next.js + LLMs + Google Calendar), JD Watch Controller (Wear OS 6-Axis), AD-BSA (IEEE CEC 2020 Rank #1).',
     contact: 'Canales directos: Correo: f.riquelmesalvo@uandresbello.edu | WhatsApp: ver seccion #contacto | GitHub: @Pipin333',

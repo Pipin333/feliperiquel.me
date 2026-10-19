@@ -1,5 +1,7 @@
 ---
 // src/components/LabShowcase.astro
+import Icon from './Icon.astro';
+
 interface LabTool {
   title: string;
   tagline: string;
@@ -18,7 +20,7 @@ const featuredTools: LabTool[] = [
     title: "SonicRip Studio",
     tagline: "Procesador de Audio & EQ Paramétrico de 8 Bandas",
     description: "Carga audio en el navegador, aplica curvas de ecualización en tiempo real (BiquadFilterNode), distorsión Lo-Fi Bitcrusher y visualiza armónicos en un analizador de espectro FFT.",
-    icon: "🎛️",
+    icon: "sliders",
     tags: ["Web Audio API", "DSP", "8-Band EQ", "FFT"],
     href: "/lab/sonicrip",
     accentColor: "text-domain-audio border-domain-audio/30 bg-domain-audio/10",
@@ -28,7 +30,7 @@ const featuredTools: LabTool[] = [
     title: "Retórica y Descalabro",
     tagline: "Transmutador Ontológico de Jerga Callejera",
     description: "Convierte modismos coloquiales y letras urbanas en tratados filosóficos decimonónicos, correspondencia diplomática de cancillería o culteranismo barroco con teléfono chocho.",
-    icon: "🎩",
+    icon: "mortarboard",
     tags: ["NLP", "Lingüística", "Humor", "TypeScript"],
     href: "/lab/retorica",
     canonicalHref: "https://github.com/Pipin333/retorica-y-descalabro",
@@ -40,7 +42,7 @@ const featuredTools: LabTool[] = [
     title: "Cuánto Rinde",
     tagline: "Optimizador Logístico & Presupuesto (Repo: calculadoracopete)",
     description: "Algoritmo predictivo de insumos (destilados, cerveza, hielo, mixers) según perfil de asistentes y horas de junta. Cuota exacta en $ CLP y exportación limpia para WhatsApp.",
-    icon: "🍻",
+    icon: "cup-straw",
     tags: ["Algoritmia", "Logística", "Presupuesto CLP", "WhatsApp"],
     href: "/lab/copete",
     canonicalHref: "https://github.com/Pipin333/calculadoracopete",
@@ -56,7 +58,8 @@ const featuredTools: LabTool[] = [
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
       <div>
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-3">
-          <span>🧪 Playground Interactivo</span>
+          <Icon name="flask" class="w-3.5 h-3.5" />
+          <span>Playground Interactivo</span>
         </div>
         <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
           El Laboratorio: micro-apps en vivo
@@ -83,7 +86,9 @@ const featuredTools: LabTool[] = [
         <article class="spotlight-card group p-7 flex flex-col justify-between relative">
           <div>
             <div class="flex items-center justify-between gap-3 mb-4">
-              <span class="text-3xl" aria-hidden="true">{tool.icon}</span>
+              <div class="w-10 h-10 rounded-tech bg-canvas border border-canvas-border flex items-center justify-center text-telemetry group-hover:border-telemetry/50 transition-colors">
+                <Icon name={tool.icon} class="w-5 h-5" />
+              </div>
               <span class={`font-mono text-[11px] px-2.5 py-0.5 rounded-tech-sm font-semibold border ${tool.accentColor}`}>
                 {tool.badge}
               </span>
