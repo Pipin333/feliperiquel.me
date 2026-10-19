@@ -2,10 +2,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /404
 Disallow: /email-preview.html
 
-# Sitemap index
 Sitemap: https://feliperiquel.me/sitemap.xml
 
 # LLM / AI Crawlers Context

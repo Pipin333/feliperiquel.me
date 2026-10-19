@@ -4,18 +4,18 @@
 ## Información General
 - Nombre: Felipe Riquelme
 - Profesión: Ingeniero Civil en Informática
-- Sitio web: https://feliperiquel.me
-- GitHub: https://github.com/Pipin333
+- [Sitio web](https://feliperiquel.me): portafolio y laboratorio interactivo.
+- [GitHub](https://github.com/Pipin333): repositorios open source.
 - Correo: f.riquelmesalvo@uandresbello.edu
 
 ## Proyectos Destacados (Open Source)
-- Toodles (https://github.com/Pipin333/Toodles): Motor de streaming de audio para Discord con sistema de recomendación híbrido ML (Implicit ALS + Item2Vec), extracción nativa yt-dlp y streaming WebM/Opus directo vía FFmpeg sobre Docker ARM64.
-- Whatsarr (https://github.com/Pipin333/Whatsarr): Puente automatizado en WhatsApp (Baileys) para solicitar películas y series en lenguaje natural, con Progressive Streamer que prioriza el Episodio 1 en qBittorrent, Fuzzball scorer y Dashboard Web para Radarr, Sonarr y Plex.
-- UniCalendar AI (https://github.com/Pipin333/UniCalendar): Planificador académico inteligente en Next.js. Ingiere sílabos en PDF y Canvas LMS, respeta feriados y recesos institucionales mediante LLMs (failover Gemini/Groq), simula notas ponderadas y sincroniza eventos con Google Calendar.
-- JD Watch Controller (https://github.com/Pipin333/jd-watch-controller): Controlador de movimiento para smartwatches Wear OS (Galaxy Watch / Pixel Watch) y Android. Fusión sensorial de 6 ejes a 50 Hz exactos, navegación por bisel rotativo y emulación de la curva de puntuación ponderada oficial de Just Dance.
-- AD-BSA (https://github.com/Pipin333/AD-BSA): Adaptive Differential Boogeyman Search Algorithm. Metaheurística global continua basada en aprendizaje negativo explícito con barreras cosecantes acotadas. Empató en el Rank #1 en el benchmark formal IEEE CEC 2020 en 50 dimensiones. Publicado con DOI en Zenodo.
+- [Toodles](https://github.com/Pipin333/Toodles): Motor de streaming de audio para Discord con sistema de recomendación híbrido ML (Implicit ALS + Item2Vec), extracción nativa yt-dlp y streaming WebM/Opus directo vía FFmpeg sobre Docker ARM64.
+- [Whatsarr](https://github.com/Pipin333/Whatsarr): Puente automatizado en WhatsApp (Baileys) para solicitar películas y series en lenguaje natural, con Progressive Streamer que prioriza el Episodio 1 en qBittorrent, Fuzzball scorer y Dashboard Web para Radarr, Sonarr y Plex.
+- [UniCalendar AI](https://github.com/Pipin333/UniCalendar): Planificador académico inteligente en Next.js. Ingiere sílabos en PDF y Canvas LMS, respeta feriados y recesos institucionales mediante LLMs (failover Gemini/Groq), simula notas ponderadas y sincroniza eventos con Google Calendar.
+- [JD Watch Controller](https://github.com/Pipin333/jd-watch-controller): Controlador de movimiento para smartwatches Wear OS (Galaxy Watch / Pixel Watch) y Android. Fusión sensorial de 6 ejes a 50 Hz exactos, navegación por bisel rotativo y emulación de la curva de puntuación ponderada oficial de Just Dance.
+- [AD-BSA](https://github.com/Pipin333/AD-BSA): Adaptive Differential Boogeyman Search Algorithm. Metaheurística global continua basada en aprendizaje negativo explícito con barreras cosecantes acotadas. Empató en el Rank #1 en el benchmark formal IEEE CEC 2020 en 50 dimensiones. Publicado con DOI en Zenodo.
 
 ## El Laboratorio (Micro-apps cliente en /lab)
-- SonicRip Studio (/lab/sonicrip): Suite de audio en navegador con ecualizador paramétrico de 8 bandas (BiquadFilterNode), distorsión Lo-Fi Bitcrusher, analizador FFT y generador batch para yt-dlp.
-- Retórica y Descalabro (/lab/retorica - https://github.com/Pipin333/retorica-y-descalabro): Transmutador lingüístico de jerga coloquial a tratados decimonónicos y diplomacia barroca.
-- Cuánto Rinde (/lab/copete - https://github.com/Pipin333/calculadoracopete): Optimizador logístico y presupuestario en $ CLP para juntas y eventos con desglose para WhatsApp (nombre de repo: calculadoracopete).
+- [SonicRip Studio](https://feliperiquel.me/lab/sonicrip): Suite de audio en navegador con ecualizador paramétrico de 8 bandas (BiquadFilterNode), distorsión Lo-Fi Bitcrusher, analizador FFT y generador batch para yt-dlp.
+- [Retórica y Descalabro](https://feliperiquel.me/lab/retorica): Transmutador lingüístico de jerga coloquial a tratados decimonónicos y diplomacia barroca. Código en [GitHub](https://github.com/Pipin333/retorica-y-descalabro).
+- [Cuánto Rinde](https://feliperiquel.me/lab/copete): Optimizador logístico y presupuestario en $ CLP para juntas y eventos con desglose para WhatsApp. Código en [GitHub](https://github.com/Pipin333/calculadoracopete).

@@ -1,0 +1,14 @@
+{
+  "name": "feliperiquel.me",
+  "short_name": "feliperiquel",
+  "description": "Portafolio y laboratorio de software interactivo de Felipe Riquelme.",
+  "lang": "es",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#07090E",
+  "theme_color": "#07090E",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

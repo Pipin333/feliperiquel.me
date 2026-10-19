@@ -100,17 +100,20 @@ npm run preview
 │   │       ├── quiz.astro        # Vista de mantenimiento temporal
 │   │       └── sonicrip.astro    # SonicRip Studio (8-band EQ & batch yt-dlp)
 │   ├── layouts/
-│   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD y contexto para agentes LLM
+│   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD (Person + WebSite) y enlace a llms.txt
 │   └── styles/
 │       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
 ├── scripts/
 │   └── supabase-schema.sql       # Esquema PostgreSQL con tabla contact_messages y RLS
 ├── public/
 │   ├── og-image.png              # Tarjeta social de previsualización 1200x630
+│   ├── apple-touch-icon.png      # Ícono 180x180 para iOS
+│   ├── manifest.webmanifest      # Manifest web (nombre, colores, íconos)
 │   ├── sitemap.xml               # Mapa canónico del sitio
 │   ├── robots.txt                # Directivas de rastreo con exclusiones de seguridad
 │   └── llms.txt                  # Manifiesto estructurado para agentes de inteligencia artificial
 ├── astro.config.mjs              # Configuración de Astro con @astrojs/vercel
+├── vercel.json                   # Cabeceras de seguridad HTTP globales
 ├── Dockerfile                    # Multi-stage production container
 ├── docker-compose.yml            # Orquestación lista para correr
 └── package.json                  # Dependencias y scripts
