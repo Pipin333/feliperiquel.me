@@ -13,27 +13,26 @@ const navItems: NavItem[] = [
   { label: "Laboratorio", href: "/lab", badge: "Live", icon: "flask" },
   { label: "Proyectos", href: "/#proyectos" },
   { label: "Sobre mí", href: "/#sobre-mi" },
-  { label: "CV (ATS)", href: "/cv" },
   { label: "Contacto", href: "/#contacto" }
 ];
 ---
 
 <header class="sticky top-0 z-50 w-full border-b border-canvas-border bg-canvas/90 backdrop-blur-md">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
     <!-- Brand / Tech Logo in one line -->
-    <a href="/" class="flex items-center gap-3 group focus-visible:rounded-tech">
+    <a href="/" class="flex items-center gap-3 group focus-visible:rounded-tech flex-shrink-0">
       <div class="w-9 h-9 rounded-tech bg-canvas-surface border border-canvas-border flex items-center justify-center text-telemetry transition-all duration-140 group-hover:border-telemetry group-hover:shadow-glow-cyan flex-shrink-0">
         <svg class="w-4 h-4 text-telemetry transition-transform duration-140 group-hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="4 7 10 12 4 17"></polyline>
           <line x1="12" y1="17" x2="20" y2="17"></line>
         </svg>
       </div>
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2.5 whitespace-nowrap">
         <span class="text-base font-display font-bold tracking-tight text-white group-hover:text-telemetry transition-colors">
           feliperiquel<span class="text-telemetry">.me</span>
         </span>
-        <span class="text-canvas-border font-mono text-xs hidden sm:inline">/</span>
-        <span class="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs text-slate-400">
+        <span class="text-canvas-border font-mono text-xs hidden xl:inline">/</span>
+        <span class="hidden xl:inline-flex items-center gap-1.5 font-mono text-xs text-slate-400">
           <span class="w-1.5 h-1.5 rounded-full bg-telemetry animate-pulse flex-shrink-0"></span>
           Ingeniero Civil en Informática
         </span>
@@ -41,13 +40,13 @@ const navItems: NavItem[] = [
     </a>
 
     <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-6" aria-label="Navegación principal">
+    <nav class="hidden md:flex items-center gap-3 lg:gap-5" aria-label="Navegación principal">
       {navItems.map((item) => (
         <a
           href={item.href}
-          class="font-mono text-xs font-medium text-slate-300 hover:text-white transition-colors duration-140 focus-visible:rounded-tech px-2.5 py-1 flex items-center gap-1.5 group"
+          class="font-mono text-xs font-medium text-slate-300 hover:text-white transition-colors duration-140 focus-visible:rounded-tech px-2.5 py-1 flex items-center gap-1.5 whitespace-nowrap group"
         >
-          {item.icon && <Icon name={item.icon} class="w-3.5 h-3.5 text-telemetry" />}
+          {item.icon && <Icon name={item.icon} class="w-3.5 h-3.5 text-telemetry flex-shrink-0" />}
           <span>{item.label}</span>
           {item.badge && (
             <span class="text-[9px] px-1.5 py-0.2 rounded-tech-sm bg-telemetry/10 text-telemetry border border-telemetry/30 group-hover:border-telemetry/60">
@@ -59,23 +58,21 @@ const navItems: NavItem[] = [
     </nav>
 
     <!-- Header Action Button -->
-    <div class="hidden sm:flex items-center gap-2.5">
+    <div class="hidden sm:flex items-center gap-2.5 flex-shrink-0">
       <a
         href="/cv"
-        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140"
+        class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140 whitespace-nowrap"
         title="Ver currículum vitae en formato ATS"
       >
-        <svg class="w-3.5 h-3.5 text-telemetry" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
+        <Icon name="file-earmark-text" class="w-3.5 h-3.5 text-telemetry flex-shrink-0" />
         <span>CV (ATS)</span>
       </a>
       <a
         href="/#contacto"
-        class="inline-flex items-center justify-center px-4 py-2 rounded-tech font-mono text-xs font-semibold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5"
+        class="inline-flex items-center justify-center px-4 py-2 rounded-tech font-mono text-xs font-semibold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap"
       >
         <span>Iniciar contacto</span>
-        <svg class="w-3.5 h-3.5 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-3.5 h-3.5 ml-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </a>
@@ -110,6 +107,13 @@ const navItems: NavItem[] = [
         <span>{item.label}</span>
       </a>
     ))}
+    <a
+      href="/cv"
+      class="flex items-center gap-2 px-3 py-2 rounded-tech font-mono text-sm font-medium text-slate-200 hover:text-white hover:bg-canvas-surface transition-colors"
+    >
+      <Icon name="file-earmark-text" class="w-4 h-4 text-telemetry" />
+      <span>CV (ATS)</span>
+    </a>
     <a
       href="/#contacto"
       class="block w-full text-center px-4 py-2.5 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover transition-colors mt-3"
