@@ -247,7 +247,7 @@ def build_pdf(filename: str) -> None:
 
     # Cuanto Rinde
     story.append(p("Cuanto Rinde: PWA de Optimizacion Combinatoria & Data Pipeline | JavaScript, Python, Firebase", item_title))
-    story.append(p("Web App en Produccion (PWA) | cuandorinde.cl", item_meta))
+    story.append(p("Web App en Produccion (PWA) | pipin333.github.io/calculadoracopete", item_meta))
     story.append(p(
         "&bull; <b>Motor Algoritmico (Knapsack DP):</b> Desarrollo en JavaScript puro un motor de optimizacion basado en programacion "
         "dinamica para resolver el problema de la mochila multidimensional aplicado a compras y presupuestos grupales en milisegundos.",
@@ -280,12 +280,27 @@ def build_pdf(filename: str) -> None:
     ))
     story.append(Spacer(1, 3))
 
-    # JD Watch Controller & SonicRip
-    story.append(p("JD Watch Controller & SonicRip Studio | Kotlin (Wear OS) & Web Audio API", item_title))
-    story.append(p("Proyectos de Hardware & DSP de Audio en Navegador", item_meta))
+    # JD Watch Controller
+    story.append(p("JD Watch Controller: Telemetria Inercial Wearable a 50 Hz | Kotlin, Wear OS", item_title))
+    story.append(p("Proyecto Personal de Hardware & Sensores | github.com/Pipin333/jd-watch-controller", item_meta))
     story.append(p(
-        "&bull; <b>Telemetria Inercial:</b> App Wear OS en Kotlin/Jetpack con transmision de sensores IMU de 6 ejes a 50 Hz por UDP/WebSocket sin perdida. "
-        "SonicRip Studio: suite de procesamiento DSP con ecualizador biquad de 8 bandas y renderizado FFT en tiempo real en feliperiquel.me.",
+        "&bull; <b>Fusion Sensorial & Protocolos:</b> Aplicacion para smartwatches Wear OS con captura inercial IMU de 6 ejes "
+        "(acelerometro y giroscopio) a 50 Hz por UDP/WebSocket sin perdida para reconocimiento cinematico de movimientos.",
+        bullet_style,
+    ))
+    story.append(Spacer(1, 3))
+
+    # SonicRip Studio & Retorica y Descalabro (RyD)
+    story.append(p("SonicRip Studio & Retorica y Descalabro (RyD) | Web Audio API, Canvas API, NLP Cliente", item_title))
+    story.append(p("Micro-aplicaciones Web en Vivo | feliperiquel.me/lab", item_meta))
+    story.append(p(
+        "&bull; <b>SonicRip Studio:</b> Suite de procesamiento DSP con ecualizador parametrico biquad de 8 bandas, modulador Lo-Fi Bitcrusher "
+        "y visualizador FFT de espectro en tiempo real mediante Canvas API a 60 FPS ejecutado 100% en el cliente.",
+        bullet_style,
+    ))
+    story.append(p(
+        "&bull; <b>Retorica y Descalabro (RyD):</b> Transmutador de estilo y motor heuristico de lenguaje natural (NLP) que reescribe jerga moderna "
+        "a prosa decimononica y diplomacia barroca con diccionario morfologico contextual en tiempo real.",
         bullet_style,
     ))
     story.append(Spacer(1, 4))

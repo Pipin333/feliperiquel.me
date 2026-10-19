@@ -3,6 +3,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <Layout
@@ -22,7 +23,8 @@ import Footer from '../components/Footer.astro';
     <!-- Page Header -->
     <header class="mb-12 border-b border-canvas-border pb-8">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-4">
-        <span>📜 Marco Legal & Condiciones</span>
+        <Icon name="file-earmark-text" class="w-3.5 h-3.5" />
+        <span>Marco Legal & Condiciones</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-4">
         Términos de Servicio
