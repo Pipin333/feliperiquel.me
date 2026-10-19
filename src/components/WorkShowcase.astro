@@ -14,6 +14,7 @@ interface Project {
   description: string;
   tags: string[];
   githubUrl?: string;
+  license?: string;
   statusBadge: string;
   accentBadgeColor: string;
   rationale: ArchitectureRationale;
@@ -44,6 +45,7 @@ const projects: Project[] = [
     description: "Puente automatizado en WhatsApp basado en Node.js y Baileys para solicitar películas y series en lenguaje natural. Integra extracción de metadatos (TMDB), un motor de priorización progresiva que descarga el Episodio 1 con máxima prioridad en qBittorrent para comenzar a ver en minutos, coordinación con Radarr, Sonarr y Prowlarr, y un Dashboard Web en tiempo real para monitoreo de descargas y salud del sistema.",
     tags: ["Node.js", "Baileys (WhatsApp)", "Radarr / Sonarr", "qBittorrent", "Plex Server", "Docker Compose", "Web Dashboard"],
     githubUrl: "https://github.com/Pipin333/Whatsarr",
+    license: "MIT",
     statusBadge: "Open Source",
     accentBadgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
     rationale: {
@@ -76,6 +78,7 @@ const projects: Project[] = [
     description: "Controlador de movimiento de código abierto para smartwatches Wear OS (Samsung Galaxy Watch 4, 5, 6, 7 / Pixel Watch) y smartphones Android para Just Dance (PC y mods comunitarios). Captura datos inerciales a 50 Hz exactos con fusión de sensores de 6 ejes (acelerómetro y giroscopio), transmite paquetes binarios Little-Endian por Bluetooth/Wi-Fi y emula el protocolo oficial con la curva de puntuación ponderada auténtica.",
     tags: ["Wear OS", "Android (Kotlin)", "6-Axis IMU Sensors", "Bluetooth ChannelClient", "WebSockets", "Haptics"],
     githubUrl: "https://github.com/Pipin333/jd-watch-controller",
+    license: "MIT",
     statusBadge: "Open Source",
     accentBadgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
     rationale: {
@@ -92,6 +95,7 @@ const projects: Project[] = [
     description: "Adaptive Differential Boogeyman Search Algorithm: metaheurística global continua basada en aprendizaje negativo explícito (Explicit Negative Learning). Modela baricentros de anti-atractores en las peores regiones del espacio de búsqueda y aplica una barrera de potencial basada en cosecante acotada (|csc(x)|) con enfriamiento polinomial para evacuar trampas de estancamiento local. Empató en el Rank #1 en el benchmark formal del IEEE CEC 2020 en 50 dimensiones.",
     tags: ["Python", "Metaheurísticas", "IEEE CEC 2020", "Optimización Continua", "NumPy / SciPy", "Differential Evolution"],
     githubUrl: "https://github.com/Pipin333/AD-BSA",
+    license: "Apache 2.0",
     statusBadge: "Research / Open Source",
     accentBadgeColor: "text-domain-algo border-domain-algo/30 bg-domain-algo/10",
     rationale: {
@@ -247,8 +251,8 @@ const projects: Project[] = [
                 Código privado / confidencial
               </span>
             )}
-            <span class="font-mono text-[10px] text-slate-500">
-              MIT / Open Source
+            <span class="font-mono text-[10px] text-slate-400">
+              {project.license ? `${project.license} / Open Source` : "Open Source"}
             </span>
           </div>
         </article>
