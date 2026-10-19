@@ -85,9 +85,11 @@ npm run preview
 │   │   ├── AboutMe.astro         # Perfil, filosofía de ingeniería y matriz de tecnologías
 │   │   ├── DynamicDock.astro     # Isla dinámica y consola interactiva flotante (CLI)
 │   │   ├── ContactGateway.astro  # Canales directos y formulario conectado a /api/contact
-│   │   └── Footer.astro          # Navegación, políticas y enlaces de pie de página
+│   │   ├── Footer.astro          # Navegación, políticas y enlaces de pie de página
+│   │   └── Icon.astro            # Renderizador en build-time de íconos SVG (Bootstrap Icons)
 │   ├── pages/
 │   │   ├── index.astro           # Portafolio principal orientado a software y lab
+│   │   ├── cv.astro              # Currículum interactivo bilingüe (ES/EN) listo para imprimir
 │   │   ├── 404.astro             # Terminal interactiva de recuperación ante errores 404
 │   │   ├── privacidad.astro      # Política de privacidad y tratamiento de datos
 │   │   ├── terminos.astro        # Términos y condiciones de uso del software

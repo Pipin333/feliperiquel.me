@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
 ---
 
 <Layout
@@ -24,7 +25,8 @@ import Footer from '../../components/Footer.astro';
     <div class="mb-10">
       <div class="flex flex-wrap items-center gap-3 mb-4">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-sky-500/30 bg-sky-500/10 text-sky-300 font-mono text-xs font-semibold">
-          <span>🎵 Web Audio DSP • EQ 8 Bandas • Lo-Fi & Batch</span>
+          <Icon name="music-note-beamed" class="w-3.5 h-3.5" />
+          <span>Web Audio DSP • EQ 8 Bandas • Lo-Fi & Batch</span>
         </div>
         <a
           href="https://github.com/Pipin333/Toodles"
@@ -55,16 +57,18 @@ import Footer from '../../components/Footer.astro';
       <button
         id="tab-dsp-btn"
         type="button"
-        class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow"
+        class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow"
       >
-        🎛️ DSP & EQ de 8 Bandas
+        <Icon name="sliders" class="w-3.5 h-3.5" />
+        <span>DSP & EQ de 8 Bandas</span>
       </button>
       <button
         id="tab-batch-btn"
         type="button"
-        class="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white"
+        class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white"
       >
-        📦 Extractor & Batch yt-dlp
+        <Icon name="box-seam" class="w-3.5 h-3.5" />
+        <span>Extractor & Batch yt-dlp</span>
       </button>
     </div>
 
@@ -78,7 +82,8 @@ import Footer from '../../components/Footer.astro';
               for="audio-file-input"
               class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 cursor-pointer transition-all hover:border-sky-500/50 shadow-sm"
             >
-              <span>📁 Cargar archivo de audio (.mp3, .wav, .ogg, .flac)</span>
+              <Icon name="folder2-open" class="w-4 h-4 text-sky-400" />
+              <span>Cargar archivo de audio (.mp3, .wav, .ogg, .flac)</span>
               <input id="audio-file-input" type="file" accept="audio/*" class="sr-only" />
             </label>
             <button
@@ -113,7 +118,12 @@ import Footer from '../../components/Footer.astro';
               class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg font-bold shadow-glow transition-all active:scale-95"
               aria-label="Reproducir o pausar audio"
             >
-              <span id="play-icon">▶</span>
+              <span id="play-icon" class="inline-flex items-center justify-center">
+                <Icon name="play-fill" class="w-5 h-5" />
+              </span>
+              <span id="pause-icon" class="hidden items-center justify-center">
+                <Icon name="pause-fill" class="w-5 h-5" />
+              </span>
             </button>
             <button
               id="stop-btn"
@@ -122,7 +132,7 @@ import Footer from '../../components/Footer.astro';
               class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-300 hover:text-white transition-all text-xs"
               aria-label="Detener reproducción"
             >
-              ⏹
+              <Icon name="stop-fill" class="w-4 h-4" />
             </button>
             <span id="time-display" class="font-mono text-xs text-slate-400 ml-2">
               00:00 / 00:00
@@ -151,7 +161,8 @@ import Footer from '../../components/Footer.astro';
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div>
             <h2 class="text-base font-bold text-white flex items-center gap-2">
-              <span>🎚️</span> Ecualizador Gráfico Paramétrico de 8 Bandas
+              <Icon name="sliders2-vertical" class="w-4 h-4 text-sky-400" />
+              <span>Ecualizador Gráfico Paramétrico de 8 Bandas</span>
             </h2>
             <p class="text-xs text-slate-400 mt-0.5">
               Control quirúrgico de frecuencias con filtros Biquad en tiempo real (-15 dB a +15 dB).
@@ -164,17 +175,21 @@ import Footer from '../../components/Footer.astro';
             <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="flat">
               Plano (0 dB)
             </button>
-            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="bass">
-              Bass Boost 🔊
+            <button type="button" class="eq-preset-btn inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="bass">
+              <span>Bass Boost</span>
+              <Icon name="speaker" class="w-3.5 h-3.5 text-sky-400" />
             </button>
-            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vocal">
-              Voces Claras 🎙️
+            <button type="button" class="eq-preset-btn inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vocal">
+              <span>Voces Claras</span>
+              <Icon name="mic" class="w-3.5 h-3.5 text-emerald-400" />
             </button>
-            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vshape">
-              V-Shape / Club ⚡
+            <button type="button" class="eq-preset-btn inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vshape">
+              <span>V-Shape / Club</span>
+              <Icon name="lightning-charge" class="w-3.5 h-3.5 text-amber-400" />
             </button>
-            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="lofi">
-              Lo-Fi Vintage 📻
+            <button type="button" class="eq-preset-btn inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="lofi">
+              <span>Lo-Fi Vintage</span>
+              <Icon name="broadcast" class="w-3.5 h-3.5 text-purple-400" />
             </button>
           </div>
         </div>
@@ -325,7 +340,8 @@ import Footer from '../../components/Footer.astro';
         <article class="p-6 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
           <div class="flex items-center justify-between pb-3 border-b border-slate-800">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>🕹️</span> Lo-Fi & Bitcrusher Digital
+              <Icon name="controller" class="w-4 h-4 text-amber-400" />
+              <span>Lo-Fi & Bitcrusher Digital</span>
             </h3>
             <span class="text-[11px] text-amber-400 font-mono">8-Bit Sound</span>
           </div>
@@ -370,7 +386,8 @@ import Footer from '../../components/Footer.astro';
         <article class="p-6 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
           <div class="flex items-center justify-between pb-3 border-b border-slate-800">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <span>🌌</span> Espacio, Tempo & Reverb
+              <Icon name="soundwave" class="w-4 h-4 text-purple-400" />
+              <span>Espacio, Tempo & Reverb</span>
             </h3>
             <span class="text-[11px] text-purple-400 font-mono">Slowed / Nightcore</span>
           </div>
@@ -422,17 +439,19 @@ import Footer from '../../components/Footer.astro';
       <div class="flex flex-wrap gap-2 mb-4">
         <button
           type="button"
-          class="demo-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="demo-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text={"Daft Punk - Around the World\nGorillaz - Feel Good Inc\nJustice - Genesis\nM83 - Midnight City\nMGMT - Kids"}
         >
-          🎧 Indie Electronic Hits (5 tracks)
+          <Icon name="headphones" class="w-3.5 h-3.5 text-sky-400" />
+          <span>Indie Electronic Hits (5 tracks)</span>
         </button>
         <button
           type="button"
-          class="demo-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="demo-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text={"Los Prisioneros - Estrechez de Corazón\nLos Bunkers - Bailando Solo\nSoda Stereo - De Música Ligera\nCharly García - Demoliendo Hoteles"}
         >
-          🎸 Rock Latino Clásico (4 tracks)
+          <Icon name="vinyl" class="w-3.5 h-3.5 text-amber-400" />
+          <span>Rock Latino Clásico (4 tracks)</span>
         </button>
       </div>
 
@@ -542,15 +561,15 @@ MGMT - Kids</textarea>
   const viewBatch = document.getElementById('view-batch') as HTMLElement;
 
   tabDspBtn?.addEventListener('click', () => {
-    tabDspBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
-    tabBatchBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
+    tabDspBtn.className = "flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
+    tabBatchBtn.className = "flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
     viewDsp.classList.remove('hidden');
     viewBatch.classList.add('hidden');
   });
 
   tabBatchBtn?.addEventListener('click', () => {
-    tabBatchBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
-    tabDspBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
+    tabBatchBtn.className = "flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
+    tabDspBtn.className = "flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
     viewBatch.classList.remove('hidden');
     viewDsp.classList.add('hidden');
   });
@@ -599,6 +618,7 @@ MGMT - Kids</textarea>
   const fileNameDisplay = document.getElementById('audio-file-name') as HTMLSpanElement;
   const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
   const playIcon = document.getElementById('play-icon') as HTMLSpanElement;
+  const pauseIcon = document.getElementById('pause-icon') as HTMLSpanElement;
   const stopBtn = document.getElementById('stop-btn') as HTMLButtonElement;
   const timeDisplay = document.getElementById('time-display') as HTMLSpanElement;
   const canvas = document.getElementById('visualizer-canvas') as HTMLCanvasElement;
@@ -748,6 +768,20 @@ MGMT - Kids</textarea>
     timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
   });
 
+  function setPlayStateUI(playing: boolean) {
+    if (playing) {
+      playIcon?.classList.add('hidden');
+      playIcon?.classList.remove('inline-flex');
+      pauseIcon?.classList.remove('hidden');
+      pauseIcon?.classList.add('inline-flex');
+    } else {
+      pauseIcon?.classList.add('hidden');
+      pauseIcon?.classList.remove('inline-flex');
+      playIcon?.classList.remove('hidden');
+      playIcon?.classList.add('inline-flex');
+    }
+  }
+
   function playAudio() {
     if (!audioBuffer || !audioCtx) return;
     initAudioNodes();
@@ -771,7 +805,7 @@ MGMT - Kids</textarea>
     startTime = audioCtx.currentTime - (pauseOffset / sourceNode.playbackRate.value);
     isPlaying = true;
 
-    playIcon.textContent = "⏸";
+    setPlayStateUI(true);
     visualizerPlaceholder.classList.add('hidden');
     drawVisualizer();
   }
@@ -781,7 +815,7 @@ MGMT - Kids</textarea>
     sourceNode.stop();
     pauseOffset = (audioCtx.currentTime - startTime) * parseFloat(speedSlider.value);
     isPlaying = false;
-    playIcon.textContent = "▶";
+    setPlayStateUI(false);
   }
 
   function stopAudio() {
@@ -790,7 +824,7 @@ MGMT - Kids</textarea>
     }
     pauseOffset = 0;
     isPlaying = false;
-    playIcon.textContent = "▶";
+    setPlayStateUI(false);
     if (audioBuffer) {
       timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
     }

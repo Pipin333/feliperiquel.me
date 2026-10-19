@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
 ---
 
 <Layout
@@ -24,7 +25,8 @@ import Footer from '../../components/Footer.astro';
     <div class="mb-10">
       <div class="flex flex-wrap items-center gap-3 mb-4">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 font-mono text-xs font-semibold">
-          <span>🎩 NLP Heurístico & Deriva Semántica</span>
+          <Icon name="mortarboard" class="w-3.5 h-3.5" />
+          <span>NLP Heurístico & Deriva Semántica</span>
         </div>
         <a
           href="https://github.com/Pipin333/retorica-y-descalabro"
@@ -58,31 +60,35 @@ import Footer from '../../components/Footer.astro';
       <div class="flex flex-wrap gap-2">
         <button
           type="button"
-          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="preset-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text="Sigue tu camino que sin ti me va mejor, ahora tengo otras que me lo hacen mejor."
         >
-          🎵 "Sigue tu camino que sin ti me va mejor..."
+          <Icon name="music-note-beamed" class="w-3.5 h-3.5 text-brand-400" />
+          <span>"Sigue tu camino que sin ti me va mejor..."</span>
         </button>
         <button
           type="button"
-          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="preset-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text="Hermano, me dio la pálida brígida con el terremoto y me fui a acostar a la mala."
         >
-          😵 "Me dio la pálida brígida con el terremoto..."
+          <Icon name="emoji-dizzy" class="w-3.5 h-3.5 text-amber-400" />
+          <span>"Me dio la pálida brígida con el terremoto..."</span>
         </button>
         <button
           type="button"
-          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="preset-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text="No me hables de pega que ando entero estresado y quiero puro tomarme una piscola bien cargada."
         >
-          🥃 "No me hables de pega que ando entero estresado..."
+          <Icon name="cup-straw" class="w-3.5 h-3.5 text-emerald-400" />
+          <span>"No me hables de pega que ando entero estresado..."</span>
         </button>
         <button
           type="button"
-          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          class="preset-chip inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
           data-text="El certamen estuvo terrible peludo y nadie cachó una sola pregunta."
         >
-          📝 "El certamen estuvo terrible peludo y nadie cachó..."
+          <Icon name="pencil-square" class="w-3.5 h-3.5 text-sky-400" />
+          <span>"El certamen estuvo terrible peludo y nadie cachó..."</span>
         </button>
       </div>
     </section>
@@ -122,32 +128,44 @@ import Footer from '../../components/Footer.astro';
               <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-brand-500/50 bg-brand-500/10 cursor-pointer transition-all">
                 <input type="radio" name="style-mode" value="ontologico" checked class="mt-1 text-brand-500 focus:ring-brand-400" />
                 <div>
-                  <span class="block text-xs font-bold text-white">🧐 Tratado Ontológico</span>
-                  <span class="block text-[11px] text-slate-400">Filosofía densa del siglo XIX, perífrasis y latinizaciones.</span>
+                  <span class="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Icon name="journal-richtext" class="w-3.5 h-3.5 text-brand-400" />
+                    <span>Tratado Ontológico</span>
+                  </span>
+                  <span class="block text-[11px] text-slate-400 mt-0.5">Filosofía densa del siglo XIX, perífrasis y latinizaciones.</span>
                 </div>
               </label>
 
               <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
                 <input type="radio" name="style-mode" value="diplomatico" class="mt-1 text-brand-500 focus:ring-brand-400" />
                 <div>
-                  <span class="block text-xs font-bold text-white">📜 Diplomacia Solemne</span>
-                  <span class="block text-[11px] text-slate-400">Cancillería institucional, cortesía pomposa y eufemismos.</span>
+                  <span class="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Icon name="file-earmark-text" class="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Diplomacia Solemne</span>
+                  </span>
+                  <span class="block text-[11px] text-slate-400 mt-0.5">Cancillería institucional, cortesía pomposa y eufemismos.</span>
                 </div>
               </label>
 
               <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
                 <input type="radio" name="style-mode" value="barroco" class="mt-1 text-brand-500 focus:ring-brand-400" />
                 <div>
-                  <span class="block text-xs font-bold text-white">🪶 Culteranismo Barroco</span>
-                  <span class="block text-[11px] text-slate-400">Estilo Luis de Góngora, hipérbaton y ornamentación mítica.</span>
+                  <span class="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Icon name="feather" class="w-3.5 h-3.5 text-amber-400" />
+                    <span>Culteranismo Barroco</span>
+                  </span>
+                  <span class="block text-[11px] text-slate-400 mt-0.5">Estilo Luis de Góngora, hipérbaton y ornamentación mítica.</span>
                 </div>
               </label>
 
               <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
                 <input type="radio" name="style-mode" value="whispers" class="mt-1 text-brand-500 focus:ring-brand-400" />
                 <div>
-                  <span class="block text-xs font-bold text-white">🌀 Teléfono Descompuesto</span>
-                  <span class="block text-[11px] text-slate-400">Deriva semántica multilingüe a través de traducción encadenada.</span>
+                  <span class="flex items-center gap-1.5 text-xs font-bold text-white">
+                    <Icon name="arrow-repeat" class="w-3.5 h-3.5 text-sky-400" />
+                    <span>Teléfono Descompuesto</span>
+                  </span>
+                  <span class="block text-[11px] text-slate-400 mt-0.5">Deriva semántica multilingüe a través de traducción encadenada.</span>
                 </div>
               </label>
             </div>
@@ -215,6 +233,7 @@ import Footer from '../../components/Footer.astro';
               type="button"
               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-950/60 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors"
             >
+              <Icon name="whatsapp" class="w-3.5 h-3.5" />
               <span>Compartir en WhatsApp</span>
             </button>
           </div>
@@ -230,7 +249,7 @@ import Footer from '../../components/Footer.astro';
         Acerca del motor de transmutación:
       </h3>
       <p>
-        Este módulo opera sobre un diccionario combinatorio de morfología culta, desambiguación léxica de chilenismos y reglas gramaticales latinizadas inspiradas en el proyecto <em>retorica-y-descalabro</em>. El modo <em>Teléfono Descompuesto</em> utiliza traducción libre encadenada de MyMemory a través de secuencias multilingües (Español ➔ Alemán ➔ Japonés ➔ Español) para evidenciar la erosión semántica del lenguaje automatizado.
+        Este módulo opera sobre un diccionario combinatorio de morfología culta, desambiguación léxica de chilenismos y reglas gramaticales latinizadas inspiradas en el proyecto <em>retorica-y-descalabro</em>. El modo <em>Teléfono Descompuesto</em> utiliza traducción libre encadenada de MyMemory a través de secuencias multilingües (Español -> Alemán -> Japonés -> Español) para evidenciar la erosión semántica del lenguaje automatizado.
       </p>
     </aside>
   </main>
@@ -447,7 +466,7 @@ import Footer from '../../components/Footer.astro';
 
   shareWaBtn?.addEventListener('click', () => {
     const text = outputContainer.textContent || '';
-    const shareMessage = `🎩 *Retórica y Descalabro* (Felipe Riquelme Lab):\n\n${text}\n\nPruébalo aquí: https://feliperiquel.me/lab/retorica`;
+    const shareMessage = `*Retórica y Descalabro* (Felipe Riquelme Lab):\n\n${text}\n\nPruébalo aquí: https://feliperiquel.me/lab/retorica`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
     window.open(url, '_blank');
   });

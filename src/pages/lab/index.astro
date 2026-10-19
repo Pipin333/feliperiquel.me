@@ -3,6 +3,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
 
 interface Experiment {
   title: string;
@@ -29,7 +30,7 @@ const experiments: Experiment[] = [
     badge: "Interactivo",
     badgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
     isInteractive: true,
-    icon: "🎩"
+    icon: "mortarboard"
   },
   {
     title: "Cuánto Rinde",
@@ -41,7 +42,7 @@ const experiments: Experiment[] = [
     badge: "Interactivo",
     badgeColor: "text-domain-beer border-domain-beer/30 bg-domain-beer/10",
     isInteractive: true,
-    icon: "🍻"
+    icon: "cup-straw"
   },
   {
     title: "SonicRip",
@@ -52,7 +53,7 @@ const experiments: Experiment[] = [
     badge: "Interactivo",
     badgeColor: "text-domain-audio border-domain-audio/30 bg-domain-audio/10",
     isInteractive: true,
-    icon: "🎛️"
+    icon: "sliders"
   },
   {
     title: "Toodles",
@@ -63,7 +64,7 @@ const experiments: Experiment[] = [
     badge: "Open Source",
     badgeColor: "text-domain-audio border-domain-audio/30 bg-domain-audio/10",
     isInteractive: false,
-    icon: "🎶"
+    icon: "music-note-beamed"
   },
   {
     title: "Whatsarr",
@@ -74,7 +75,7 @@ const experiments: Experiment[] = [
     badge: "Open Source",
     badgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
     isInteractive: false,
-    icon: "🍿"
+    icon: "film"
   },
   {
     title: "UniCalendar AI",
@@ -85,7 +86,7 @@ const experiments: Experiment[] = [
     badge: "Publicado",
     badgeColor: "text-domain-ai border-domain-ai/30 bg-domain-ai/10",
     isInteractive: false,
-    icon: "📅"
+    icon: "calendar-event"
   },
   {
     title: "JD Watch Controller",
@@ -96,7 +97,7 @@ const experiments: Experiment[] = [
     badge: "Open Source",
     badgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
     isInteractive: false,
-    icon: "🕺"
+    icon: "smartwatch"
   },
   {
     title: "AD-BSA",
@@ -107,7 +108,7 @@ const experiments: Experiment[] = [
     badge: "Research",
     badgeColor: "text-domain-algo border-domain-algo/30 bg-domain-algo/10",
     isInteractive: false,
-    icon: "🧬"
+    icon: "diagram-3"
   }
 ];
 ---
@@ -129,7 +130,8 @@ const experiments: Experiment[] = [
     <!-- Lab Hero -->
     <header class="max-w-3xl mb-14">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-4">
-        <span>🧪 The Playground & Lab</span>
+        <Icon name="flask" class="w-3.5 h-3.5" />
+        <span>The Playground & Lab</span>
       </div>
       <h1 class="text-4xl sm:text-5xl font-display font-extrabold tracking-tight text-white mb-4">
         Herramientas, algoritmos y código no convencional.
@@ -144,7 +146,8 @@ const experiments: Experiment[] = [
       <div class="flex items-center justify-between gap-4 mb-8 pb-3 border-b border-canvas-border">
         <div>
           <h2 id="interactive-heading" class="text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
-            <span class="text-telemetry">⚡</span> Herramientas Interactivas en Vivo
+            <Icon name="lightning-charge" class="w-5 h-5 text-telemetry" />
+            <span>Herramientas Interactivas en Vivo</span>
           </h2>
           <p class="font-mono text-xs text-slate-400 mt-1">
             Aplicaciones cliente ejecutables de inmediato desde el navegador sin instalación.
@@ -157,7 +160,9 @@ const experiments: Experiment[] = [
           <article class="spotlight-card group p-7 flex flex-col justify-between relative">
             <div>
               <div class="flex items-center justify-between gap-3 mb-4">
-                <span class="text-3xl" aria-hidden="true">{exp.icon}</span>
+                <div class="w-10 h-10 rounded-tech bg-canvas border border-canvas-border flex items-center justify-center text-telemetry group-hover:border-telemetry/50 transition-colors">
+                  <Icon name={exp.icon} class="w-5 h-5" />
+                </div>
                 <span class={`font-mono text-[11px] px-2.5 py-0.5 rounded-tech-sm font-semibold border ${exp.badgeColor}`}>
                   {exp.badge}
                 </span>
@@ -221,7 +226,8 @@ const experiments: Experiment[] = [
       <div class="flex items-center justify-between gap-4 mb-8 pb-3 border-b border-canvas-border">
         <div>
           <h2 id="ecosystem-heading" class="text-2xl font-display font-bold text-white tracking-tight flex items-center gap-2.5">
-            <span class="text-domain-audio">🔬</span> Ecosistema de Proyectos & Homelab
+            <Icon name="cpu" class="w-5 h-5 text-domain-audio" />
+            <span>Ecosistema de Proyectos & Homelab</span>
           </h2>
           <p class="font-mono text-xs text-slate-400 mt-1">
             Investigaciones, arquitecturas de backend y herramientas distribuidas de código abierto.
@@ -234,7 +240,9 @@ const experiments: Experiment[] = [
           <article class={`spotlight-card group p-6 flex flex-col justify-between relative ${index === 3 && experiments.filter(e => !e.isInteractive).length % 3 !== 0 ? '' : ''}`}>
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
-                <span class="text-2xl" aria-hidden="true">{exp.icon}</span>
+                <div class="w-9 h-9 rounded-tech bg-canvas border border-canvas-border flex items-center justify-center text-slate-300 group-hover:text-telemetry group-hover:border-telemetry/50 transition-colors">
+                  <Icon name={exp.icon} class="w-4 h-4" />
+                </div>
                 <span class={`font-mono text-[10px] px-2 py-0.5 rounded-tech-sm font-semibold border ${exp.badgeColor}`}>
                   {exp.badge}
                 </span>
