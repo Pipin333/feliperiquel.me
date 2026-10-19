@@ -7,6 +7,9 @@ export default defineConfig({
   site: 'https://feliperiquel.me',
   adapter: vercel(),
   integrations: [tailwind()],
+  security: {
+    checkOrigin: false
+  },
   server: {
     port: 4321,
     host: true
