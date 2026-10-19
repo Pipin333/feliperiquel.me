@@ -386,6 +386,8 @@ ${escapedMessage}
 
         if (notifyResult.data) {
           notificationSent = true;
+        } else if (notifyResult.error) {
+          console.error('[Resend Notify Error]', JSON.stringify(notifyResult.error));
         }
 
         // Email 2: Auto-reply ACK to the sender
@@ -503,6 +505,8 @@ ${escapedMessage}
 
         if (autoReplyResult.data) {
           autoReplySent = true;
+        } else if (autoReplyResult.error) {
+          console.error('[Resend AutoReply Error]', JSON.stringify(autoReplyResult.error));
         }
       } catch (err) {
         console.error('[Resend Exception]', err);
