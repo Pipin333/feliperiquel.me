@@ -10,6 +10,7 @@ interface Project {
   id: string;
   title: string;
   category: string;
+  tldr: string;
   description: string;
   tags: string[];
   githubUrl?: string;
@@ -23,6 +24,7 @@ const projects: Project[] = [
     id: "toodles",
     title: "Toodles",
     category: "Audio Streaming & Machine Learning",
+    tldr: "Bot de audio para Discord con streaming directo Opus (< 0.5% CPU en ARM64) y motor de recomendación musical híbrido (ALS + Item2Vec).",
     description: "Motor de streaming de audio para Discord de alto rendimiento y baja latencia desplegado en contenedores Docker sobre arquitectura ARM64 (Oracle Cloud). Integra extracción nativa con yt-dlp, streaming WebM/Opus directo vía FFmpeg sin transcodificación pesada (< 0.5% CPU) y un motor de recomendación musical híbrido (Implicit ALS + Item2Vec + vectores acústicos) con persistencia de colas ante reinicios.",
     tags: ["Discord Bot", "Python (asyncio)", "RecSys (ALS + Item2Vec)", "FFmpeg Opus", "yt-dlp", "Docker / ARM64", "SQLAlchemy"],
     githubUrl: "https://github.com/Pipin333/Toodles",
@@ -38,6 +40,7 @@ const projects: Project[] = [
     id: "whatsarr",
     title: "Whatsarr",
     category: "Bots Conversacionales & Media Server",
+    tldr: "Gestor multimedia para WhatsApp: solicita series y películas en lenguaje natural, prioriza el episodio 1 y lo envía al home server en minutos.",
     description: "Puente automatizado en WhatsApp basado en Node.js y Baileys para solicitar películas y series en lenguaje natural. Integra extracción de metadatos (TMDB), un motor de priorización progresiva que descarga el Episodio 1 con máxima prioridad en qBittorrent para comenzar a ver en minutos, coordinación con Radarr, Sonarr y Prowlarr, y un Dashboard Web en tiempo real para monitoreo de descargas y salud del sistema.",
     tags: ["Node.js", "Baileys (WhatsApp)", "Radarr / Sonarr", "qBittorrent", "Plex Server", "Docker Compose", "Web Dashboard"],
     githubUrl: "https://github.com/Pipin333/Whatsarr",
@@ -53,6 +56,7 @@ const projects: Project[] = [
     id: "unicalendar",
     title: "UniCalendar AI",
     category: "EdTech & Planificación Inteligente",
+    tldr: "Plataforma web que ingiere programas académicos (PDF/Canvas LMS), extrae evaluaciones con LLMs y las sincroniza en Google Calendar.",
     description: "Aplicación web integral en Next.js para estudiantes y docentes universitarios. Ingiere cronogramas y sílabos en PDF, Word, texto o directamente desde Canvas LMS vía API. Analiza las fechas mediante LLMs con failover multi-proveedor (Google Gemini, Groq, OpenRouter), protege la planificación inyectando el calendario institucional (feriados, recesos y marcha blanca), incluye un simulador de calificaciones y sincroniza eventos con código de colores en Google Calendar.",
     tags: ["Next.js", "TypeScript", "Google Gemini / Groq", "Canvas LMS API", "Google Calendar OAuth", "SheetJS", "Tailwind CSS"],
     githubUrl: "https://github.com/Pipin333/UniCalendar",
@@ -68,6 +72,7 @@ const projects: Project[] = [
     id: "jd-watch",
     title: "JD Watch Controller",
     category: "IoT & Wearables (Wear OS + Android)",
+    tldr: "Controlador de movimiento para relojes inteligentes Wear OS: captura inercial a 50 Hz por Bluetooth/Wi-Fi con emulación precisa de puntuación.",
     description: "Controlador de movimiento de código abierto para smartwatches Wear OS (Samsung Galaxy Watch 4, 5, 6, 7 / Pixel Watch) y smartphones Android para Just Dance (PC y mods comunitarios). Captura datos inerciales a 50 Hz exactos con fusión de sensores de 6 ejes (acelerómetro y giroscopio), transmite paquetes binarios Little-Endian por Bluetooth/Wi-Fi y emula el protocolo oficial con la curva de puntuación ponderada auténtica.",
     tags: ["Wear OS", "Android (Kotlin)", "6-Axis IMU Sensors", "Bluetooth ChannelClient", "WebSockets", "Haptics"],
     githubUrl: "https://github.com/Pipin333/jd-watch-controller",
@@ -83,6 +88,7 @@ const projects: Project[] = [
     id: "ad-bsa",
     title: "AD-BSA",
     category: "Computación Científica & Optimización",
+    tldr: "Algoritmo de optimización matemática continua que empató en el Rank #1 en el benchmark mundial IEEE CEC 2020 en 50 dimensiones.",
     description: "Adaptive Differential Boogeyman Search Algorithm: metaheurística global continua basada en aprendizaje negativo explícito (Explicit Negative Learning). Modela baricentros de anti-atractores en las peores regiones del espacio de búsqueda y aplica una barrera de potencial basada en cosecante acotada (|csc(x)|) con enfriamiento polinomial para evacuar trampas de estancamiento local. Empató en el Rank #1 en el benchmark formal del IEEE CEC 2020 en 50 dimensiones.",
     tags: ["Python", "Metaheurísticas", "IEEE CEC 2020", "Optimización Continua", "NumPy / SciPy", "Differential Evolution"],
     githubUrl: "https://github.com/Pipin333/AD-BSA",
@@ -143,18 +149,27 @@ const projects: Project[] = [
               </span>
             </div>
 
-            <h3 class="text-2xl font-display font-bold text-white mb-2 group-hover:text-telemetry transition-colors">
+            <h3 class="text-2xl font-display font-bold text-white mb-2.5 group-hover:text-telemetry transition-colors">
               {project.title}
             </h3>
 
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
+            <!-- TL;DR Executive Impact Pill (for recruiters & quick scan) -->
+            <div class="mb-3.5 p-3 rounded-tech bg-canvas/80 border border-telemetry/20 border-l-2 border-l-telemetry flex items-start gap-2.5">
+              <span class="font-mono text-xs font-bold text-telemetry flex-shrink-0 tracking-wider">TL;DR:</span>
+              <p class="text-xs sm:text-sm text-slate-200 leading-snug font-sans font-medium">
+                {project.tldr}
+              </p>
+            </div>
+
+            <!-- Deep Technical Description -->
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
               {project.description}
             </p>
 
-            <!-- Tags -->
+            <!-- Tags (Tamaño aumentado a text-xs para legibilidad movil) -->
             <div class="flex flex-wrap gap-1.5 mb-5">
               {project.tags.map((tag) => (
-                <span class="font-mono text-[11px] px-2 py-0.5 rounded-tech-sm bg-canvas text-slate-400 border border-canvas-border">
+                <span class="font-mono text-xs px-2.5 py-1 rounded-tech-sm bg-canvas text-slate-300 border border-canvas-border">
                   {tag}
                 </span>
               ))}
@@ -165,44 +180,44 @@ const projects: Project[] = [
               <button
                 type="button"
                 data-toggle-why={project.id}
-                class="flex items-center justify-between w-full font-mono text-xs text-telemetry hover:text-white py-1 transition-colors"
+                class="flex items-center justify-between w-full font-mono text-xs text-telemetry hover:text-white py-1.5 transition-colors"
                 aria-expanded="false"
                 aria-controls={`rationale-${project.id}`}
               >
-                <span class="flex items-center gap-1.5 font-bold">
-                  <span class="toggle-icon text-[11px]">[+]</span>
+                <span class="flex items-center gap-2 font-bold">
+                  <span class="toggle-icon text-xs">[+]</span>
                   <span>Por qué se diseñó así (decisiones técnicas)</span>
                 </span>
-                <span class="text-[10px] text-slate-500 uppercase">Detalles</span>
+                <span class="text-xs text-slate-400 uppercase font-semibold">Detalles</span>
               </button>
 
               <div
                 id={`rationale-${project.id}`}
-                class="hidden mt-3 p-4 rounded-tech bg-canvas border border-canvas-border space-y-3 font-mono text-xs"
+                class="hidden mt-3 p-4 rounded-tech bg-canvas border border-canvas-border space-y-4 font-mono text-xs"
               >
                 <div>
-                  <div class="text-[11px] font-bold text-telemetry mb-0.5">
+                  <div class="text-xs font-bold text-telemetry mb-1">
                     1. ¿Por qué nació esta solución?
                   </div>
-                  <p class="text-slate-300 text-[11px] leading-normal font-sans">
+                  <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans">
                     {project.rationale.origin}
                   </p>
                 </div>
 
                 <div>
-                  <div class="text-[11px] font-bold text-domain-audio mb-0.5">
+                  <div class="text-xs font-bold text-domain-audio mb-1">
                     2. ¿Por qué esta arquitectura y stack?
                   </div>
-                  <p class="text-slate-300 text-[11px] leading-normal font-sans">
+                  <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans">
                     {project.rationale.decisions}
                   </p>
                 </div>
 
                 <div>
-                  <div class="text-[11px] font-bold text-slate-200 mb-0.5">
+                  <div class="text-xs font-bold text-slate-200 mb-1">
                     3. ¿Por qué se muestra en este portafolio?
                   </div>
-                  <p class="text-slate-400 text-[11px] leading-normal font-sans">
+                  <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-sans">
                     {project.rationale.whyShown}
                   </p>
                 </div>
