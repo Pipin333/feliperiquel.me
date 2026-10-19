@@ -262,7 +262,11 @@ export const POST: APIRoute = async ({ request }) => {
     if (resendApiKey) {
       try {
         const resend = new Resend(resendApiKey);
-        const senderFrom = import.meta.env.RESEND_FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'Felipe Riquelme <contacto@feliperiquel.me>';
+        const configuredFrom = import.meta.env.RESEND_FROM_EMAIL || process.env.RESEND_FROM_EMAIL || 'no-reply@mail.feliperiquel.me';
+        // Formatear remitente limpio para no-reply
+        const senderFrom = configuredFrom.includes('<')
+          ? configuredFrom
+          : `Felipe Riquelme <${configuredFrom}>`;
 
         // Email 1: Notification to Felipe
         const notifyResult = await resend.emails.send({
@@ -450,8 +454,9 @@ ${sanitizedMessage}
 
                 <!-- Terminal Footer Status -->
                 <tr>
-                  <td style="background-color: #07090E; padding: 12px 24px; border-top: 1px solid #1B2338; font-family: 'Fira Code', monospace; font-size: 10px; color: #475569; text-align: center;">
-                    Este es un acuse de recibo automatico enviado desde feliperiquel.me
+                  <td style="background-color: #07090E; padding: 14px 24px; border-top: 1px solid #1B2338; font-family: 'Fira Code', monospace; font-size: 10px; color: #475569; text-align: center; line-height: 1.5;">
+                    <div>Este mensaje es automatizado. No responder a esta casilla o falleceras.</div>
+                    <div style="color: #334155; margin-top: 4px;">feliperiquel.me &bull; sistema de telemetria directa</div>
                   </td>
                 </tr>
 
