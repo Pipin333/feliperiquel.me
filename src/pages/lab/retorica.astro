@@ -11,7 +11,79 @@ import Icon from '../../components/Icon.astro';
 >
   <Header />
 
-  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+  <!-- Fondo Ambiental: Siluetas de Molinos de Viento (Don Quijote) & Paisaje Manchego Medieval -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none opacity-25" aria-hidden="true">
+    <!-- Resplandor central púrpura real -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-gradient-to-b from-purple-900/30 via-purple-950/15 to-transparent blur-3xl"></div>
+
+    <!-- Siluetas de Molinos de Viento en el horizonte inferior -->
+    <svg class="absolute bottom-0 left-0 right-0 w-full h-80 text-purple-600/40" viewBox="0 0 1440 320" fill="currentColor">
+      <!-- Colina de fondo -->
+      <path d="M0,270 C320,230 600,285 920,240 C1200,210 1350,250 1440,260 L1440,320 L0,320 Z" class="text-purple-950/60" fill="currentColor" />
+      <!-- Colina frontal -->
+      <path d="M0,290 C250,265 550,295 850,270 C1150,245 1380,280 1440,285 L1440,320 L0,320 Z" class="text-purple-900/40" fill="currentColor" />
+
+      <!-- Molino 1 (Izquierda, grande) -->
+      <g transform="translate(140, 130)">
+        <!-- Cuerpo del molino -->
+        <path d="M30,140 L45,35 L75,35 L90,140 Z" class="text-purple-800/70" />
+        <!-- Techo cónico -->
+        <polygon points="40,35 60,8 80,35" class="text-amber-500/50" />
+        <!-- Puerta en arco y ventana -->
+        <path d="M55,140 L55,122 A5,5 0 0,1 65,122 L65,140 Z" class="text-purple-950" />
+        <circle cx="60" cy="55" r="3.5" class="text-amber-400/70" />
+        <!-- Eje y Aspas con enrejado clásico de Don Quijote -->
+        <g transform="translate(60, 28) rotate(-12)">
+          <circle cx="0" cy="0" r="4.5" class="text-amber-400/90" />
+          <!-- Aspa Superior -->
+          <line x1="0" y1="0" x2="0" y2="-75" stroke="currentColor" stroke-width="2.5" class="text-purple-400/80" />
+          <rect x="2" y="-70" width="14" height="60" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/70" />
+          <!-- Aspa Inferior -->
+          <line x1="0" y1="0" x2="0" y2="75" stroke="currentColor" stroke-width="2.5" class="text-purple-400/80" />
+          <rect x="-16" y="10" width="14" height="60" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/70" />
+          <!-- Aspa Derecha -->
+          <line x1="0" y1="0" x2="75" y2="0" stroke="currentColor" stroke-width="2.5" class="text-purple-400/80" />
+          <rect x="10" y="2" width="60" height="14" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/70" />
+          <!-- Aspa Izquierda -->
+          <line x1="0" y1="0" x2="-75" y2="0" stroke="currentColor" stroke-width="2.5" class="text-purple-400/80" />
+          <rect x="-70" y="-16" width="60" height="14" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/70" />
+        </g>
+      </g>
+
+      <!-- Molino 2 (Derecha, distancia media) -->
+      <g transform="translate(1140, 150) scale(0.75)">
+        <path d="M30,140 L45,35 L75,35 L90,140 Z" class="text-purple-800/60" />
+        <polygon points="40,35 60,8 80,35" class="text-amber-600/40" />
+        <path d="M55,140 L55,122 A5,5 0 0,1 65,122 L65,140 Z" class="text-purple-950" />
+        <g transform="translate(60, 28) rotate(32)">
+          <circle cx="0" cy="0" r="4.5" class="text-amber-400/90" />
+          <line x1="0" y1="0" x2="0" y2="-70" stroke="currentColor" stroke-width="2" class="text-purple-400/70" />
+          <rect x="2" y="-65" width="12" height="55" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/60" />
+          <line x1="0" y1="0" x2="0" y2="70" stroke="currentColor" stroke-width="2" class="text-purple-400/70" />
+          <rect x="-14" y="10" width="12" height="55" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/60" />
+          <line x1="0" y1="0" x2="70" y2="0" stroke="currentColor" stroke-width="2" class="text-purple-400/70" />
+          <rect x="10" y="2" width="55" height="12" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/60" />
+          <line x1="0" y1="0" x2="-70" y2="0" stroke="currentColor" stroke-width="2" class="text-purple-400/70" />
+          <rect x="-65" y="-14" width="55" height="12" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3" class="text-amber-300/60" />
+        </g>
+      </g>
+
+      <!-- Molino 3 (Fondo distante, escala pequeña) -->
+      <g transform="translate(820, 185) scale(0.48)">
+        <path d="M30,140 L45,35 L75,35 L90,140 Z" class="text-purple-900/60" />
+        <polygon points="40,35 60,8 80,35" class="text-amber-700/40" />
+        <g transform="translate(60, 28) rotate(18)">
+          <circle cx="0" cy="0" r="3.5" class="text-amber-500/70" />
+          <line x1="0" y1="0" x2="0" y2="-65" stroke="currentColor" stroke-width="2" class="text-purple-400/50" />
+          <line x1="0" y1="0" x2="0" y2="65" stroke="currentColor" stroke-width="2" class="text-purple-400/50" />
+          <line x1="0" y1="0" x2="65" y2="0" stroke="currentColor" stroke-width="2" class="text-purple-400/50" />
+          <line x1="0" y1="0" x2="-65" y2="0" stroke="currentColor" stroke-width="2" class="text-purple-400/50" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs text-purple-300/80 mb-8 font-serif" aria-label="Ruta de navegación">
       <a href="/" class="hover:text-amber-300 transition-colors">Inicio</a>
