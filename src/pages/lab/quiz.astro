@@ -1,0 +1,65 @@
+---
+// src/pages/lab/quiz.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout
+  title="Quiz In-House | Temporalmente en Mantenimiento"
+  description="Quiz In-House se encuentra temporalmente fuera de servicio por mantenimiento y actualización de contenidos."
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 font-mono text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <a href="/lab" class="hover:text-white transition-colors">Lab</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-domain-ai font-medium" aria-current="page">Quiz In-House</span>
+    </nav>
+
+    <!-- Maintenance Notice Container -->
+    <div class="spotlight-card bg-canvas-surface border border-canvas-border rounded-tech p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-2xl">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono text-xs mb-6">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span>Módulo en Mantenimiento Temporal</span>
+      </div>
+
+      <div class="text-4xl mb-4" aria-hidden="true">
+        🛠️
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-display font-bold text-white mb-3">
+        Quiz In-House está temporalmente fuera de servicio
+      </h1>
+
+      <p class="text-sm text-slate-300 leading-relaxed font-sans max-w-lg mx-auto mb-8">
+        Estamos reestructurando el banco de preguntas, optimizando la latencia del cliente y afinando las métricas de rachas. Esta herramienta volverá a estar disponible próximamente.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/lab"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Volver al Laboratorio</span>
+        </a>
+
+        <a
+          href="/#proyectos"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-tech font-mono text-xs font-semibold text-slate-300 bg-canvas border border-canvas-border hover:border-slate-500 hover:text-white transition-all duration-140"
+        >
+          <span>Ver proyectos</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

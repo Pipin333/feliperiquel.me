@@ -1,21 +1,33 @@
 # feliperiquel.me
 
-Sitio web personal y puerta de entrada comercial (*gateway*) para servicios de desarrollo y renovación web de **Felipe Riquelme**. Construido sobre **Astro**, **Tailwind CSS** y optimizado para una puntuación de 100/100 en Google Lighthouse, accesibilidad WCAG 2.2 AA y costo \$0 de mantenimiento de servidor.
+Portafolio de ingeniería de software y laboratorio interactivo de **Felipe Riquelme**. Construido sobre **Astro**, **Tailwind CSS** y configurado con `@astrojs/vercel` para despliegue estático de alto rendimiento, accesibilidad WCAG 2.2 AA y 100/100 en Core Web Vitals.
 
 ---
 
-## 🎁 Integraciones del GitHub Student Developer Pack
+## 🧪 El Laboratorio (`/lab`)
 
-Este proyecto aprovecha beneficios clave incluidos en el **GitHub Student Developer Pack**:
+El sitio integra un playground de micro-aplicaciones y experimentos que se ejecutan directamente en el navegador:
 
-1. **Dominio `.me` Gratuito (Namecheap):**
-   - 1 año de registro gratuito para `feliperiquel.me` + protección de privacidad WhoisGuard y SSL.
-2. **Hosting Estático Global (GitHub Pages):**
-   - Alojamiento en servidores CDN globales de GitHub con HTTPS automático y despliegue continuo mediante GitHub Actions.
-3. **Stripe (Pasarela de Pagos Segura):**
-   - Exención de comisiones en los primeros \$1,000 USD procesados para cobro de señas, proyectos o catálogos sin recargos.
-4. **Testmail.app (Testing Transaccional):**
-   - Entorno de pruebas automatizado para garantizar la entregabilidad de correos y formularios sin caer en carpetas de spam.
+1. **SonicRip Studio (`/lab/sonicrip`):**
+   - Procesador de audio en vivo con **Ecualizador Paramétrico de 8 Bandas** (`BiquadFilterNode`), distorsión digital Lo-Fi Bitcrusher, analizador de espectro FFT con `requestAnimationFrame` y generador de comandos por lotes para `yt-dlp`.
+2. **Retórica y Descalabro (`/lab/retorica`):**
+   - Transmutador ontológico de lenguaje cotidiano hacia prosa decimonónica, cancillería diplomática y culteranismo barroco, con simulación de teléfono descompuesto multilingüe vía MyMemory API.
+3. **Cuánto Rinde (`/lab/copete` - Repo: `calculadoracopete`):**
+   - Optimizador logístico y presupuestario para eventos y juntas en Chile. Cálculo de destilados, cerveza, mixers y hielo con cuota por persona en \$ CLP y exportación formateada a WhatsApp.
+4. **Quiz In-House (`/lab/quiz`):**
+   - Motor de trivia interactiva en tiempo real sin anuncios ni paywalls con temporizador de cuenta regresiva, racha de puntos y generador de retos.
+
+---
+
+## ⚙️ Proyectos de Software & Homelab
+
+El portafolio expone herramientas reales y proyectos de código abierto:
+
+- **Toodles:** Bot de Discord para streaming de audio desde YouTube y sistema de recomendación musical inteligente con ML (similitud del coseno sobre features de audio).
+- **Whatsarr:** Interfaz conversacional en WhatsApp para solicitudes y monitoreo multimedia integrado a la suite Sonarr, Radarr y qBittorrent.
+- **UniCalendar AI:** Aplicación web integral para ingesta curricular multiformato (PDF, Word, Canvas LMS), protección de recesos institucionales y sincronización con Google Calendar.
+- **JD Watch Controller:** Captura de telemetría inercial (acelerómetro y giroscopio a 50Hz) y hápticos en Wear OS para emulación de controles de videojuegos.
+- **AD-BSA:** Metaheurística continua de optimización bioinspirada (IEEE CEC 2020) con barreras cosecantes.
 
 ---
 
@@ -25,7 +37,7 @@ El proyecto está 100% containerizado con Docker multi-stage y usuario no privil
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/feliperiquel.me.git
+git clone https://github.com/Pipin333/feliperiquel.me.git
 cd feliperiquel.me
 
 # 2. Copiar variables de entorno
@@ -52,59 +64,70 @@ npm install
 # Iniciar servidor de desarrollo en vivo
 npm run dev
 
-# Compilar para producción
+# Compilar para producción (Vercel Ready)
 npm run build
 
-# Previsualizar el build de producción
+# Previsualizar el build estático
 npm run preview
 ```
-
----
-
-## 🌐 Configuración del Dominio en Namecheap para GitHub Pages
-
-Para vincular tu dominio `feliperiquel.me` canjeado en Namecheap con este repositorio:
-
-1. En tu repositorio de GitHub, ve a **Settings > Pages**.
-2. En **Custom domain**, escribe `feliperiquel.me` y activa **Enforce HTTPS**.
-3. En el panel de control de **Namecheap** (Advanced DNS), crea los siguientes registros:
-
-| Tipo | Host | Valor / Destino | TTL |
-| :--- | :--- | :--- | :--- |
-| **A Record** | `@` | `185.199.108.153` | Automático |
-| **A Record** | `@` | `185.199.109.153` | Automático |
-| **A Record** | `@` | `185.199.110.153` | Automático |
-| **A Record** | `@` | `185.199.111.153` | Automático |
-| **CNAME** | `www` | `tu-usuario.github.io` | Automático |
-
-*(El archivo [`public/CNAME`](./public/CNAME) ya está incluido en el repositorio para que GitHub Pages mantenga tu dominio en cada despliegue).*
 
 ---
 
 ## 🛠️ Estructura del Proyecto
 
 ```text
-├── .github/workflows/deploy.yml   # Despliegue automático a GitHub Pages
-├── public/
-│   ├── CNAME                     # Dominio personalizado para GitHub Pages
-│   └── favicon.svg               # Identidad visual e icono SVG
 ├── src/
 │   ├── components/
-│   │   ├── Header.astro          # Navegación accesible, estado de disponibilidad
-│   │   ├── Hero.astro            # Propuesta de valor, métricas y CTAs
-│   │   ├── PainPoints.astro      # Diagnóstico comparativo (problemas vs soluciones)
-│   │   ├── Services.astro        # 3 paquetes de servicios detallados
-│   │   ├── WorkShowcase.astro    # Casos de estudio y resultados verificados
-│   │   ├── StudentPackPerks.astro # Infraestructura Stripe, Testmail y Edge
-│   │   ├── Process.astro         # Metodología de trabajo en 4 pasos
-│   │   ├── InteractiveEstimator.astro # Simulador en tiempo real con WhatsApp
-│   │   ├── ContactGateway.astro  # Formulario accesible y botón flotante
-│   │   └── Footer.astro          # Créditos, enlaces y derechos
+│   │   ├── Header.astro          # Navegación accesible y estado de disponibilidad
+│   │   ├── Hero.astro            # Perfil Software Engineer & Builder y pilares técnicos
+│   │   ├── LabShowcase.astro     # Destacado interactivo de las herramientas del /lab
+│   │   ├── WorkShowcase.astro    # Casos de estudio y repositorios de código abierto
+│   │   ├── AboutMe.astro         # Perfil, filosofía de ingeniería y matriz de tecnologías
+│   │   ├── DynamicDock.astro     # Isla dinámica y consola interactiva flotante (CLI)
+│   │   ├── ContactGateway.astro  # Canales directos y formulario conectado a /api/contact
+│   │   └── Footer.astro          # Navegación, políticas y enlaces de pie de página
+│   ├── pages/
+│   │   ├── index.astro           # Portafolio principal orientado a software y lab
+│   │   ├── 404.astro             # Terminal interactiva de recuperación ante errores 404
+│   │   ├── privacidad.astro      # Política de privacidad y tratamiento de datos
+│   │   ├── terminos.astro        # Términos y condiciones de uso del software
+│   │   ├── api/
+│   │   │   └── contact.ts        # Endpoint serverless: rate limiting, Supabase y Resend
+│   │   └── lab/
+│   │       ├── index.astro       # Hub central del Laboratorio & Playground
+│   │       ├── retorica.astro    # Transmutador ontológico de prosa técnica
+│   │       ├── copete.astro      # Cuánto Rinde (optimizador de insumos, repo: calculadoracopete)
+│   │       ├── quiz.astro        # Vista de mantenimiento temporal
+│   │       └── sonicrip.astro    # SonicRip Studio (8-band EQ & batch yt-dlp)
 │   ├── layouts/
-│   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD Schema
+│   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD y contexto para agentes LLM
 │   └── styles/
-│       └── global.css            # Tokens Tailwind, fluid typography, motion
+│       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
+├── scripts/
+│   └── supabase-schema.sql       # Esquema PostgreSQL con tabla contact_messages y RLS
+├── public/
+│   ├── og-image.png              # Tarjeta social de previsualización 1200x630
+│   ├── sitemap.xml               # Mapa canónico del sitio
+│   ├── robots.txt                # Directivas de rastreo con exclusiones de seguridad
+│   └── llms.txt                  # Manifiesto estructurado para agentes de inteligencia artificial
+├── astro.config.mjs              # Configuración de Astro con @astrojs/vercel
 ├── Dockerfile                    # Multi-stage production container
 ├── docker-compose.yml            # Orquestación lista para correr
 └── package.json                  # Dependencias y scripts
 ```
+
+---
+
+## 🔐 Variables de Entorno
+
+Copia el archivo `.env.example` a `.env` para desarrollo local o configúralas en tu panel de Vercel:
+
+| Variable | Propósito | Requerido |
+| :--- | :--- | :--- |
+| `PUBLIC_SITE_URL` | URL pública canónica (`https://feliperiquel.me`) | Sí |
+| `SUPABASE_URL` | URL de tu proyecto PostgreSQL en Supabase | Opcional (persistencias) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Clave de servicio para inserción segura en Supabase | Opcional (persistencias) |
+| `RESEND_API_KEY` | Clave API de Resend para notificaciones y auto-mailer | Opcional (correos) |
+| `RESEND_FROM_EMAIL` | Remitente verificado en Resend | Opcional (default provisto) |
+| `CONTACT_NOTIFICATION_EMAIL` | Correo donde recibirás alertas de nuevos mensajes | Opcional (default institucional) |
+| `PUBLIC_WHATSAPP_NUMBER` | Número para el enlace directo de chat en WhatsApp | Opcional |

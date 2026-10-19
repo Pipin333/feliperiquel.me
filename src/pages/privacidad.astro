@@ -1,0 +1,102 @@
+---
+// src/pages/privacidad.astro
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Política de Privacidad | Felipe Riquelme"
+  description="Política de privacidad, protección de datos y transparencia en el procesamiento de información para feliperiquel.me y sus micro-aplicaciones."
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 font-mono text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-telemetry font-medium" aria-current="page">Política de Privacidad</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-12 border-b border-canvas-border pb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-4">
+        <span>🛡️ Transparencia & Datos</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-4">
+        Política de Privacidad
+      </h1>
+      <p class="font-mono text-xs text-slate-400">
+        Última actualización: 19 de octubre de 2026 // Versión 1.1
+      </p>
+    </header>
+
+    <!-- Content Sections -->
+    <article class="space-y-10 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-telemetry">
+          1. Declaración de Principios y Cero Rastreo Publicitario
+        </h2>
+        <p class="mb-3">
+          En <strong class="text-white">feliperiquel.me</strong> la privacidad no es un documento decorativo, sino un principio de diseño arquitectónico. Este sitio web no comercializa información personal, no emplea redes de rastreo entre sitios (ad-tracking), no aloja banners publicitarios invasivos ni transfiere datos de comportamiento a corredores de datos (data brokers).
+        </p>
+        <p>
+          La navegación es libre, abierta y respetuosa de las libertades digitales de cada visitante.
+        </p>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-audio">
+          2. Procesamiento Cliente en El Laboratorio (/lab)
+        </h2>
+        <p class="mb-3">
+          Las herramientas interactivas alojadas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">El Laboratorio</a> (como SonicRip Studio, Retórica y Descalabro y Calculadora de Copete) han sido concebidas para ejecutarse prioritariamente del lado del cliente (<em class="text-slate-200">client-side</em>) a través de las APIs nativas del navegador (Web Audio API, JavaScript y TypeScript).
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-300 font-mono">
+          <li><strong>Audio DSP (SonicRip Studio):</strong> Los archivos de audio que cargas para ecualización o análisis FFT se procesan estrictamente en la memoria RAM de tu dispositivo. No son subidos ni almacenados en servidores externos.</li>
+          <li><strong>Calculadora Logística:</strong> Los presupuestos, listas de asistentes y estimaciones de bebidas se calculan localmente y sólo se formatean para que tú decidas compartirlos voluntariamente en tus canales privados.</li>
+          <li><strong>Procesamiento de Texto:</strong> Las entradas de texto para experimentos lingüísticos se gestionan de forma efímera durante tu sesión activa.</li>
+        </ul>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-ai">
+          3. Pasarela de Contacto y Comunicaciones
+        </h2>
+        <p class="mb-3">
+          Si decides utilizar el formulario de la sección de contacto o escribirme directamente por correo electrónico (<code class="font-mono text-xs text-telemetry">f.riquelmesalvo@uandresbello.edu</code>), la información suministrada (tu nombre, dirección de correo y contenido del mensaje) se empleará única y exclusivamente para sostener una comunicación directa y profesional contigo.
+        </p>
+        <p>
+          Bajo ninguna circunstancia tu dirección de correo electrónico será incorporada a listas masivas de spam o divulgada a terceros.
+        </p>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-white">
+          4. Integraciones y Proyectos de Código Abierto
+        </h2>
+        <p class="mb-3">
+          Los proyectos de software enlazados desde este portafolio (como UniCalendar AI, Toodles, Whatsarr o JD Watch Controller) cuentan con repositorios de código abierto donde cada usuario puede auditar de forma transparente el flujo de datos.
+        </p>
+        <p>
+          En particular, las integraciones que utilizan protocolos OAuth o tokens personales (por ejemplo, Google Calendar API o Canvas LMS API en proyectos como UniCalendar) gestionan las credenciales con cifrado o en el almacenamiento de sesión del usuario, garantizando que el desarrollador no almacene contraseñas ni acceda a cuentas privadas sin consentimiento expreso.
+        </p>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-algo">
+          5. Derechos del Usuario y Normativa Aplicable
+        </h2>
+        <p class="mb-3">
+          De conformidad con la Ley N° 19.628 de la República de Chile sobre Protección de la Vida Privada y los estándares éticos internacionales de protección de datos, tienes derecho en todo momento a solicitar información sobre cualquier interacción que hayas sostenido con este sitio, así como a pedir la actualización, rectificación o eliminación total de tus comunicaciones.
+        </p>
+        <p>
+          Para ejercer cualquiera de estos derechos, basta con enviar una solicitud formal al correo <code class="font-mono text-xs text-telemetry">f.riquelmesalvo@uandresbello.edu</code> indicando el requerimiento en el asunto.
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,1018 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout
+  title="SonicRip | Suite DSP con Ecualizador de 8 Bandas & Audio Lab"
+  description="Herramienta interactiva de procesamiento de audio en el navegador: ecualizador gráfico paramétrico de 8 bandas con presets, efectos Lo-Fi / Bitcrusher, reverberación y generador de comandos batch de alta fidelidad."
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <a href="/lab" class="hover:text-white transition-colors">Lab</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-brand-400 font-medium" aria-current="page">SonicRip Studio</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-10">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-sky-500/30 bg-sky-500/10 text-sky-300 font-mono text-xs font-semibold">
+          <span>🎵 Web Audio DSP • EQ 8 Bandas • Lo-Fi & Batch</span>
+        </div>
+        <a
+          href="https://github.com/Pipin333/Toodles"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-sky-400/50 transition-colors"
+          title="Ver ecosistema de audio Toodles en GitHub"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>Ecosistema: Toodles</span>
+          <svg class="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
+        SonicRip Studio & Audio Lab
+      </h1>
+      <p class="text-base text-slate-300 leading-relaxed max-w-3xl">
+        Carga cualquier canción o prueba con el sintetizador en memoria. Ecualiza con 8 bandas paramétricas, aplica texturas Lo-Fi / Bitcrusher o genera comandos por lotes para tus playlists.
+      </p>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="flex items-center gap-3 p-1.5 rounded-2xl bg-slate-900 border border-slate-800 mb-8 max-w-md">
+      <button
+        id="tab-dsp-btn"
+        type="button"
+        class="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow"
+      >
+        🎛️ DSP & EQ de 8 Bandas
+      </button>
+      <button
+        id="tab-batch-btn"
+        type="button"
+        class="flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white"
+      >
+        📦 Extractor & Batch yt-dlp
+      </button>
+    </div>
+
+    <!-- VIEW 1: DSP STUDIO & FX (DEFAULT) -->
+    <section id="view-dsp" class="space-y-8">
+      <!-- File dropzone & Visualizer Card -->
+      <div class="p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/70 shadow-2xl space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="w-full sm:w-auto">
+            <label
+              for="audio-file-input"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 cursor-pointer transition-all hover:border-sky-500/50 shadow-sm"
+            >
+              <span>📁 Cargar archivo de audio (.mp3, .wav, .ogg, .flac)</span>
+              <input id="audio-file-input" type="file" accept="audio/*" class="sr-only" />
+            </label>
+            <button
+              id="load-demo-btn"
+              type="button"
+              class="ml-0 sm:ml-3 mt-2 sm:mt-0 text-xs text-sky-400 hover:text-sky-300 underline font-medium"
+            >
+              o probar con tono sintetizado demo
+            </button>
+          </div>
+
+          <span id="audio-file-name" class="text-xs font-mono text-slate-400 truncate max-w-xs">
+            Sin archivo cargado
+          </span>
+        </div>
+
+        <!-- Realtime Audio Visualizer Canvas -->
+        <div class="relative w-full h-32 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center">
+          <canvas id="visualizer-canvas" class="w-full h-full block"></canvas>
+          <div id="visualizer-placeholder" class="absolute inset-0 flex items-center justify-center text-xs text-slate-600 font-mono">
+            Presiona reproducir para activar el osciloscopio en tiempo real
+          </div>
+        </div>
+
+        <!-- Transport / Player Controls -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              id="play-pause-btn"
+              type="button"
+              disabled
+              class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-sky-600 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-lg font-bold shadow-glow transition-all active:scale-95"
+              aria-label="Reproducir o pausar audio"
+            >
+              <span id="play-icon">▶</span>
+            </button>
+            <button
+              id="stop-btn"
+              type="button"
+              disabled
+              class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-slate-300 hover:text-white transition-all text-xs"
+              aria-label="Detener reproducción"
+            >
+              ⏹
+            </button>
+            <span id="time-display" class="font-mono text-xs text-slate-400 ml-2">
+              00:00 / 00:00
+            </span>
+          </div>
+
+          <!-- Master Volume -->
+          <div class="flex items-center gap-3 w-full sm:w-64">
+            <span class="text-xs text-slate-400">Volumen:</span>
+            <input
+              id="master-volume"
+              type="range"
+              min="0"
+              max="1.5"
+              step="0.05"
+              value="1.0"
+              class="flex-1 h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-sky-500"
+            />
+            <span id="volume-val" class="font-mono text-xs text-slate-300 w-10 text-right">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8-BAND GRAPHIC PARAMETRIC EQUALIZER RACK -->
+      <article class="p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span>🎚️</span> Ecualizador Gráfico Paramétrico de 8 Bandas
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Control quirúrgico de frecuencias con filtros Biquad en tiempo real (-15 dB a +15 dB).
+            </p>
+          </div>
+
+          <!-- Presets Buttons Bar -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] text-slate-500 uppercase font-semibold mr-1">Presets:</span>
+            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="flat">
+              Plano (0 dB)
+            </button>
+            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="bass">
+              Bass Boost 🔊
+            </button>
+            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vocal">
+              Voces Claras 🎙️
+            </button>
+            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="vshape">
+              V-Shape / Club ⚡
+            </button>
+            <button type="button" class="eq-preset-btn text-xs px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors" data-preset="lofi">
+              Lo-Fi Vintage 📻
+            </button>
+          </div>
+        </div>
+
+        <!-- 8 Vertical Fader Strips -->
+        <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 sm:gap-4 pt-2">
+          <!-- Band 1: 60 Hz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">60 Hz</span>
+            <span class="text-[10px] text-slate-500">Sub-bass</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-0"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-0" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 2: 150 Hz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">150 Hz</span>
+            <span class="text-[10px] text-slate-500">Bajos</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-1"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-1" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 3: 400 Hz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">400 Hz</span>
+            <span class="text-[10px] text-slate-500">Medio-Bajo</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-2"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-2" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 4: 1 kHz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">1 kHz</span>
+            <span class="text-[10px] text-slate-500">Medios</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-3"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-3" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 5: 2.5 kHz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">2.5 kHz</span>
+            <span class="text-[10px] text-slate-500">Medio-Alto</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-4"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-4" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 6: 5 kHz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">5 kHz</span>
+            <span class="text-[10px] text-slate-500">Presencia</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-5"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-5" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 7: 10 kHz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">10 kHz</span>
+            <span class="text-[10px] text-slate-500">Brillo</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-6"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-6" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+
+          <!-- Band 8: 15 kHz -->
+          <div class="flex flex-col items-center p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2">
+            <span class="text-[11px] font-bold text-sky-400 font-mono">15 kHz</span>
+            <span class="text-[10px] text-slate-500">Aire</span>
+            <div class="h-32 flex items-center justify-center py-2">
+              <input
+                id="eq-band-7"
+                type="range"
+                min="-15"
+                max="15"
+                value="0"
+                class="eq-slider w-28 h-2 bg-slate-900 rounded-lg appearance-none cursor-pointer accent-sky-500 -rotate-90"
+              />
+            </div>
+            <span id="eq-val-7" class="text-xs font-mono font-bold text-slate-300">0 dB</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- FX RACK: Lo-Fi + Pitch/Reverb -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Module: Bitcrusher & Lo-Fi Texture -->
+        <article class="p-6 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>🕹️</span> Lo-Fi & Bitcrusher Digital
+            </h3>
+            <span class="text-[11px] text-amber-400 font-mono">8-Bit Sound</span>
+          </div>
+
+          <!-- Bit depth / distortion -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="bitcrush-amount" class="font-medium text-slate-300">Degradación de Bits:</label>
+              <span id="bitcrush-val" class="font-mono text-amber-400 font-bold">Desactivado</span>
+            </div>
+            <input
+              id="bitcrush-amount"
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value="0"
+              class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-amber-500"
+            />
+          </div>
+
+          <!-- Lowpass filter -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="filter-cutoff" class="font-medium text-slate-300">Filtro Paso Bajo (Cutoff):</label>
+              <span id="filter-cutoff-val" class="font-mono text-amber-400 font-bold">20 kHz (Abierto)</span>
+            </div>
+            <input
+              id="filter-cutoff"
+              type="range"
+              min="300"
+              max="20000"
+              step="100"
+              value="20000"
+              class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-amber-500"
+            />
+            <span class="text-[10px] text-slate-500 block">Efecto "música sonando en otra habitación"</span>
+          </div>
+        </article>
+
+        <!-- Module: Pitch, Speed & Reverb -->
+        <article class="p-6 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>🌌</span> Espacio, Tempo & Reverb
+            </h3>
+            <span class="text-[11px] text-purple-400 font-mono">Slowed / Nightcore</span>
+          </div>
+
+          <!-- Speed / Pitch -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="playback-speed" class="font-medium text-slate-300">Velocidad / Pitch:</label>
+              <span id="playback-speed-val" class="font-mono text-purple-400 font-bold">1.0x (Normal)</span>
+            </div>
+            <input
+              id="playback-speed"
+              type="range"
+              min="0.5"
+              max="1.5"
+              step="0.05"
+              value="1.0"
+              class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-purple-500"
+            />
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>0.5x (Slowed)</span>
+              <span>1.0x</span>
+              <span>1.5x (Nightcore)</span>
+            </div>
+          </div>
+
+          <!-- Reverb Delay -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs">
+              <label for="reverb-mix" class="font-medium text-slate-300">Espacialidad / Reverb:</label>
+              <span id="reverb-mix-val" class="font-mono text-purple-400 font-bold">0%</span>
+            </div>
+            <input
+              id="reverb-mix"
+              type="range"
+              min="0"
+              max="0.8"
+              step="0.05"
+              value="0"
+              class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-purple-500"
+            />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- VIEW 2: BATCH DOWNLOADER & PLAYLIST CONVERTER -->
+    <section id="view-batch" class="hidden space-y-8">
+      <div class="flex flex-wrap gap-2 mb-4">
+        <button
+          type="button"
+          class="demo-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text={"Daft Punk - Around the World\nGorillaz - Feel Good Inc\nJustice - Genesis\nM83 - Midnight City\nMGMT - Kids"}
+        >
+          🎧 Indie Electronic Hits (5 tracks)
+        </button>
+        <button
+          type="button"
+          class="demo-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text={"Los Prisioneros - Estrechez de Corazón\nLos Bunkers - Bailando Solo\nSoda Stereo - De Música Ligera\nCharly García - Demoliendo Hoteles"}
+        >
+          🎸 Rock Latino Clásico (4 tracks)
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
+          <div>
+            <div class="flex items-center justify-between gap-4 mb-3">
+              <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-400">
+                Pistas o Enlace de Entrada
+              </h2>
+              <button id="clear-input-btn" type="button" class="text-xs text-slate-500 hover:text-slate-300">
+                Limpiar
+              </button>
+            </div>
+
+            <textarea
+              id="track-input"
+              rows="7"
+              class="w-full rounded-xl bg-slate-950 border border-slate-800 p-4 font-mono text-xs text-slate-100 placeholder-slate-600 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors resize-y leading-relaxed"
+              placeholder="Pega aquí nombres de canciones (uno por línea, ej: 'Artista - Canción') o un enlace..."
+            >Daft Punk - Around the World
+Gorillaz - Feel Good Inc
+Justice - Genesis
+M83 - Midnight City
+MGMT - Kids</textarea>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+              <div>
+                <label for="audio-format" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                  Formato de Audio:
+                </label>
+                <select id="audio-format" class="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-xs text-slate-100 focus:border-sky-500">
+                  <option value="mp3" selected>MP3 (192 kbps - Estándar)</option>
+                  <option value="mp3_hq">MP3 (320 kbps - Alta fidelidad)</option>
+                  <option value="flac">FLAC (Lossless sin compresión)</option>
+                  <option value="m4a">M4A / AAC (Apple Friendly)</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="dest-folder" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                  Carpeta Destino en Disco:
+                </label>
+                <input id="dest-folder" type="text" value="D:/Musica" class="w-full rounded-xl bg-slate-950 border border-slate-800 p-2.5 text-xs text-slate-100 font-mono focus:border-sky-500" />
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-4">
+            <span id="track-count" class="text-xs text-slate-400 font-mono">5 canciones detectadas</span>
+            <button
+              id="generate-cmd-btn"
+              type="button"
+              class="inline-flex items-center justify-center px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-sky-600 to-brand-500 hover:from-sky-500 hover:to-brand-400 shadow-glow transition-all active:scale-[0.98]"
+            >
+              Generar Comando
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-6">
+          <div>
+            <div class="flex items-center justify-between gap-4 mb-3">
+              <h2 class="text-sm font-semibold uppercase tracking-wider text-sky-400">
+                Comando Terminal Listo para Copiar
+              </h2>
+              <span class="text-[11px] text-slate-500 font-mono">yt-dlp</span>
+            </div>
+
+            <textarea
+              id="generated-cmd"
+              readonly
+              rows="8"
+              class="w-full rounded-xl bg-slate-950 border border-slate-800/90 p-4 font-mono text-xs text-emerald-400 leading-relaxed resize-none focus:outline-none select-all"
+            ></textarea>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+            <button
+              id="copy-cmd-btn"
+              type="button"
+              class="px-4 py-2 rounded-lg text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 transition-colors shadow-glow"
+            >
+              <span id="copy-cmd-text">Copiar comando</span>
+            </button>
+            <button
+              id="download-m3u-btn"
+              type="button"
+              class="px-3 py-2 rounded-lg text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              Descargar .m3u
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // TAB SWITCHING LOGIC
+  const tabDspBtn = document.getElementById('tab-dsp-btn') as HTMLButtonElement;
+  const tabBatchBtn = document.getElementById('tab-batch-btn') as HTMLButtonElement;
+  const viewDsp = document.getElementById('view-dsp') as HTMLElement;
+  const viewBatch = document.getElementById('view-batch') as HTMLElement;
+
+  tabDspBtn?.addEventListener('click', () => {
+    tabDspBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
+    tabBatchBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
+    viewDsp.classList.remove('hidden');
+    viewBatch.classList.add('hidden');
+  });
+
+  tabBatchBtn?.addEventListener('click', () => {
+    tabBatchBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all bg-sky-600 text-white shadow-glow";
+    tabDspBtn.className = "flex-1 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-white";
+    viewBatch.classList.remove('hidden');
+    viewDsp.classList.add('hidden');
+  });
+
+  // ==========================================
+  // 8-BAND GRAPHIC PARAMETRIC EQ CONFIGURATION
+  // ==========================================
+  const EQ_SPECS = [
+    { freq: 60, type: 'lowshelf' as BiquadFilterType, label: '60 Hz' },
+    { freq: 150, type: 'peaking' as BiquadFilterType, label: '150 Hz' },
+    { freq: 400, type: 'peaking' as BiquadFilterType, label: '400 Hz' },
+    { freq: 1000, type: 'peaking' as BiquadFilterType, label: '1 kHz' },
+    { freq: 2500, type: 'peaking' as BiquadFilterType, label: '2.5 kHz' },
+    { freq: 5000, type: 'peaking' as BiquadFilterType, label: '5 kHz' },
+    { freq: 10000, type: 'peaking' as BiquadFilterType, label: '10 kHz' },
+    { freq: 15000, type: 'highshelf' as BiquadFilterType, label: '15 kHz' }
+  ];
+
+  const PRESETS: Record<string, number[]> = {
+    flat: [0, 0, 0, 0, 0, 0, 0, 0],
+    bass: [7, 6, 3, 0, -1, 0, 1, 2],
+    vocal: [-3, -2, 1, 4, 5, 3, 1, 0],
+    vshape: [6, 4, 0, -3, -1, 2, 5, 7],
+    lofi: [-6, -2, 2, 4, 1, -4, -8, -12]
+  };
+
+  let audioCtx: AudioContext | null = null;
+  let audioBuffer: AudioBuffer | null = null;
+  let sourceNode: AudioBufferSourceNode | null = null;
+  let isPlaying = false;
+  let startTime = 0;
+  let pauseOffset = 0;
+
+  // Audio Nodes
+  let eqFilters: BiquadFilterNode[] = [];
+  let cutoffFilter: BiquadFilterNode;
+  let waveShaper: WaveShaperNode;
+  let delayNode: DelayNode;
+  let delayGain: GainNode;
+  let masterGain: GainNode;
+  let analyser: AnalyserNode;
+
+  // DOM Elements - Player & DSP
+  const fileInput = document.getElementById('audio-file-input') as HTMLInputElement;
+  const loadDemoBtn = document.getElementById('load-demo-btn') as HTMLButtonElement;
+  const fileNameDisplay = document.getElementById('audio-file-name') as HTMLSpanElement;
+  const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
+  const playIcon = document.getElementById('play-icon') as HTMLSpanElement;
+  const stopBtn = document.getElementById('stop-btn') as HTMLButtonElement;
+  const timeDisplay = document.getElementById('time-display') as HTMLSpanElement;
+  const canvas = document.getElementById('visualizer-canvas') as HTMLCanvasElement;
+  const visualizerPlaceholder = document.getElementById('visualizer-placeholder') as HTMLDivElement;
+  const canvasCtx = canvas.getContext('2d');
+
+  // Sliders
+  const masterVolSlider = document.getElementById('master-volume') as HTMLInputElement;
+  const volumeVal = document.getElementById('volume-val') as HTMLSpanElement;
+
+  const bitcrushSlider = document.getElementById('bitcrush-amount') as HTMLInputElement;
+  const bitcrushVal = document.getElementById('bitcrush-val') as HTMLSpanElement;
+  const cutoffSlider = document.getElementById('filter-cutoff') as HTMLInputElement;
+  const cutoffVal = document.getElementById('filter-cutoff-val') as HTMLSpanElement;
+
+  const speedSlider = document.getElementById('playback-speed') as HTMLInputElement;
+  const speedVal = document.getElementById('playback-speed-val') as HTMLSpanElement;
+  const reverbSlider = document.getElementById('reverb-mix') as HTMLInputElement;
+  const reverbVal = document.getElementById('reverb-mix-val') as HTMLSpanElement;
+
+  function initAudioNodes() {
+    if (!audioCtx) {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      audioCtx = new AudioCtx();
+    }
+
+    // 1. Build the 8 EQ Filters in Series
+    eqFilters = EQ_SPECS.map((spec, idx) => {
+      const filter = audioCtx!.createBiquadFilter();
+      filter.type = spec.type;
+      filter.frequency.value = spec.freq;
+      filter.Q.value = 1.4; // Musical Q bandwidth
+      const slider = document.getElementById(`eq-band-${idx}`) as HTMLInputElement;
+      filter.gain.value = slider ? parseFloat(slider.value) : 0;
+      return filter;
+    });
+
+    // Wire EQ in series
+    for (let i = 0; i < eqFilters.length - 1; i++) {
+      eqFilters[i].connect(eqFilters[i + 1]);
+    }
+
+    // 2. Cutoff lowpass filter
+    cutoffFilter = audioCtx.createBiquadFilter();
+    cutoffFilter.type = 'lowpass';
+    cutoffFilter.frequency.value = parseFloat(cutoffSlider.value);
+
+    // 3. Distortion / Bitcrush WaveShaper
+    waveShaper = audioCtx.createWaveShaper();
+    updateBitcrushCurve(parseFloat(bitcrushSlider.value));
+
+    // 4. Delay / Space
+    delayNode = audioCtx.createDelay();
+    delayNode.delayTime.value = 0.28;
+    delayGain = audioCtx.createGain();
+    delayGain.gain.value = parseFloat(reverbSlider.value);
+
+    // 5. Master Gain
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = parseFloat(masterVolSlider.value);
+
+    // 6. Analyser
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+
+    // Connect last EQ filter to Cutoff & Shaper
+    const lastEqFilter = eqFilters[eqFilters.length - 1];
+    lastEqFilter.connect(cutoffFilter);
+    cutoffFilter.connect(waveShaper);
+
+    // Dry to Master
+    waveShaper.connect(masterGain);
+
+    // Wet Delay Path
+    waveShaper.connect(delayNode);
+    delayNode.connect(delayGain);
+    delayGain.connect(delayNode);
+    delayGain.connect(masterGain);
+
+    masterGain.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  }
+
+  function updateBitcrushCurve(amount: number) {
+    if (!audioCtx) return;
+    if (amount <= 0.05) {
+      waveShaper.curve = null;
+      return;
+    }
+    const samples = 4096;
+    const curve = new Float32Array(samples);
+    const steps = Math.max(2, Math.floor(16 * (1 - amount)));
+    for (let i = 0; i < samples; i++) {
+      const x = (i * 2) / samples - 1;
+      curve[i] = Math.round(x * steps) / steps;
+    }
+    waveShaper.curve = curve;
+  }
+
+  function formatTime(sec: number): string {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  }
+
+  // Load user audio file
+  fileInput?.addEventListener('change', async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    fileNameDisplay.textContent = file.name;
+    const arrayBuffer = await file.arrayBuffer();
+    initAudioNodes();
+    audioBuffer = await audioCtx!.decodeAudioData(arrayBuffer);
+
+    pauseOffset = 0;
+    playPauseBtn.disabled = false;
+    stopBtn.disabled = false;
+    timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
+  });
+
+  // Load Demo Audio
+  loadDemoBtn?.addEventListener('click', async () => {
+    initAudioNodes();
+    const sampleRate = audioCtx!.sampleRate;
+    const duration = 6.0;
+    const frameCount = sampleRate * duration;
+    audioBuffer = audioCtx!.createBuffer(2, frameCount, sampleRate);
+
+    const left = audioBuffer.getChannelData(0);
+    const right = audioBuffer.getChannelData(1);
+
+    const bassLine = [130.81, 146.83, 164.81, 174.61]; // C3, D3, E3, F3
+    for (let i = 0; i < frameCount; i++) {
+      const t = i / sampleRate;
+      const note = bassLine[Math.floor((t * 2) % bassLine.length)];
+      const sample = Math.sin(2 * Math.PI * note * t) * 0.4 +
+                     Math.sin(2 * Math.PI * (note * 2) * t) * 0.15;
+      left[i] = sample;
+      right[i] = sample;
+    }
+
+    fileNameDisplay.textContent = "Sintetizador Demo Loop (6s)";
+    pauseOffset = 0;
+    playPauseBtn.disabled = false;
+    stopBtn.disabled = false;
+    timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
+  });
+
+  function playAudio() {
+    if (!audioBuffer || !audioCtx) return;
+    initAudioNodes();
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    sourceNode = audioCtx.createBufferSource();
+    sourceNode.buffer = audioBuffer;
+    sourceNode.playbackRate.value = parseFloat(speedSlider.value);
+    sourceNode.connect(eqFilters[0]); // Connect source to 1st band
+
+    sourceNode.onended = () => {
+      if (isPlaying) {
+        stopAudio();
+      }
+    };
+
+    sourceNode.start(0, pauseOffset % audioBuffer.duration);
+    startTime = audioCtx.currentTime - (pauseOffset / sourceNode.playbackRate.value);
+    isPlaying = true;
+
+    playIcon.textContent = "⏸";
+    visualizerPlaceholder.classList.add('hidden');
+    drawVisualizer();
+  }
+
+  function pauseAudio() {
+    if (!sourceNode || !audioCtx) return;
+    sourceNode.stop();
+    pauseOffset = (audioCtx.currentTime - startTime) * parseFloat(speedSlider.value);
+    isPlaying = false;
+    playIcon.textContent = "▶";
+  }
+
+  function stopAudio() {
+    if (sourceNode) {
+      try { sourceNode.stop(); } catch (e) {}
+    }
+    pauseOffset = 0;
+    isPlaying = false;
+    playIcon.textContent = "▶";
+    if (audioBuffer) {
+      timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
+    }
+  }
+
+  playPauseBtn?.addEventListener('click', () => {
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      playAudio();
+    }
+  });
+
+  stopBtn?.addEventListener('click', stopAudio);
+
+  // Bind 8 EQ Sliders
+  EQ_SPECS.forEach((_, idx) => {
+    const slider = document.getElementById(`eq-band-${idx}`) as HTMLInputElement;
+    const valDisplay = document.getElementById(`eq-val-${idx}`) as HTMLSpanElement;
+
+    slider?.addEventListener('input', () => {
+      const val = parseFloat(slider.value);
+      valDisplay.textContent = `${val > 0 ? '+' : ''}${val} dB`;
+      if (eqFilters[idx]) {
+        eqFilters[idx].gain.value = val;
+      }
+    });
+  });
+
+  // Apply EQ Presets
+  document.querySelectorAll('.eq-preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const presetKey = btn.getAttribute('data-preset');
+      const gains = PRESETS[presetKey || 'flat'];
+      if (!gains) return;
+
+      gains.forEach((gain, idx) => {
+        const slider = document.getElementById(`eq-band-${idx}`) as HTMLInputElement;
+        const valDisplay = document.getElementById(`eq-val-${idx}`) as HTMLSpanElement;
+        if (slider && valDisplay) {
+          slider.value = gain.toString();
+          valDisplay.textContent = `${gain > 0 ? '+' : ''}${gain} dB`;
+        }
+        if (eqFilters[idx]) {
+          eqFilters[idx].gain.value = gain;
+        }
+      });
+    });
+  });
+
+  // Lo-Fi & Filter bindings
+  bitcrushSlider?.addEventListener('input', () => {
+    const val = parseFloat(bitcrushSlider.value);
+    bitcrushVal.textContent = val === 0 ? "Desactivado" : `${Math.round(val * 100)}%`;
+    updateBitcrushCurve(val);
+  });
+
+  cutoffSlider?.addEventListener('input', () => {
+    const val = parseFloat(cutoffSlider.value);
+    cutoffVal.textContent = val >= 19000 ? "20 kHz (Abierto)" : `${(val / 1000).toFixed(1)} kHz`;
+    if (cutoffFilter) cutoffFilter.frequency.value = val;
+  });
+
+  // Pitch & Speed bindings
+  speedSlider?.addEventListener('input', () => {
+    const val = parseFloat(speedSlider.value);
+    speedVal.textContent = `${val.toFixed(2)}x`;
+    if (sourceNode) sourceNode.playbackRate.value = val;
+  });
+
+  reverbSlider?.addEventListener('input', () => {
+    const val = parseFloat(reverbSlider.value);
+    reverbVal.textContent = `${Math.round(val * 125)}%`;
+    if (delayGain) delayGain.gain.value = val;
+  });
+
+  masterVolSlider?.addEventListener('input', () => {
+    const val = parseFloat(masterVolSlider.value);
+    volumeVal.textContent = `${Math.round(val * 100)}%`;
+    if (masterGain) masterGain.gain.value = val;
+  });
+
+  // Visualizer Animation Loop
+  function drawVisualizer() {
+    if (!isPlaying || !analyser || !canvasCtx) return;
+
+    requestAnimationFrame(drawVisualizer);
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(dataArray);
+
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let barHeight;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+      barHeight = (dataArray[i] / 255) * canvas.height;
+
+      const r = 56 + (i * 2);
+      const g = 189;
+      const b = 248;
+
+      canvasCtx.fillStyle = `rgb(${r},${g},${b})`;
+      canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+      x += barWidth + 1;
+    }
+
+    if (audioCtx && audioBuffer) {
+      const current = ((audioCtx.currentTime - startTime) * parseFloat(speedSlider.value)) % audioBuffer.duration;
+      timeDisplay.textContent = `${formatTime(current)} / ${formatTime(audioBuffer.duration)}`;
+    }
+  }
+
+  // ==========================================
+  // BATCH EXTRACTOR LOGIC
+  // ==========================================
+  const trackInput = document.getElementById('track-input') as HTMLTextAreaElement;
+  const audioFormatSelect = document.getElementById('audio-format') as HTMLSelectElement;
+  const destFolderInput = document.getElementById('dest-folder') as HTMLInputElement;
+  const generatedCmd = document.getElementById('generated-cmd') as HTMLTextAreaElement;
+  const generateBtn = document.getElementById('generate-cmd-btn') as HTMLButtonElement;
+  const copyCmdBtn = document.getElementById('copy-cmd-btn') as HTMLButtonElement;
+  const copyCmdText = document.getElementById('copy-cmd-text') as HTMLSpanElement;
+  const downloadM3uBtn = document.getElementById('download-m3u-btn') as HTMLButtonElement;
+  const clearBtn = document.getElementById('clear-input-btn') as HTMLButtonElement;
+  const trackCountEl = document.getElementById('track-count') as HTMLSpanElement;
+
+  function updateTrackCount() {
+    const lines = trackInput.value.split('\n').map(l => l.trim()).filter(Boolean);
+    trackCountEl.textContent = `${lines.length} canciones detectadas`;
+  }
+
+  trackInput?.addEventListener('input', updateTrackCount);
+
+  function generateCommand() {
+    const raw = trackInput.value.trim();
+    if (!raw) {
+      generatedCmd.value = "# Ingresa canciones o enlaces a la izquierda.";
+      return;
+    }
+
+    const format = audioFormatSelect.value;
+    const dest = destFolderInput.value.trim() || 'D:/Musica';
+    const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+
+    let bitrate = '192';
+    let codec = 'mp3';
+    if (format === 'mp3_hq') { bitrate = '320'; codec = 'mp3'; }
+    if (format === 'flac') { codec = 'flac'; }
+    if (format === 'm4a') { codec = 'm4a'; }
+
+    if (lines.length === 1 && (lines[0].startsWith('http://') || lines[0].startsWith('https://'))) {
+      const url = lines[0];
+      generatedCmd.value = `yt-dlp --format "bestaudio/best" --extract-audio --audio-format ${codec} ${codec === 'mp3' ? `--audio-quality ${bitrate}K` : ''} --output "${dest}/%(title)s.%(ext)s" --add-metadata "${url}"`;
+      return;
+    }
+
+    let cmd = `# Batch download para ${lines.length} canciones con yt-dlp:\n`;
+    lines.forEach((title) => {
+      const cleanTitle = title.replace(/"/g, '');
+      cmd += `yt-dlp --extract-audio --audio-format ${codec} ${codec === 'mp3' ? `--audio-quality ${bitrate}K` : ''} -o "${dest}/%(title)s.%(ext)s" --default-search "ytsearch" "ytsearch:${cleanTitle}"\n`;
+    });
+
+    generatedCmd.value = cmd.trim();
+  }
+
+  generateBtn?.addEventListener('click', generateCommand);
+  audioFormatSelect?.addEventListener('change', generateCommand);
+  destFolderInput?.addEventListener('input', generateCommand);
+
+  document.querySelectorAll('.demo-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-text');
+      if (text) {
+        trackInput.value = text;
+        updateTrackCount();
+        generateCommand();
+      }
+    });
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    trackInput.value = '';
+    updateTrackCount();
+    generatedCmd.value = '';
+  });
+
+  copyCmdBtn?.addEventListener('click', async () => {
+    if (generatedCmd.value) {
+      await navigator.clipboard.writeText(generatedCmd.value);
+      copyCmdText.textContent = "¡Copiado!";
+      setTimeout(() => {
+        copyCmdText.textContent = "Copiar comando";
+      }, 2000);
+    }
+  });
+
+  downloadM3uBtn?.addEventListener('click', () => {
+    const raw = trackInput.value.trim();
+    if (!raw) return;
+    const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+    let m3u = "#EXTM3U\n";
+    lines.forEach(l => {
+      m3u += `#EXTINF:-1,${l}\n${l}.mp3\n`;
+    });
+
+    const blob = new Blob([m3u], { type: 'audio/x-mpegurl' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'playlist.m3u';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  generateCommand();
+  updateTrackCount();
+</script>

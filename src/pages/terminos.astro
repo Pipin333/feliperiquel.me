@@ -1,0 +1,104 @@
+---
+// src/pages/terminos.astro
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Términos de Servicio | Felipe Riquelme"
+  description="Condiciones de uso, licencias de software y marco de responsabilidad para feliperiquel.me y sus micro-aplicaciones interactivas."
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 font-mono text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-telemetry font-medium" aria-current="page">Términos de Servicio</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-12 border-b border-canvas-border pb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-4">
+        <span>📜 Marco Legal & Condiciones</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight mb-4">
+        Términos de Servicio
+      </h1>
+      <p class="font-mono text-xs text-slate-400">
+        Última actualización: 19 de octubre de 2026 // Versión 1.1
+      </p>
+    </header>
+
+    <!-- Content Sections -->
+    <article class="space-y-10 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-telemetry">
+          1. Aceptación y Naturaleza del Servicio
+        </h2>
+        <p class="mb-3">
+          El acceso, navegación y uso de las aplicaciones disponibles en <strong class="text-white">feliperiquel.me</strong> están sujetos a los presentes Términos de Servicio. Al interactuar con el sitio, manifiestas tu conformidad con estas cláusulas.
+        </p>
+        <p>
+          Este sitio opera como un portafolio profesional de ingeniería y un espacio de experimentación técnica pública sin fines de lucro directo ni intermediación financiera.
+        </p>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-audio">
+          2. Licenciamiento de Código Abierto y Propiedad Intelectual
+        </h2>
+        <p class="mb-3">
+          El código fuente de los proyectos enlazados (incluyendo Toodles, Whatsarr, UniCalendar AI, JD Watch Controller y AD-BSA) se distribuye bajo licencias abiertas permisivas (principalmente MIT License y Apache License 2.0), detalladas en sus respectivos repositorios oficiales en GitHub (<code class="font-mono text-xs text-telemetry">@Pipin333</code>).
+        </p>
+        <p>
+          Los textos editoriales, la identidad gráfica, el diseño visual del sitio y los análisis metodológicos de este portafolio son propiedad intelectual de Felipe Riquelme, quedando prohibida su reproducción no atribuida con fines comerciales engañosos.
+        </p>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-ai">
+          3. Uso de Herramientas de El Laboratorio (/lab)
+        </h2>
+        <p class="mb-3">
+          Las micro-aplicaciones interactivas contenidas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">/lab</a> son prototipos de investigación técnica y software experimental proporcionados bajo el principio <em class="text-slate-200">"tal cual" (as-is)</em>, sin garantías explícitas o implícitas de disponibilidad ininterrumpida, idoneidad para un propósito comercial particular o infalibilidad técnica:
+        </p>
+        <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-300 font-mono">
+          <li><strong>Herramientas Lúdicas y Satíricas:</strong> Módulos como Retórica y Descalabro operan con fines artísticos, lingüísticos y de humor técnico.</li>
+          <li><strong>Calculadoras Logísticas:</strong> Los resultados arrojados por la Calculadora de Copete constituyen sugerencias matemáticas aproximadas para organización de eventos sociales entre pares. El usuario es el único responsable del consumo prudente de bebidas y del cumplimiento de la legislación de tránsito y salud pública aplicable.</li>
+          <li><strong>Procesamiento de Audio:</strong> SonicRip Studio realiza procesamiento DSP experimental sobre Web Audio API. El usuario es responsable de contar con los derechos legítimos sobre los archivos de audio procesados.</li>
+        </ul>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-white">
+          4. Conducta Aceptable y Seguridad del Sistema
+        </h2>
+        <p class="mb-3">
+          Al hacer uso de este sitio y sus APIs auxiliares, te comprometes a actuar de buena fe. Queda estrictamente prohibido:
+        </p>
+        <ul class="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-slate-300 font-mono">
+          <li>Desplegar ataques coordinados de denegación de servicio (DDoS) contra los servidores de alojamiento.</li>
+          <li>Inyectar código malicioso, scripts maliciosos persistentes o manipular indebidamente formularios de contacto.</li>
+          <li>Intentar eludir las cuotas de seguridad y mecanismos de autenticación de las APIs de proyectos enlazados.</li>
+        </ul>
+      </section>
+
+      <section class="spotlight-card p-6 sm:p-8 bg-canvas-surface border border-canvas-border rounded-tech">
+        <h2 class="text-xl font-display font-bold text-white mb-3 text-domain-algo">
+          5. Ley Aplicable y Jurisdicción
+        </h2>
+        <p class="mb-3">
+          Cualquier controversia, disputa o reclamo derivado del uso de este sitio web o de la interpretación de estos términos se regirá por la legislación vigente de la República de Chile.
+        </p>
+        <p>
+          Las partes se someten voluntariamente a la competencia de los tribunales ordinarios de justicia de la ciudad de Santiago de Chile, renunciando a cualquier otro fuero que pudiera corresponderles.
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

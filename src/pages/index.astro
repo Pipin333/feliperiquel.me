@@ -1,28 +1,25 @@
 ---
+// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import PainPoints from '../components/PainPoints.astro';
-import Services from '../components/Services.astro';
+import LabShowcase from '../components/LabShowcase.astro';
 import WorkShowcase from '../components/WorkShowcase.astro';
-import Process from '../components/Process.astro';
-import InteractiveEstimator from '../components/InteractiveEstimator.astro';
+import AboutMe from '../components/AboutMe.astro';
 import ContactGateway from '../components/ContactGateway.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Layout
-  title="Felipe Riquelme | Desarrollo & Renovación de Sitios Web"
-  description="Transformo tu presencia digital en un canal de credibilidad y ventas. Sitios web ultrarrápidos, rediseños modernos y pasarelas de pago para empresas y profesionales."
+  title="Felipe Riquelme | Software Engineer & Builder"
+  description="Portafolio y laboratorio de software interactivo. Audio DSP en el navegador, micro-aplicaciones en tiempo real, orquestación homelab y optimización de algoritmos."
 >
   <Header />
   <main id="main-content" class="flex-1">
     <Hero />
-    <PainPoints />
-    <Services />
+    <LabShowcase />
     <WorkShowcase />
-    <Process />
-    <InteractiveEstimator />
+    <AboutMe />
     <ContactGateway />
   </main>
   <Footer />

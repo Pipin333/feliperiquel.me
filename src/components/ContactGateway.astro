@@ -2,95 +2,133 @@
 // src/components/ContactGateway.astro
 ---
 
-<section id="contacto" class="py-24 relative">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<section id="contacto" class="py-20 relative overflow-hidden bg-canvas">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
       <!-- Left column: Info & Value -->
       <div class="lg:col-span-5">
-        <h2 class="text-xs uppercase tracking-widest font-bold text-brand-400 mb-3">Hablemos</h2>
-        <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-6">
-          ¿Listo para renovar o crear tu sitio web?
-        </h3>
-        <p class="text-slate-300 text-base leading-relaxed mb-8">
-          Cuéntame sobre tu proyecto o déjame el link de tu web actual para darte un diagnóstico sincero y sin compromiso. Respondo habitualmente en menos de 24 horas.
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-4">
+          <span>📬 Canales Directos</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight mb-4">
+          ¿Tienes una idea, desafío técnico o quieres colaborar?
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
+          Conversemos. Ya sea para proponer un proyecto de software, colaborar en código abierto o explorar un problema de ingeniería, puedes contactarme por cualquiera de estos canales.
         </p>
 
         <!-- Direct channels -->
-        <div class="space-y-4 mb-8">
+        <div class="space-y-3.5">
+          <!-- WhatsApp Card -->
           <a
-            href="https://wa.me/?text=Hola%20Felipe,%20vi%20tu%20sitio%20feliperiquel.me%20y%20me%20gustar%C3%ADa%20cotizar%20una%20web"
+            href="https://wa.me/?text=Hola%20Felipe,%20estuve%20viendo%20tu%20portafolio%20y%20el%20Lab%20en%20feliperiquel.me"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-4 p-4 rounded-2xl bg-emerald-950/40 border border-emerald-800/40 hover:border-emerald-600 transition-colors group"
+            class="spotlight-card flex items-center gap-4 p-4 rounded-tech hover:border-domain-audio transition-colors group"
           >
-            <span class="w-12 h-12 rounded-xl bg-emerald-900/60 text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <span class="w-10 h-10 rounded-tech bg-canvas border border-canvas-border text-domain-audio flex items-center justify-center flex-shrink-0 group-hover:border-domain-audio transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.78 14.15c-.24.68-1.39 1.3-1.92 1.38-.49.08-1.12.11-3.23-.76-2.69-1.11-4.43-3.83-4.57-4.01-.13-.19-1.1-1.46-1.1-2.79 0-1.33.7-1.98.95-2.25.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.6.53.22.5.75 1.83.82 1.96.07.14.12.3.02.48-.09.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.32-.13.62.17.3 75 1.24 1.62 2.01 1.11.99 2.04 1.3 2.34 1.44.3.15.48.13.66-.07.18-.21.78-.91.99-1.22.21-.31.42-.26.71-.15.29.11 1.83.86 2.14 1.02.31.15.52.23.6.36.08.13.08.77-.16 1.45z"/>
               </svg>
             </span>
-            <div>
-              <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider block">Canal Directo</span>
-              <span class="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Chat por WhatsApp</span>
-              <span class="text-xs text-slate-400 block mt-0.5">Respuesta inmediata en horario laboral</span>
+            <div class="flex-1 min-w-0">
+              <span class="font-mono text-[10px] font-semibold text-domain-audio uppercase tracking-wider block">Chat Directo</span>
+              <span class="text-sm font-bold text-white group-hover:text-domain-audio transition-colors">Hablar por WhatsApp</span>
+              <span class="text-xs text-slate-400 block mt-0.5 truncate">Respuesta directa para consultas o proyectos</span>
             </div>
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-domain-audio transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </a>
 
-          <div class="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/40 border border-slate-800">
-            <span class="w-12 h-12 rounded-xl bg-slate-800 text-brand-400 flex items-center justify-center flex-shrink-0">
-              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <!-- Email Card with Copy button -->
+          <div class="spotlight-card flex items-center justify-between gap-3 p-4 rounded-tech">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <span class="w-10 h-10 rounded-tech bg-canvas border border-canvas-border text-telemetry flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <div class="min-w-0">
+                <span class="font-mono text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Correo Institucional</span>
+                <a
+                  href="mailto:f.riquelmesalvo@uandresbello.edu"
+                  class="font-mono text-xs font-bold text-white hover:text-telemetry transition-colors truncate block"
+                >
+                  f.riquelmesalvo@uandresbello.edu
+                </a>
+                <span class="text-xs text-slate-400 block mt-0.5">Contacto profesional y académico</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              id="copy-email-btn"
+              class="px-2.5 py-1.5 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry font-mono text-[11px] font-medium text-slate-300 transition-colors flex items-center gap-1 flex-shrink-0"
+              aria-label="Copiar correo electrónico al portapapeles"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span id="copy-email-text">Copiar</span>
+            </button>
+          </div>
+
+          <!-- GitHub Card -->
+          <a
+            href="https://github.com/Pipin333"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="spotlight-card flex items-center gap-4 p-4 rounded-tech hover:border-telemetry transition-colors group"
+          >
+            <span class="w-10 h-10 rounded-tech bg-canvas border border-canvas-border text-slate-200 flex items-center justify-center flex-shrink-0 group-hover:border-telemetry transition-colors">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
               </svg>
             </span>
-            <div>
-              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
-              <span class="text-sm font-bold text-white">contacto@feliperiquel.me</span>
-              <span class="text-xs text-slate-400 block mt-0.5">Para solicitudes formales o licitaciones</span>
+            <div class="flex-1 min-w-0">
+              <span class="font-mono text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Repositorios de Código</span>
+              <span class="text-sm font-bold text-white group-hover:text-telemetry transition-colors">GitHub (@Pipin333)</span>
+              <span class="text-xs text-slate-400 block mt-0.5 truncate">Revisa el código y commits de mis proyectos</span>
             </div>
-          </div>
-        </div>
-
-        <!-- Safe Transaction Guarantee -->
-        <div class="p-4 rounded-2xl bg-brand-950/30 border border-brand-500/20 text-xs text-slate-300 flex items-start gap-3">
-          <svg class="w-5 h-5 text-brand-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          <span>
-            <strong>Garantía de Satisfacción:</strong> Todo proyecto incluye etapa de revisión de maquetas y garantía de soporte técnico post-lanzamiento.
-          </span>
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-telemetry transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </div>
       </div>
 
-      <!-- Right column: Accessible Contact Form -->
-      <div class="lg:col-span-7">
+      <!-- Right column: Direct Message Form -->
+      <div class="lg:col-span-7 w-full lg:self-end">
         <form
           id="contact-form"
-          action="https://api.web3forms.com/submit"
+          action="/api/contact"
           method="POST"
-          class="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative"
+          class="spotlight-card p-6 sm:p-8 rounded-tech relative"
         >
-          <!-- Hidden Access Key (configured via .env or Web3Forms) -->
-          <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
-          <input type="hidden" name="subject" value="Nueva cotización desde feliperiquel.me" />
-          <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+          <!-- Anti-spam honeypot -->
+          <input type="text" name="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off" />
 
-          <h4 class="text-xl font-bold text-white mb-6">Formulario de Cotización</h4>
+          <h3 class="text-xl font-display font-bold text-white mb-1">Enviar Mensaje Directo</h3>
+          <p class="text-xs sm:text-sm text-slate-400 mb-6 font-sans">
+            Si prefieres dejar un mensaje aquí, te responderé directamente a tu correo.
+          </p>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="contact-name" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Tu Nombre o Empresa <span class="text-rose-400">*</span>
+              <label for="contact-name" class="block font-mono text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                Tu Nombre <span class="text-rose-400">*</span>
               </label>
               <input
                 type="text"
                 id="contact-name"
                 name="name"
                 required
-                placeholder="Ej. Camila Morales"
-                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors"
+                placeholder="Ej. Martín González"
+                class="w-full px-3.5 py-2.5 rounded-tech-sm bg-canvas border border-canvas-border text-white placeholder-slate-600 focus-visible:ring-2 focus-visible:ring-telemetry text-sm transition-colors"
               />
             </div>
             <div>
-              <label for="contact-email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+              <label for="contact-email" class="block font-mono text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                 Correo Electrónico <span class="text-rose-400">*</span>
               </label>
               <input
@@ -98,147 +136,123 @@
                 id="contact-email"
                 name="email"
                 required
-                placeholder="ejemplo@empresa.com"
-                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors"
+                placeholder="martin@ejemplo.com"
+                class="w-full px-3.5 py-2.5 rounded-tech-sm bg-canvas border border-canvas-border text-white placeholder-slate-600 focus-visible:ring-2 focus-visible:ring-telemetry text-sm transition-colors"
               />
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-            <div>
-              <label for="contact-phone" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Teléfono / WhatsApp
-              </label>
-              <input
-                type="tel"
-                id="contact-phone"
-                name="phone"
-                placeholder="+56 9 ..."
-                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors"
-              />
-            </div>
-            <div>
-              <label for="contact-website" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Sitio Web Actual (si quieres renovación)
-              </label>
-              <input
-                type="url"
-                id="contact-website"
-                name="current_website"
-                placeholder="https://tuempresa.com"
-                class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors"
-              />
-            </div>
+          <div class="mb-4">
+            <label for="contact-subject" class="block font-mono text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Motivo o Asunto <span class="text-rose-400">*</span>
+            </label>
+            <input
+              type="text"
+              id="contact-subject"
+              name="topic"
+              required
+              placeholder="Ej. Consulta sobre Whatsarr / Proyecto de software"
+              class="w-full px-3.5 py-2.5 rounded-tech-sm bg-canvas border border-canvas-border text-white placeholder-slate-600 focus-visible:ring-2 focus-visible:ring-telemetry text-sm transition-colors"
+            />
           </div>
 
           <div class="mb-5">
-            <label for="contact-service" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Tipo de Servicio Requerido
-            </label>
-            <select
-              id="contact-service"
-              name="service_type"
-              class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors"
-            >
-              <option value="renovacion">Renovación / Rediseño de sitio existente</option>
-              <option value="landing">Landing Page nueva (1 página)</option>
-              <option value="corporativo">Sitio Web Corporativo completo</option>
-              <option value="pagos-stripe">Catálogo o Cobros en línea (Stripe)</option>
-              <option value="auditoria">Auditoría de velocidad y SEO</option>
-              <option value="otro">Otro proyecto a medida</option>
-            </select>
-          </div>
-
-          <div class="mb-6">
-            <label for="contact-message" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Cuéntame detalles de lo que necesitas <span class="text-rose-400">*</span>
+            <label for="contact-message" class="block font-mono text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Mensaje o Detalles <span class="text-rose-400">*</span>
             </label>
             <textarea
               id="contact-message"
               name="message"
               rows="4"
               required
-              placeholder="¿Qué objetivos tienes? ¿Tienes alguna fecha límite o referencia visual que te guste?"
-              class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 focus-visible:ring-2 focus-visible:ring-brand-400 text-sm transition-colors resize-y"
+              placeholder="Cuéntame en qué consiste tu idea, propuesta o consulta..."
+              class="w-full px-3.5 py-2.5 rounded-tech-sm bg-canvas border border-canvas-border text-white placeholder-slate-600 focus-visible:ring-2 focus-visible:ring-telemetry text-sm transition-colors resize-y font-sans"
             ></textarea>
           </div>
 
-          <!-- Status Message Alert (5 UI states) -->
-          <div id="form-status" class="hidden mb-6 p-4 rounded-xl text-sm" role="status"></div>
-
+          <!-- Submit Button -->
           <button
             type="submit"
             id="submit-btn"
-            class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 shadow-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99]"
+            class="w-full py-3 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 flex items-center justify-center gap-2 group"
           >
-            <span id="btn-text">Enviar solicitud de cotización</span>
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <span>Enviar Mensaje</span>
+            <svg class="w-4 h-4 transition-transform duration-140 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
 
-          <p class="text-center text-xs text-slate-500 mt-4">
-            🔒 Tu información es 100% confidencial y solo se usará para responder a tu cotización.
-          </p>
+          <!-- Status Message Area -->
+          <div id="form-status" class="mt-3 text-center font-mono text-xs font-medium hidden" role="status" aria-live="polite"></div>
         </form>
       </div>
     </div>
   </div>
-
-  <!-- Floating WhatsApp Action Button for Mobile & Desktop -->
-  <a
-    href="https://wa.me/?text=Hola%20Felipe,%20estoy%20en%20feliperiquel.me%20y%20me%20gustar%C3%ADa%20hacerte%20una%20consulta%20web"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-emerald-500 text-white shadow-2xl hover:bg-emerald-400 hover:scale-110 active:scale-95 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-emerald-300"
-    aria-label="Abrir conversación de WhatsApp"
-  >
-    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.78 14.15c-.24.68-1.39 1.3-1.92 1.38-.49.08-1.12.11-3.23-.76-2.69-1.11-4.43-3.83-4.57-4.01-.13-.19-1.1-1.46-1.1-2.79 0-1.33.7-1.98.95-2.25.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.4.06.6.53.22.5.75 1.83.82 1.96.07.14.12.3.02.48-.09.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.32-.13.62.17.3 75 1.24 1.62 2.01 1.11.99 2.04 1.3 2.34 1.44.3.15.48.13.66-.07.18-.21.78-.91.99-1.22.21-.31.42-.26.71-.15.29.11 1.83.86 2.14 1.02.31.15.52.23.6.36.08.13.08.77-.16 1.45z"/>
-    </svg>
-  </a>
 </section>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  const statusDiv = document.getElementById('form-status') as HTMLDivElement;
-  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const btnText = document.getElementById('btn-text') as HTMLSpanElement;
+  // Copy email button logic
+  const copyBtn = document.getElementById('copy-email-btn');
+  const copyText = document.getElementById('copy-email-text');
+  const emailToCopy = 'f.riquelmesalvo@uandresbello.edu';
+
+  if (copyBtn && copyText) {
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(emailToCopy);
+        const originalText = copyText.textContent;
+        copyText.textContent = '¡Copiado!';
+        copyBtn.classList.add('text-domain-audio', 'border-domain-audio');
+        setTimeout(() => {
+          copyText.textContent = originalText;
+          copyBtn.classList.remove('text-domain-audio', 'border-domain-audio');
+        }, 2500);
+      } catch (e) {
+        window.location.href = `mailto:${emailToCopy}`;
+      }
+    });
+  }
+
+  // Handle accessible form submission via fetch to /api/contact
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const statusDiv = document.getElementById('form-status');
+  const submitBtn = document.getElementById('submit-btn');
 
   if (form && statusDiv && submitBtn) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      // UI State: Loading
-      submitBtn.disabled = true;
-      if (btnText) btnText.textContent = 'Enviando solicitud...';
-      statusDiv.classList.add('hidden');
-      statusDiv.className = 'mb-6 p-4 rounded-xl text-sm hidden';
+      statusDiv.classList.remove('hidden', 'text-domain-audio', 'text-rose-400');
+      statusDiv.classList.add('text-slate-300');
+      statusDiv.textContent = 'Enviando mensaje y registrando telemetría...';
+      submitBtn.setAttribute('disabled', 'true');
 
       const formData = new FormData(form);
 
       try {
         const response = await fetch(form.action, {
-          method: 'POST',
+          method: form.method,
           body: formData,
-          headers: { 'Accept': 'application/json' }
+          headers: {
+            'Accept': 'application/json'
+          }
         });
 
-        if (response.ok) {
-          // UI State: Success
-          statusDiv.className = 'mb-6 p-4 rounded-xl text-sm bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 block';
-          statusDiv.innerHTML = '<strong>¡Mensaje recibido con éxito!</strong> Me pondré en contacto contigo a la brevedad para coordinar tu cotización.';
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          statusDiv.classList.remove('text-slate-300');
+          statusDiv.classList.add('text-domain-audio');
+          statusDiv.textContent = data.message || '¡Mensaje recibido con éxito! Te responderé a la brevedad.';
           form.reset();
         } else {
-          throw new Error('Respuesta no exitosa');
+          throw new Error(data.error || 'Error al procesar el mensaje');
         }
-      } catch (err) {
-        // UI State: Error Reintentable
-        statusDiv.className = 'mb-6 p-4 rounded-xl text-sm bg-rose-950/80 border border-rose-500/50 text-rose-200 block';
-        statusDiv.innerHTML = '<strong>Hubo un problema al enviar el formulario.</strong> Por favor contáctame directamente por <a href="https://wa.me/?text=Hola%20Felipe,%20estoy%20interesado%20en%20una%20web" class="underline font-bold">WhatsApp haciendo clic aquí</a> o escribe a contacto@feliperiquel.me.';
+      } catch (err: any) {
+        statusDiv.classList.remove('text-slate-300');
+        statusDiv.classList.add('text-rose-400');
+        statusDiv.textContent = err.message || 'No se pudo enviar automáticamente. Por favor escríbeme directamente a f.riquelmesalvo@uandresbello.edu o por WhatsApp.';
       } finally {
-        submitBtn.disabled = false;
-        if (btnText) btnText.textContent = 'Enviar solicitud de cotización';
+        submitBtn.removeAttribute('disabled');
       }
     });
   }

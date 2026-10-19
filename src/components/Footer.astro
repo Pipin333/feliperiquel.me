@@ -3,50 +3,69 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-12 text-slate-400">
+<footer class="mt-auto border-t border-canvas-border bg-canvas pt-10 pb-28 sm:pb-32 text-slate-400">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800/60">
-      <!-- Brand -->
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center font-bold text-white text-sm">
-          FR
+    <div class="flex flex-col md:flex-row items-center justify-between gap-5 pb-6 border-b border-canvas-border">
+      <!-- Brand in one line -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-tech bg-canvas-surface border border-canvas-border flex items-center justify-center text-telemetry flex-shrink-0">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 7 10 12 4 17"></polyline>
+            <line x1="12" y1="17" x2="20" y2="17"></line>
+          </svg>
         </div>
-        <span class="text-base font-bold text-white tracking-tight">
-          feliperiquel<span class="text-brand-400">.me</span>
-        </span>
+        <div class="flex items-center gap-2 font-mono text-xs">
+          <span class="font-display text-sm font-bold text-white tracking-tight">
+            feliperiquel<span class="text-telemetry">.me</span>
+          </span>
+          <span class="text-canvas-border">/</span>
+          <span class="text-[11px] text-slate-400">
+            Ingeniero Civil en Informática
+          </span>
+        </div>
       </div>
 
       <!-- Quick Nav -->
-      <nav class="flex flex-wrap items-center justify-center gap-6 text-sm" aria-label="Navegación del pie de página">
-        <a href="#servicios" class="hover:text-white transition-colors">Servicios</a>
-        <a href="#diagnostico" class="hover:text-white transition-colors">¿Por qué renovar?</a>
-        <a href="#portafolio" class="hover:text-white transition-colors">Portafolio</a>
-        <a href="#proceso" class="hover:text-white transition-colors">Proceso</a>
-        <a href="#cotizador" class="hover:text-white transition-colors">Cotizador</a>
-        <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+      <nav class="flex flex-wrap items-center justify-center gap-5 font-mono text-xs" aria-label="Navegación del pie de página">
+        <a href="/lab" class="text-telemetry hover:text-white transition-colors flex items-center gap-1 font-semibold">
+          <span>🧪 Laboratorio</span>
+        </a>
+        <a href="/#proyectos" class="hover:text-white transition-colors">Proyectos</a>
+        <a href="/#sobre-mi" class="hover:text-white transition-colors">Sobre mí</a>
+        <a href="/#contacto" class="hover:text-white transition-colors">Contacto</a>
+        <a
+          href="https://github.com/Pipin333"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-white transition-colors"
+        >
+          GitHub
+        </a>
       </nav>
 
       <!-- Back to top -->
       <a
         href="#"
-        class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-brand-300 transition-colors p-2 rounded-lg hover:bg-slate-900"
+        class="inline-flex items-center gap-1.5 font-mono text-[11px] text-slate-400 hover:text-telemetry transition-colors p-1.5 rounded-tech hover:bg-canvas-surface"
         aria-label="Volver al inicio de la página"
       >
         <span>Volver arriba</span>
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
         </svg>
       </a>
     </div>
 
-    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px]">
       <p class="text-slate-500">
         &copy; {currentYear} Felipe Riquelme. Todos los derechos reservados.
       </p>
-      <div class="flex items-center gap-4 text-slate-500">
-        <span>Construido con Astro & Tailwind</span>
-        <span>•</span>
-        <span>Dominio .me & Hosting GitHub Pages</span>
+      <div class="flex items-center gap-3 text-slate-500">
+        <a href="/privacidad" class="hover:text-slate-300 transition-colors">Privacidad</a>
+        <span class="text-canvas-border">/</span>
+        <a href="/terminos" class="hover:text-slate-300 transition-colors">Términos</a>
+        <span class="text-canvas-border">/</span>
+        <span>Astro + Tailwind CSS</span>
       </div>
     </div>
   </div>

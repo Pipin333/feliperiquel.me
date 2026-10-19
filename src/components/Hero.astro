@@ -2,87 +2,80 @@
 // src/components/Hero.astro
 ---
 
-<section class="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
-  <!-- Background Glow & Grid -->
-  <div class="absolute inset-0 bg-radial-glow pointer-events-none"></div>
-  <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+<section class="relative overflow-hidden pt-12 pb-20 md:pt-18 md:pb-24 border-b border-canvas-border">
+  <!-- Subtle technical grid background -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#1b233818_1px,transparent_1px),linear-gradient(to_bottom,#1b233818_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-    <!-- Highlight Badge -->
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-500/30 bg-brand-950/40 text-brand-300 text-xs sm:text-sm font-medium mb-8 backdrop-blur-sm animate-fade-in shadow-glow">
-      <span class="flex h-2 w-2 rounded-full bg-brand-400"></span>
-      Desarrollo Web a Medida & Modernización de Sitios
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <!-- Top System Badge -->
+    <div class="flex justify-center mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-tech border border-canvas-border bg-canvas-surface/80 text-slate-300 font-mono text-xs backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-telemetry animate-pulse"></span>
+        <span>feliperiquel.me // kernel ready</span>
+      </div>
     </div>
 
-    <!-- Main Headline -->
-    <h1 class="title-fluid font-black text-white max-w-5xl mx-auto tracking-tight mb-6">
-      Transformo la web de tu negocio en un <span class="bg-gradient-to-r from-brand-400 via-indigo-300 to-accent-400 bg-clip-text text-transparent">imán de clientes</span> y credibilidad.
+    <!-- Main Headline (Tested & Frozen) -->
+    <h1 class="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white text-center max-w-4xl mx-auto tracking-tight leading-[1.12] mb-6">
+      Ideo soluciones sólidas hasta para el problema <span class="text-telemetry underline decoration-telemetry/40 underline-offset-8">más mundano</span>.
     </h1>
 
-    <!-- Subheadline -->
-    <p class="subtitle-fluid text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-      ¿Tu sitio actual carga lento o no se ve profesional en celulares? Ayudo a personas, consultores y empresas a renovar su presencia online o construir páginas web de alta velocidad que convierten visitas en cotizaciones reales.
+    <!-- Supporting Sentence (Tested & Frozen) -->
+    <p class="font-sans text-slate-300 text-center max-w-2xl mx-auto text-base sm:text-lg leading-relaxed mb-10">
+      En este sitio encontrarás mis proyectos destacados y mi laboratorio de pruebas. Soy Felipe Riquelme: desarrollador detallista, con foco ingenieril y recién entrando al mercado.
     </p>
 
     <!-- CTAs -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto mb-16">
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 max-w-md mx-auto mb-14">
       <a
-        href="#cotizador"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-accent-600 hover:from-brand-500 hover:to-accent-500 shadow-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+        href="/lab"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5"
       >
-        <span>Cotizar mi renovación / web</span>
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <span>Explorar el Laboratorio</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </a>
       <a
-        href="#portafolio"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-base text-slate-200 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-600 transition-all duration-300 hover:scale-[1.02]"
+        href="#proyectos"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-tech font-mono text-xs font-semibold text-slate-200 bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-slate-600 transition-all duration-140 hover:-translate-y-0.5"
       >
-        Ver proyectos & resultados
+        <span>Ver proyectos & repositorios</span>
       </a>
     </div>
 
-    <!-- Trust Badges & Metrics Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-8 border-t border-slate-800/80 text-left">
-      <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-sm">
-        <div class="flex items-center gap-2 text-emerald-400 font-bold text-lg mb-1">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          &lt; 0.8s
+    <!-- Engineering Capability Pillars -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+      <div class="p-3.5 rounded-tech bg-canvas-surface/60 border border-canvas-border">
+        <div class="font-mono text-xs font-bold text-domain-audio mb-1 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-domain-audio"></span>
+          Audio & DSP
         </div>
-        <p class="text-xs text-slate-400 font-medium">Velocidad de carga optimizada (100 Google Lighthouse)</p>
+        <p class="text-[11px] text-slate-400 leading-normal">Filtros biquad, EQ paramétrico de 8 bandas y visualización FFT con Web Audio API.</p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-sm">
-        <div class="flex items-center gap-2 text-brand-400 font-bold text-lg mb-1">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          100% Mobile
+      <div class="p-3.5 rounded-tech bg-canvas-surface/60 border border-canvas-border">
+        <div class="font-mono text-xs font-bold text-telemetry mb-1 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-telemetry"></span>
+          Homelab & Bots
         </div>
-        <p class="text-xs text-slate-400 font-medium">Experiencia táctil impecable en cualquier dispositivo</p>
+        <p class="text-[11px] text-slate-400 leading-normal">Bots en Discord y WhatsApp orquestados con Docker, colas multimedia y el stack *arr.</p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-sm">
-        <div class="flex items-center gap-2 text-accent-400 font-bold text-lg mb-1">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-          </svg>
-          Stripe Ready
+      <div class="p-3.5 rounded-tech bg-canvas-surface/60 border border-canvas-border">
+        <div class="font-mono text-xs font-bold text-domain-ai mb-1 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-domain-ai"></span>
+          Fullstack & Web
         </div>
-        <p class="text-xs text-slate-400 font-medium">Integración de cobros y señas seguras con 0% recargos</p>
+        <p class="text-[11px] text-slate-400 leading-normal">Astro, TypeScript, Python, Docker y arquitecturas con 100/100 en Core Web Vitals.</p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-sm">
-        <div class="flex items-center gap-2 text-indigo-400 font-bold text-lg mb-1">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-          </svg>
-          SSL & Hosting
+      <div class="p-3.5 rounded-tech bg-canvas-surface/60 border border-canvas-border">
+        <div class="font-mono text-xs font-bold text-domain-algo mb-1 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-domain-algo"></span>
+          Algoritmia & ML
         </div>
-        <p class="text-xs text-slate-400 font-medium">Dominio seguro, CDN mundial y protección continua</p>
+        <p class="text-[11px] text-slate-400 leading-normal">Metaheurísticas continuas evaluadas en IEEE CEC y modelos de sincronización con IA.</p>
       </div>
     </div>
   </div>

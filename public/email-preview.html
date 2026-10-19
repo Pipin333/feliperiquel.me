@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Previsualización de Plantillas de Correo | feliperiquel.me</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #030508;
+      color: #E2E8F0;
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 80px 16px;
+    }
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      background: #090D17;
+      padding: 6px;
+      border-radius: 9999px;
+      border: 1px solid #1B2338;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover {
+      color: #FFFFFF;
+    }
+    .tab-btn.active {
+      background: #00D2FF;
+      color: #05070B;
+      font-weight: 700;
+    }
+    .preview-container {
+      width: 100%;
+      max-width: 660px;
+    }
+    .template-view {
+      display: none;
+    }
+    .template-view.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Switcher -->
+  <div class="top-controls">
+    <button id="btn-ack" class="tab-btn active" onclick="switchTab('ack')">
+      1. Auto-Reply [ACK] al Usuario
+    </button>
+    <button id="btn-notify" class="tab-btn" onclick="switchTab('notify')">
+      2. Notificación Interna a Felipe
+    </button>
+  </div>
+
+  <div class="preview-container">
+
+    <!-- TEMPLATE 1: AUTO-REPLY AL USUARIO -->
+    <div id="view-ack" class="template-view active">
+      <div style="background-color: #05070B; padding: 24px 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #090D17; border: 1px solid #1B2338; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+          
+          <!-- Terminal Header Bar (Native macOS Style) -->
+          <tr>
+            <td style="background-color: #07090E; padding: 12px 18px; border-bottom: 1px solid #1B2338;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="left" style="width: 72px; min-width: 72px; white-space: nowrap; vertical-align: middle;">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #EF4444; margin-right: 6px; vertical-align: middle;"></span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #F59E0B; margin-right: 6px; vertical-align: middle;"></span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #10B981; vertical-align: middle;"></span>
+                  </td>
+                  <td align="center" style="font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; vertical-align: middle;">
+                    feliperiquel.me/contact_gateway
+                  </td>
+                  <td align="right" style="width: 72px; min-width: 72px; white-space: nowrap; vertical-align: middle; font-family: 'Fira Code', monospace; font-size: 10px; color: #10B981;">
+                    [200_OK]
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Content Area -->
+          <tr>
+            <td style="padding: 32px 26px;">
+              <!-- Pill Badge -->
+              <div style="display: inline-block; padding: 4px 10px; background-color: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 11px; color: #00D2FF; font-weight: 600; margin-bottom: 16px;">
+                ACK_SIGNAL // TELEMETRIA
+              </div>
+
+              <h1 style="color: #FFFFFF; font-size: 22px; font-weight: 700; margin: 0 0 16px 0; letter-spacing: -0.02em;">
+                Mensaje recibido con exito
+              </h1>
+
+              <p style="color: #CBD5E1; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0;">
+                Hola <strong style="color: #FFFFFF;">Martín González</strong>,
+              </p>
+
+              <p style="color: #94A3B8; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
+                Te confirmo que he recibido tu mensaje sobre <em style="color: #E2E8F0;">"Consulta sobre Whatsarr y arquitectura Homelab"</em>. Revisare los antecedentes tecnicos y me pondre en contacto contigo a la brevedad.
+              </p>
+
+              <!-- Status Log Box -->
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #07090E; border: 1px solid #1B2338; border-left: 3px solid #10B981; border-radius: 6px; margin-bottom: 24px;">
+                <tr>
+                  <td style="padding: 14px 16px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8; line-height: 1.7;">
+                    <div style="color: #10B981; font-weight: 700;">[ESTADO: REGISTRADO EN BASE DE DATOS]</div>
+                    <div>Canal: Pasarela web directa (feliperiquel.me)</div>
+                    <div>Timestamp UTC: 2026-10-19T18:04:00.000Z</div>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 0 0 16px 0;">
+                Mientras tanto, puedes revisar el codigo de mis proyectos en GitHub o experimentar con las aplicaciones de audio y utilidades en el laboratorio:
+              </p>
+
+              <!-- Action Buttons -->
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
+                <tr>
+                  <td style="padding-right: 10px;">
+                    <a href="https://github.com/Pipin333" target="_blank" style="display: inline-block; background-color: #1B2338; border: 1px solid #2B3856; color: #FFFFFF; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 600; padding: 10px 18px; border-radius: 6px; text-decoration: none;">
+                      GitHub @Pipin333 &rarr;
+                    </a>
+                  </td>
+                  <td>
+                    <a href="https://feliperiquel.me/lab" target="_blank" style="display: inline-block; background-color: #00D2FF; color: #05070B; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 10px 18px; border-radius: 6px; text-decoration: none;">
+                      Ver Laboratorio &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Signature Box -->
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #1B2338; padding-top: 20px;">
+                <tr>
+                  <td>
+                    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF;">
+                      Felipe Riquelme
+                    </div>
+                    <div style="font-family: 'Fira Code', monospace; font-size: 11px; color: #00D2FF; margin-top: 2px;">
+                      Ingeniero Civil en Informatica
+                    </div>
+                    <div style="font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B; margin-top: 4px;">
+                      <a href="https://feliperiquel.me" style="color: #64748B; text-decoration: none;">feliperiquel.me</a> &bull; Santiago, Chile
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Terminal Footer Status -->
+          <tr>
+            <td style="background-color: #07090E; padding: 12px 24px; border-top: 1px solid #1B2338; font-family: 'Fira Code', monospace; font-size: 10px; color: #475569; text-align: center;">
+              Este es un acuse de recibo automatico enviado desde feliperiquel.me
+            </td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+
+
+    <!-- TEMPLATE 2: NOTIFICACIÓN INTERNA A FELIPE -->
+    <div id="view-notify" class="template-view">
+      <div style="background-color: #05070B; padding: 24px 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #090D17; border: 1px solid #1B2338; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+          
+          <!-- Terminal Header Bar -->
+          <tr>
+            <td style="background-color: #07090E; padding: 12px 18px; border-bottom: 1px solid #1B2338;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="left" style="width: 72px; min-width: 72px; white-space: nowrap; vertical-align: middle;">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #EF4444; margin-right: 6px; vertical-align: middle;"></span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #F59E0B; margin-right: 6px; vertical-align: middle;"></span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #10B981; vertical-align: middle;"></span>
+                  </td>
+                  <td align="center" style="font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; vertical-align: middle;">
+                    feliperiquel.me/telemetry-inbox
+                  </td>
+                  <td align="right" style="width: 72px; min-width: 72px; white-space: nowrap; vertical-align: middle; font-family: 'Fira Code', monospace; font-size: 10px; color: #00D2FF;">
+                    [NUEVO]
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Content Area -->
+          <tr>
+            <td style="padding: 28px 24px;">
+              <div style="display: inline-block; padding: 4px 10px; background-color: rgba(0, 210, 255, 0.08); border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 11px; color: #00D2FF; font-weight: 600; margin-bottom: 14px;">
+                TELEMETRIA // NUEVO CONTACTO
+              </div>
+              
+              <h2 style="color: #FFFFFF; font-size: 20px; font-weight: 700; margin: 0 0 16px 0; letter-spacing: -0.02em;">
+                Propuesta de colaboración en proyecto de audio DSP
+              </h2>
+
+              <!-- Sender Info Box -->
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #07090E; border: 1px solid #1B2338; border-radius: 8px; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 14px 16px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8; line-height: 1.8;">
+                    <div><strong style="color: #E2E8F0;">Remitente:</strong> Martín González</div>
+                    <div><strong style="color: #E2E8F0;">Correo:</strong> <a href="mailto:martin@ejemplo.com" style="color: #00D2FF; text-decoration: none;">martin@ejemplo.com</a></div>
+                    <div><strong style="color: #E2E8F0;">Fecha UTC:</strong> 2026-10-19T18:04:00.000Z</div>
+                    <div><strong style="color: #E2E8F0;">Hash IP:</strong> <span style="color: #64748B;">4f7a29e108c9b32a...</span></div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Message Body -->
+              <div style="font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+                Cuerpo del mensaje:
+              </div>
+              <div style="background-color: #0D1322; border: 1px solid #1B2338; border-left: 3px solid #00D2FF; border-radius: 6px; padding: 16px; color: #F1F5F9; font-size: 14px; line-height: 1.6; white-space: pre-wrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+Hola Felipe, estuve revisando tu portafolio y probando SonicRip Studio en el laboratorio. Me llamó mucho la atención la implementación del ecualizador paramétrico y el pipeline de yt-dlp.
+
+Estamos armando una herramienta de procesamiento de audio en tiempo real y nos gustaría conversar contigo para ver posibilidades de colaboración. ¡Quedo atento a tus comentarios!
+              </div>
+
+              <!-- Action Button -->
+              <div style="margin-top: 24px; text-align: left;">
+                <a href="mailto:martin@ejemplo.com?subject=Re:%20Propuesta%20de%20colaboracion%20en%20proyecto%20de%20audio%20DSP" style="display: inline-block; background-color: #00D2FF; color: #05070B; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
+                  Responder a Martín González &rarr;
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #07090E; padding: 14px 24px; border-top: 1px solid #1B2338; font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B;">
+              Pasarela de contacto automatizada de <strong style="color: #CBD5E1;">feliperiquel.me</strong>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      document.getElementById('view-ack').classList.toggle('active', tab === 'ack');
+      document.getElementById('view-notify').classList.toggle('active', tab === 'notify');
+      document.getElementById('btn-ack').classList.toggle('active', tab === 'ack');
+      document.getElementById('btn-notify').classList.toggle('active', tab === 'notify');
+    }
+  </script>
+</body>
+</html>

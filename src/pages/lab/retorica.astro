@@ -1,0 +1,454 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout
+  title="Retórica y Descalabro | Transmutador Ontológico de Jerga Callejera"
+  description="Herramienta heurística y lingüística para la transmutación de enunciados callejeros, modismos y letras urbanas en tratados ontológicos y prosa académica del siglo XIX."
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <a href="/lab" class="hover:text-white transition-colors">Lab</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-brand-400 font-medium" aria-current="page">Retórica y Descalabro</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-10">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 font-mono text-xs font-semibold">
+          <span>🎩 NLP Heurístico & Deriva Semántica</span>
+        </div>
+        <a
+          href="https://github.com/Pipin333/retorica-y-descalabro"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-emerald-400/50 transition-colors"
+          title="Ver repositorio canónico retorica-y-descalabro en GitHub"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>Repo: retorica-y-descalabro</span>
+          <svg class="w-3 h-3 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
+        Retórica y Descalabro
+      </h1>
+      <p class="text-base text-slate-300 leading-relaxed max-w-3xl">
+        Transmuta cualquier enunciado coloquial, jerga callejera o letra de reggaetón en un denso tratado ontológico del siglo XIX, correspondencia diplomática de cancillería o en un ejercicio de entropía semántica multilingüe.
+      </p>
+    </div>
+
+    <!-- Presets bar -->
+    <section class="mb-8" aria-labelledby="presets-heading">
+      <h2 id="presets-heading" class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+        Enunciados de prueba rápida:
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text="Sigue tu camino que sin ti me va mejor, ahora tengo otras que me lo hacen mejor."
+        >
+          🎵 "Sigue tu camino que sin ti me va mejor..."
+        </button>
+        <button
+          type="button"
+          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text="Hermano, me dio la pálida brígida con el terremoto y me fui a acostar a la mala."
+        >
+          😵 "Me dio la pálida brígida con el terremoto..."
+        </button>
+        <button
+          type="button"
+          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text="No me hables de pega que ando entero estresado y quiero puro tomarme una piscola bien cargada."
+        >
+          🥃 "No me hables de pega que ando entero estresado..."
+        </button>
+        <button
+          type="button"
+          class="preset-chip text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-500/50 hover:bg-slate-800/80 transition-all text-left"
+          data-text="El certamen estuvo terrible peludo y nadie cachó una sola pregunta."
+        >
+          📝 "El certamen estuvo terrible peludo y nadie cachó..."
+        </button>
+      </div>
+    </section>
+
+    <!-- Interactive Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- Input Panel -->
+      <section class="flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl" aria-labelledby="input-heading">
+        <div>
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <h2 id="input-heading" class="text-sm font-semibold uppercase tracking-wider text-slate-400">
+              Enunciado Coloquial de Entrada
+            </h2>
+            <button
+              id="clear-btn"
+              type="button"
+              class="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              Limpiar
+            </button>
+          </div>
+
+          <label for="source-text" class="sr-only">Texto coloquial para transmutar</label>
+          <textarea
+            id="source-text"
+            rows="6"
+            class="w-full rounded-xl bg-slate-950 border border-slate-800 p-4 text-slate-100 placeholder-slate-600 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors resize-y text-sm leading-relaxed"
+            placeholder="Escribe o pega aquí cualquier modismo callejero, frase urbana o reclamo cotidiano..."
+          >Sigue tu camino que sin ti me va mejor, ahora tengo otras que me lo hacen mejor.</textarea>
+
+          <!-- Style Register Selector -->
+          <fieldset class="mt-6">
+            <legend class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+              Registro de Transmutación Deseado:
+            </legend>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="style-options">
+              <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-brand-500/50 bg-brand-500/10 cursor-pointer transition-all">
+                <input type="radio" name="style-mode" value="ontologico" checked class="mt-1 text-brand-500 focus:ring-brand-400" />
+                <div>
+                  <span class="block text-xs font-bold text-white">🧐 Tratado Ontológico</span>
+                  <span class="block text-[11px] text-slate-400">Filosofía densa del siglo XIX, perífrasis y latinizaciones.</span>
+                </div>
+              </label>
+
+              <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
+                <input type="radio" name="style-mode" value="diplomatico" class="mt-1 text-brand-500 focus:ring-brand-400" />
+                <div>
+                  <span class="block text-xs font-bold text-white">📜 Diplomacia Solemne</span>
+                  <span class="block text-[11px] text-slate-400">Cancillería institucional, cortesía pomposa y eufemismos.</span>
+                </div>
+              </label>
+
+              <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
+                <input type="radio" name="style-mode" value="barroco" class="mt-1 text-brand-500 focus:ring-brand-400" />
+                <div>
+                  <span class="block text-xs font-bold text-white">🪶 Culteranismo Barroco</span>
+                  <span class="block text-[11px] text-slate-400">Estilo Luis de Góngora, hipérbaton y ornamentación mítica.</span>
+                </div>
+              </label>
+
+              <label class="style-card flex items-start gap-3 p-3 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-950 cursor-pointer transition-all">
+                <input type="radio" name="style-mode" value="whispers" class="mt-1 text-brand-500 focus:ring-brand-400" />
+                <div>
+                  <span class="block text-xs font-bold text-white">🌀 Teléfono Descompuesto</span>
+                  <span class="block text-[11px] text-slate-400">Deriva semántica multilingüe a través de traducción encadenada.</span>
+                </div>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-4">
+          <div class="text-xs text-slate-400">
+            <span id="word-count">16 palabras</span>
+          </div>
+          <button
+            id="transmute-btn"
+            type="button"
+            class="inline-flex items-center justify-center px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-brand-600 to-accent-500 hover:from-brand-500 hover:to-accent-400 shadow-glow transition-all active:scale-[0.98]"
+          >
+            <span>Transmutar Texto</span>
+            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Output Panel -->
+      <section class="flex flex-col justify-between p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl" aria-labelledby="output-heading">
+        <div>
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <h2 id="output-heading" class="text-sm font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              Prosa Transmutada Resultante
+            </h2>
+            <span id="transmute-status" class="text-xs text-slate-500">Heurística lista</span>
+          </div>
+
+          <div
+            id="output-container"
+            class="min-h-[220px] rounded-xl bg-slate-950 border border-slate-800/90 p-5 font-serif text-slate-200 text-base leading-relaxed tracking-wide select-all"
+            aria-live="polite"
+          >
+            "Continúa con tu sendero porque en tu ausencia la calidad de mi vida ha aumentado; actualmente poseo a otras entidades femeninas que copulan más satisfactoriamente con mi persona."
+          </div>
+
+          <!-- Chain trace (visible only for whispers) -->
+          <div id="whispers-trace" class="hidden mt-4 p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs text-slate-400 space-y-1">
+            <span class="font-mono text-brand-300 block mb-1 font-semibold">Deriva Semántica (Saltos):</span>
+            <div id="whispers-steps" class="font-mono text-[11px] text-slate-400"></div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button
+              id="copy-btn"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span id="copy-text">Copiar</span>
+            </button>
+
+            <button
+              id="share-whatsapp-btn"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-emerald-300 bg-emerald-950/60 border border-emerald-800/50 hover:bg-emerald-900/60 transition-colors"
+            >
+              <span>Compartir en WhatsApp</span>
+            </button>
+          </div>
+
+          <span class="text-[11px] text-slate-500">100% Client-side & Libre</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- Technical Note Section -->
+    <aside class="p-6 rounded-xl border border-slate-800/60 bg-slate-900/30 text-xs text-slate-400 space-y-2">
+      <h3 class="font-semibold text-slate-300 uppercase tracking-wider text-[11px]">
+        Acerca del motor de transmutación:
+      </h3>
+      <p>
+        Este módulo opera sobre un diccionario combinatorio de morfología culta, desambiguación léxica de chilenismos y reglas gramaticales latinizadas inspiradas en el proyecto <em>retorica-y-descalabro</em>. El modo <em>Teléfono Descompuesto</em> utiliza traducción libre encadenada de MyMemory a través de secuencias multilingües (Español ➔ Alemán ➔ Japonés ➔ Español) para evidenciar la erosión semántica del lenguaje automatizado.
+      </p>
+    </aside>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  // Lexicographical dictionaries & transposition heuristics
+  const DICTIONARY_CHILEAN: Record<string, string> = {
+    "me dio la pálida": "experimenté una súbita y dramática lipotimia vasovagal de etiología somatomorfa",
+    "la pálida": "un colapso neurovegetativo transitorio",
+    "terremoto": "un cóctel alcohólico hiperbólico a base de vino fermentado y crema láctea",
+    "a la mala": "mediante una imposición carente de consentimiento o decoro",
+    "brígida": "de una naturaleza ontológicamente severa y desconcertante",
+    "brígido": "grave y epistemológicamente inquietante",
+    "pega": "mi jornada de servidumbre asalariada",
+    "piscola": "una dilución hidroalcohólica de destilado de uva moscatel en soda carbonatada caramelizada",
+    "entero estresado": "en un estado de extenuación neuropsiquiátrica integral",
+    "peludo": "intelectualmente inescrutable y de complejidad abrumadora",
+    "peluda": "de insondable dificultad heurística",
+    "cachó": "comprendió cabalmente",
+    "cacharon": "aprehendieron cognitivamente",
+    "carrete": "un cónclave dionisíaco de comunión etílica",
+    "hermano": "estimado coetáneo y compatriota",
+    "wena": "cordial salutación fraterna",
+    "weon": "sujeto indeterminado de la comunidad",
+    "weona": "fémina no especificada del conglomerado social",
+    "sapo": "vigilante clandestino y delator consuetudinario"
+  };
+
+  const DICTIONARY_REGGAETON: Record<string, string> = {
+    "sigue tu camino": "prosigue con tu desplazamiento teleológico autónomo",
+    "sin ti me va mejor": "en tu conspicua ausencia los índices de bienestar de mi existencia han experimentado un alza estadística",
+    "ahora tengo otras": "en el presente disfruto del concurso de diversos especímenes femeninos alternativos",
+    "que me lo hacen mejor": "cuyas destrezas copulatorias resultan manifiestamente superiores a tu desempeño pretérito",
+    "perreo": "una danza de fricción pélvica sincopada al compás del dembow",
+    "bellaqueo": "un cortejo lúbrico y desinhibido orientado al intercambio de fluidos",
+    "sandungueo": "un frenético ejercicio rítmico de cortejo corporal"
+  };
+
+  function transmuteOntologico(text: string): string {
+    let result = text;
+
+    // Apply phrases first
+    for (const [k, v] of Object.entries(DICTIONARY_REGGAETON)) {
+      const reg = new RegExp(k, "gi");
+      result = result.replace(reg, v);
+    }
+    for (const [k, v] of Object.entries(DICTIONARY_CHILEAN)) {
+      const reg = new RegExp(k, "gi");
+      result = result.replace(reg, v);
+    }
+
+    // Generic word replacements
+    const wordMap: Record<string, string> = {
+      "quiero": "manifiesto una pulsión irrefrenable por",
+      "puedo": "dispongo de la facultad volitiva para",
+      "tengo": "ostento en mi haber existencial",
+      "hacen": "ejecutan con destreza motriz",
+      "dijo": "declaró con énfasis categórico",
+      "amor": "afecto neuroquímico correspondido",
+      "noche": "intervalo circadiano nocturno",
+      "besos": "ósculos mucosos de naturaleza erótica",
+      "cama": "lecho horizontal de reposo fisiológico"
+    };
+
+    for (const [w, repl] of Object.entries(wordMap)) {
+      const reg = new RegExp(`\\b${w}\\b`, "gi");
+      result = result.replace(reg, repl);
+    }
+
+    return `"${result.charAt(0).toUpperCase() + result.slice(1)}"`;
+  }
+
+  function transmuteDiplomatico(text: string): string {
+    let result = text;
+    for (const [k, v] of Object.entries(DICTIONARY_CHILEAN)) {
+      const reg = new RegExp(k, "gi");
+      result = result.replace(reg, v);
+    }
+
+    return `"Por medio de la presente, cumplo con transmitir que: ${result.toLowerCase().trim()}. Rogamos a las partes concernidas tomar debida nota del precedente enunciado con la mayor circunspección y solemnidad diplomática."`;
+  }
+
+  function transmuteBarroco(text: string): string {
+    return `"¡Oh voluble Fortuna! Ved aquí cómo, en dorada sombra de engaño envuelta, ${text.trim().toLowerCase()}, cual Ícaro audaz cuyas alas de cera el Febo implacable derrite en las procelosas ondas del Parnaso."`;
+  }
+
+  async function runWhispersTranslation(text: string, onStep: (step: string) => void): Promise<string> {
+    const hops = [
+      { from: "es", to: "de", label: "Alemán (de)" },
+      { from: "de", to: "ja", label: "Japonés (ja)" },
+      { from: "ja", to: "es", label: "Español retornado (es)" }
+    ];
+
+    let current = text.trim();
+    for (const hop of hops) {
+      onStep(`Traduciendo: ${hop.label}...`);
+      try {
+        const enc = encodeURIComponent(current);
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${enc}&langpair=${hop.from}|${hop.to}`);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        const translated = data?.responseData?.translatedText;
+        if (translated && !translated.toUpperCase().includes("MYMEMORY WARNING")) {
+          current = translated;
+        }
+      } catch (err) {
+        // Fallback to slight lexical drift if network rate-limits
+        current = current + " [alteración semántica]";
+      }
+    }
+    return `"${current}"`;
+  }
+
+  // DOM bindings
+  const sourceText = document.getElementById('source-text') as HTMLTextAreaElement;
+  const outputContainer = document.getElementById('output-container') as HTMLDivElement;
+  const transmuteBtn = document.getElementById('transmute-btn') as HTMLButtonElement;
+  const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
+  const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+  const copyText = document.getElementById('copy-text') as HTMLSpanElement;
+  const shareWaBtn = document.getElementById('share-whatsapp-btn') as HTMLButtonElement;
+  const wordCount = document.getElementById('word-count') as HTMLSpanElement;
+  const whispersTrace = document.getElementById('whispers-trace') as HTMLDivElement;
+  const whispersSteps = document.getElementById('whispers-steps') as HTMLDivElement;
+  const transmuteStatus = document.getElementById('transmute-status') as HTMLSpanElement;
+
+  function updateWordCount() {
+    const words = sourceText.value.trim().split(/\s+/).filter(Boolean).length;
+    wordCount.textContent = `${words} palabra${words === 1 ? '' : 's'}`;
+  }
+
+  sourceText?.addEventListener('input', updateWordCount);
+
+  // Preset chips click
+  document.querySelectorAll('.preset-chip').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-text');
+      if (val && sourceText) {
+        sourceText.value = val;
+        updateWordCount();
+        executeTransmutation();
+      }
+    });
+  });
+
+  // Radio button styling feedback
+  document.querySelectorAll('input[name="style-mode"]').forEach((radio) => {
+    radio.addEventListener('change', (e) => {
+      document.querySelectorAll('.style-card').forEach((card) => {
+        card.classList.remove('border-brand-500/50', 'bg-brand-500/10');
+        card.classList.add('border-slate-800', 'bg-slate-950/60');
+      });
+      const parent = (e.target as HTMLElement).closest('.style-card');
+      parent?.classList.add('border-brand-500/50', 'bg-brand-500/10');
+      parent?.classList.remove('border-slate-800', 'bg-slate-950/60');
+    });
+  });
+
+  async function executeTransmutation() {
+    const raw = sourceText.value.trim();
+    if (!raw) {
+      outputContainer.textContent = "Por favor ingresa un enunciado para transmutar.";
+      return;
+    }
+
+    const mode = (document.querySelector('input[name="style-mode"]:checked') as HTMLInputElement)?.value || 'ontologico';
+
+    whispersTrace.classList.add('hidden');
+    transmuteStatus.textContent = "Procesando...";
+
+    if (mode === 'ontologico') {
+      outputContainer.textContent = transmuteOntologico(raw);
+      transmuteStatus.textContent = "Transmutación ontológica completa";
+    } else if (mode === 'diplomatico') {
+      outputContainer.textContent = transmuteDiplomatico(raw);
+      transmuteStatus.textContent = "Registro diplomático aplicado";
+    } else if (mode === 'barroco') {
+      outputContainer.textContent = transmuteBarroco(raw);
+      transmuteStatus.textContent = "Culteranismo barroco generado";
+    } else if (mode === 'whispers') {
+      whispersTrace.classList.remove('hidden');
+      whispersSteps.textContent = "Iniciando cadena de traducción...";
+      const result = await runWhispersTranslation(raw, (step) => {
+        whispersSteps.textContent = step;
+      });
+      outputContainer.textContent = result;
+      transmuteStatus.textContent = "Deriva semántica completada";
+      whispersSteps.textContent = "es -> de -> ja -> es [completado]";
+    }
+  }
+
+  transmuteBtn?.addEventListener('click', executeTransmutation);
+
+  clearBtn?.addEventListener('click', () => {
+    sourceText.value = '';
+    updateWordCount();
+    outputContainer.textContent = 'Ingresa un enunciado y presiona "Transmutar Texto".';
+    whispersTrace.classList.add('hidden');
+  });
+
+  copyBtn?.addEventListener('click', async () => {
+    const text = outputContainer.textContent || '';
+    if (text) {
+      await navigator.clipboard.writeText(text);
+      copyText.textContent = "¡Copiado!";
+      setTimeout(() => {
+        copyText.textContent = "Copiar";
+      }, 2000);
+    }
+  });
+
+  shareWaBtn?.addEventListener('click', () => {
+    const text = outputContainer.textContent || '';
+    const shareMessage = `🎩 *Retórica y Descalabro* (Felipe Riquelme Lab):\n\n${text}\n\nPruébalo aquí: https://feliperiquel.me/lab/retorica`;
+    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+    window.open(url, '_blank');
+  });
+</script>

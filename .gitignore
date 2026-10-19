@@ -5,13 +5,19 @@ node_modules/
 # Build artifacts
 dist/
 .astro/
+.vercel/
 
 # Environment and secrets
 .env
 .env.local
 .env.*.local
 
-# OS files
+# AI Agent harnesses & scratch
+.agents/
+.gemini/
+.scratch/
+
+# OS files & logs
 .DS_Store
 Thumbs.db
 *.log

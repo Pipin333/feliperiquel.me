@@ -1,123 +1,271 @@
 ---
 // src/components/WorkShowcase.astro
+interface ArchitectureRationale {
+  origin: string;
+  decisions: string;
+  whyShown: string;
+}
+
 interface Project {
+  id: string;
   title: string;
   category: string;
   description: string;
-  highlightMetric: string;
   tags: string[];
-  gradient: string;
+  githubUrl?: string;
+  statusBadge: string;
+  accentBadgeColor: string;
+  rationale: ArchitectureRationale;
 }
 
 const projects: Project[] = [
   {
-    title: "Nova Legal - Estudio Jurídico",
-    category: "Renovación Web Completa",
-    description: "Modernización de un sitio legal con más de 8 años de antigüedad. Se reestructuró la arquitectura de información, reduciendo el tiempo de carga un 85% e incorporando agenda directa de consultas.",
-    highlightMetric: "⚡ De 4.2s a 0.7s de carga (+120% en contactos)",
-    tags: ["Astro", "Tailwind CSS", "SEO Local", "Calendly"],
-    gradient: "from-blue-600/30 to-indigo-900/40"
+    id: "toodles",
+    title: "Toodles",
+    category: "Audio Streaming & Machine Learning",
+    description: "Motor de streaming de audio para Discord de alto rendimiento y baja latencia desplegado en contenedores Docker sobre arquitectura ARM64 (Oracle Cloud). Integra extracción nativa con yt-dlp, streaming WebM/Opus directo vía FFmpeg sin transcodificación pesada (< 0.5% CPU) y un motor de recomendación musical híbrido (Implicit ALS + Item2Vec + vectores acústicos) con persistencia de colas ante reinicios.",
+    tags: ["Discord Bot", "Python (asyncio)", "RecSys (ALS + Item2Vec)", "FFmpeg Opus", "yt-dlp", "Docker / ARM64", "SQLAlchemy"],
+    githubUrl: "https://github.com/Pipin333/Toodles",
+    statusBadge: "Open Source",
+    accentBadgeColor: "text-domain-audio border-domain-audio/30 bg-domain-audio/10",
+    rationale: {
+      origin: "Los bots de música convencionales en Discord colapsaban frecuentemente por bloqueos de CDN de YouTube (HTTP 403/429), saturaban la CPU por re-codificaciones innecesarias y carecían de recomendación inteligente al agotarse la cola de reproducción.",
+      decisions: "Se estructuró una arquitectura en Python asíncrono con buffer híbrido de 3 niveles (reproducción activa, descarga en caché atómica de la siguiente pista en /tmp y pre-resolución en segundo plano). El passthrough de cabeceras HTTP de yt-dlp hacia FFmpeg elimina los bloqueos 403 sin sobrecargar la CPU. El motor RecSys entrena modelos ALS e Item2Vec cada 6 horas limitando hilos con threadpoolctl y serializa la cola en SQLite con WAL para cero pérdida de canciones ante reinicios (graceful drain).",
+      whyShown: "Demuestra ingeniería de audio en tiempo real, modelado matemático de recomendación (Machine Learning embebido con inferencia en < 10 ms), orquestación en contenedores ARM64 y despliegues sin tiempo de inactividad con GitHub Actions CI/CD."
+    }
   },
   {
-    title: "Clínica Dental OdontoSalud",
-    category: "Landing Page & Reservas",
-    description: "Diseño mobile-first para captación de pacientes en Google Ads. Se crearon botones flotantes de WhatsApp y formulario inteligente con confirmación inmediata.",
-    highlightMetric: "📱 78% de visitas convertidas desde celulares",
-    tags: ["Mobile First", "WhatsApp Gateway", "Core Web Vitals"],
-    gradient: "from-emerald-600/30 to-teal-900/40"
+    id: "whatsarr",
+    title: "Whatsarr",
+    category: "Bots Conversacionales & Media Server",
+    description: "Puente automatizado en WhatsApp basado en Node.js y Baileys para solicitar películas y series en lenguaje natural. Integra extracción de metadatos (TMDB), un motor de priorización progresiva que descarga el Episodio 1 con máxima prioridad en qBittorrent para comenzar a ver en minutos, coordinación con Radarr, Sonarr y Prowlarr, y un Dashboard Web en tiempo real para monitoreo de descargas y salud del sistema.",
+    tags: ["Node.js", "Baileys (WhatsApp)", "Radarr / Sonarr", "qBittorrent", "Plex Server", "Docker Compose", "Web Dashboard"],
+    githubUrl: "https://github.com/Pipin333/Whatsarr",
+    statusBadge: "Open Source",
+    accentBadgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
+    rationale: {
+      origin: "Familiares y usuarios no técnicos en el hogar encuentran frustrante o inaccesible entrar por VPN a paneles de gestión como Radarr o Sonarr para pedir contenidos. WhatsApp es la aplicación donde ya conviven diariamente.",
+      decisions: "Se empaquetó un microservicio en Docker usando Baileys v6.7 (conexión multi-dispositivo sin la sobrecarga de navegadores Chromium). Se implementó un evaluador de lanzamientos con Fuzzball para filtrar versiones CAM o archivos inflados, y un Progressive Streamer que prioriza el Episodio 1 en qBittorrent (filePrio: 7) para alertar al chat apenas Plex lo indexa mientras el resto de la temporada sigue descargando en segundo plano.",
+      whyShown: "Refleja capacidad para diseñar pasarelas conversacionales con i18n (inglés/español), orquestar stacks complejos con Docker Compose y construir interfaces web de monitoreo reactivas sin fricción para el usuario final."
+    }
   },
   {
-    title: "Andes Logistics & Freight",
-    category: "Sitio Corporativo & Cotizador",
-    description: "Plataforma corporativa para empresa de comercio exterior con cotizador dinámico de fletes internacionales y panel de contacto por departamento.",
-    highlightMetric: "💼 +45 cotizaciones B2B mensuales",
-    tags: ["Astro Jamstack", "Cotizador Dinámico", "Micro-interacciones"],
-    gradient: "from-amber-600/30 to-orange-900/40"
+    id: "unicalendar",
+    title: "UniCalendar AI",
+    category: "EdTech & Planificación Inteligente",
+    description: "Aplicación web integral en Next.js para estudiantes y docentes universitarios. Ingiere cronogramas y sílabos en PDF, Word, texto o directamente desde Canvas LMS vía API. Analiza las fechas mediante LLMs con failover multi-proveedor (Google Gemini, Groq, OpenRouter), protege la planificación inyectando el calendario institucional (feriados, recesos y marcha blanca), incluye un simulador de calificaciones y sincroniza eventos con código de colores en Google Calendar.",
+    tags: ["Next.js", "TypeScript", "Google Gemini / Groq", "Canvas LMS API", "Google Calendar OAuth", "SheetJS", "Tailwind CSS"],
+    githubUrl: "https://github.com/Pipin333/UniCalendar",
+    statusBadge: "Publicado / Open Source",
+    accentBadgeColor: "text-domain-ai border-domain-ai/30 bg-domain-ai/10",
+    rationale: {
+      origin: "La dispersión de fechas de certámenes y entregas entre sílabos estáticos en PDF y plataformas como Canvas LMS, lo que provoca olvidos, desorganización y choques imprevistos con semanas de receso institucional o feriados.",
+      decisions: "Se construyó una arquitectura en Next.js con soporte multi-proveedor de IA (Google Gemini, Groq y OpenRouter) con failover automático ante cuotas 429. Las fechas inhábiles institucionales se inyectan en el prompt del LLM para blindar los días de descanso. Se incorporó un simulador de notas ponderadas con SheetJS para planillas Excel y sincronización OAuth 2.0 hacia Google Calendar con clasificación por criticidad.",
+      whyShown: "Evidencia desarrollo de producto completo de grado de producción, orquestación de LLMs tolerante a fallos, autenticación segura con terceros y diseño de interfaces con cero deuda visual bajo los principios de Impeccable."
+    }
   },
   {
-    title: "Atelier Cerámicas & Diseño",
-    category: "Catálogo Digital & Cobros",
-    description: "Tienda visual con cobro de señas e inscripciones a talleres presenciales integrado con pasarela Stripe segura y notificaciones automáticas.",
-    highlightMetric: "💳 0% errores en cobros con Stripe Checkout",
-    tags: ["Stripe Ready", "Catálogo Interactivo", "Email Transaccional"],
-    gradient: "from-purple-600/30 to-fuchsia-900/40"
+    id: "jd-watch",
+    title: "JD Watch Controller",
+    category: "IoT & Wearables (Wear OS + Android)",
+    description: "Controlador de movimiento de código abierto para smartwatches Wear OS (Samsung Galaxy Watch 4, 5, 6, 7 / Pixel Watch) y smartphones Android para Just Dance (PC y mods comunitarios). Captura datos inerciales a 50 Hz exactos con fusión de sensores de 6 ejes (acelerómetro y giroscopio), transmite paquetes binarios Little-Endian por Bluetooth/Wi-Fi y emula el protocolo oficial con la curva de puntuación ponderada auténtica.",
+    tags: ["Wear OS", "Android (Kotlin)", "6-Axis IMU Sensors", "Bluetooth ChannelClient", "WebSockets", "Haptics"],
+    githubUrl: "https://github.com/Pipin333/jd-watch-controller",
+    statusBadge: "Open Source",
+    accentBadgeColor: "text-telemetry border-telemetry/30 bg-telemetry/10",
+    rationale: {
+      origin: "Sostener un teléfono móvil pesado al bailar es peligroso para el dispositivo, incómodo y antinatural. Además, la aplicación móvil oficial carecía de soporte para relojes Wear OS y para servidores comunitarios de PC.",
+      decisions: "Se desarrolló en Kotlin nativo para Wear OS y Android. Implementa un protector de batería (Battery Shield) que apaga los sensores IMU y los LEDs PPG en menús reduciendo el gasto de batería hasta en un 80%, navegación por el carrusel de canciones con el bisel rotativo del reloj y calibración matemática de umbrales G-force según la fórmula oficial de Ubisoft para un registro de puntuación fidedigno.",
+      whyShown: "Acredita dominio de desarrollo móvil nativo de bajo nivel, sincronización inercial a alta frecuencia (50 Hz), ingeniería de protocolos de red binarios en tiempo real y optimización rigurosa de energía en hardware restringido."
+    }
+  },
+  {
+    id: "ad-bsa",
+    title: "AD-BSA",
+    category: "Computación Científica & Optimización",
+    description: "Adaptive Differential Boogeyman Search Algorithm: metaheurística global continua basada en aprendizaje negativo explícito (Explicit Negative Learning). Modela baricentros de anti-atractores en las peores regiones del espacio de búsqueda y aplica una barrera de potencial basada en cosecante acotada (|csc(x)|) con enfriamiento polinomial para evacuar trampas de estancamiento local. Empató en el Rank #1 en el benchmark formal del IEEE CEC 2020 en 50 dimensiones.",
+    tags: ["Python", "Metaheurísticas", "IEEE CEC 2020", "Optimización Continua", "NumPy / SciPy", "Differential Evolution"],
+    githubUrl: "https://github.com/Pipin333/AD-BSA",
+    statusBadge: "Research / Open Source",
+    accentBadgeColor: "text-domain-algo border-domain-algo/30 bg-domain-algo/10",
+    rationale: {
+      origin: "En paisajes de optimización no lineales de alta dimensión (D >= 50), los algoritmos evolutivos canónicos (DE, PSO, CMA-ES) sufren convergencia prematura al guiarse exclusivamente por atracción positiva hacia los mejores puntos conocidos, quedando atrapados en valles de engaño.",
+      decisions: "Se formuló un operador de mutación tripartito (Atracción Elite + Barrera Repulsiva Cosecante + Perturbación Diferencial) junto a memorias de éxito de Lehmer y reducción lineal de población (LPSR). La función de repulsión se desacopla a cero en valles seguros para permitir descenso puro. Evaluado rigurosamente sobre el conjunto de pruebas IEEE CEC 2020 (50 dimensiones, 50.000 evaluaciones por corrida) empatando en el primer lugar con CMA-ES.",
+      whyShown: "Demuestra capacidad de investigación en matemática aplicada y algoritmia avanzada, respaldado por código científico probado bajo PEP 8, CI automatizado en GitHub Actions y publicación con identificador formal DOI de Zenodo."
+    }
   }
 ];
 ---
 
-<section id="portafolio" class="py-24 bg-slate-900/40 border-t border-slate-800">
+<section id="proyectos" class="py-20 bg-canvas-surface/40 border-b border-canvas-border">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
       <div>
-        <h2 class="text-xs uppercase tracking-widest font-bold text-accent-400 mb-3">Trabajos & Resultados</h2>
-        <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Proyectos que generan impacto real
-        </h3>
-        <p class="mt-4 text-slate-300 text-base max-w-2xl">
-          No solo construyo sitios bonitos: diseño herramientas de negocio que cargan en un parpadeo, posicionan en buscadores y facilitan que tus clientes te compren.
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas text-slate-300 font-mono text-xs uppercase tracking-wider mb-3">
+          <span>⚙️ Proyectos de Software</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
+          Repositorios & Soluciones Reales
+        </h2>
+        <p class="mt-2 text-slate-300 text-sm sm:text-base max-w-2xl leading-relaxed">
+          Cada proyecto responde a una fricción real. Pulsa en cada tarjeta para inspeccionar el origen del problema y las decisiones de arquitectura detrás del código.
         </p>
       </div>
 
       <a
-        href="#cotizador"
-        class="inline-flex items-center gap-2 text-sm font-semibold text-brand-400 hover:text-brand-300 transition-colors"
+        href="https://github.com/Pipin333"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-tech font-mono text-xs font-semibold text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry hover:text-telemetry shadow-lg transition-all duration-140 hover:-translate-y-0.5 group shrink-0"
       >
-        <span>¿Quieres resultados similares? Cotiza tu web</span>
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <svg class="w-4 h-4 text-slate-300 group-hover:text-telemetry transition-colors" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        <span>Ver perfil en GitHub (@Pipin333)</span>
+        <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-telemetry group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
         </svg>
       </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {projects.map((project) => (
-        <article class="group rounded-3xl bg-slate-950 border border-slate-800 overflow-hidden hover:border-slate-700 transition-all duration-300 flex flex-col justify-between">
-          <!-- Visual Mockup Container -->
-          <div class={`h-56 bg-gradient-to-br ${project.gradient} p-8 flex flex-col justify-between border-b border-slate-800/80 relative overflow-hidden`}>
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-slate-900/80 text-white backdrop-blur-md border border-white/10">
+    <!-- Projects Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {projects.map((project, index) => (
+        <article class={`spotlight-card group p-6 sm:p-7 flex flex-col justify-between relative ${index === projects.length - 1 && projects.length % 2 !== 0 ? 'lg:col-span-2 lg:max-w-[calc(50%-0.75rem)] lg:mx-auto w-full' : ''}`}>
+          <div>
+            <!-- Header bar -->
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <span class="font-mono text-[11px] text-slate-400">
                 {project.category}
               </span>
-              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
-                Caso Verificado
+              <span class={`font-mono text-[10px] px-2 py-0.5 rounded-tech-sm font-semibold border ${project.accentBadgeColor}`}>
+                {project.statusBadge}
               </span>
             </div>
 
-            <!-- Decorative Mockup Element -->
-            <div class="rounded-xl bg-slate-950/80 border border-white/10 p-4 shadow-2xl backdrop-blur-md group-hover:scale-[1.02] transition-transform duration-300">
-              <div class="flex items-center gap-2 mb-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
-                <div class="w-32 h-2 rounded-full bg-slate-800 ml-2"></div>
-              </div>
-              <div class="text-xs font-mono text-emerald-400 font-bold">
-                {project.highlightMetric}
-              </div>
-            </div>
-          </div>
+            <h3 class="text-2xl font-display font-bold text-white mb-2 group-hover:text-telemetry transition-colors">
+              {project.title}
+            </h3>
 
-          <!-- Content Details -->
-          <div class="p-8 flex-1 flex flex-col justify-between">
-            <div>
-              <h4 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-300 transition-colors">
-                {project.title}
-              </h4>
-              <p class="text-sm text-slate-400 mb-6 leading-relaxed">
-                {project.description}
-              </p>
-            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-5">
+              {project.description}
+            </p>
 
-            <div class="pt-4 border-t border-slate-800/80 flex flex-wrap gap-2">
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-1.5 mb-5">
               {project.tags.map((tag) => (
-                <span class="text-xs font-medium px-2.5 py-1 rounded-lg bg-slate-900 text-slate-300 border border-slate-800">
+                <span class="font-mono text-[11px] px-2 py-0.5 rounded-tech-sm bg-canvas text-slate-400 border border-canvas-border">
                   {tag}
                 </span>
               ))}
             </div>
+
+            <!-- SIGNATURE ELEMENT 2: "Por qué se diseñó así" Accordion Drawer -->
+            <div class="mb-5 border-t border-canvas-border/80 pt-3">
+              <button
+                type="button"
+                data-toggle-why={project.id}
+                class="flex items-center justify-between w-full font-mono text-xs text-telemetry hover:text-white py-1 transition-colors"
+                aria-expanded="false"
+                aria-controls={`rationale-${project.id}`}
+              >
+                <span class="flex items-center gap-1.5 font-bold">
+                  <span class="toggle-icon text-[11px]">[+]</span>
+                  <span>Por qué se diseñó así (decisiones técnicas)</span>
+                </span>
+                <span class="text-[10px] text-slate-500 uppercase">Detalles</span>
+              </button>
+
+              <div
+                id={`rationale-${project.id}`}
+                class="hidden mt-3 p-4 rounded-tech bg-canvas border border-canvas-border space-y-3 font-mono text-xs"
+              >
+                <div>
+                  <div class="text-[11px] font-bold text-telemetry mb-0.5">
+                    1. ¿Por qué nació esta solución?
+                  </div>
+                  <p class="text-slate-300 text-[11px] leading-normal font-sans">
+                    {project.rationale.origin}
+                  </p>
+                </div>
+
+                <div>
+                  <div class="text-[11px] font-bold text-domain-audio mb-0.5">
+                    2. ¿Por qué esta arquitectura y stack?
+                  </div>
+                  <p class="text-slate-300 text-[11px] leading-normal font-sans">
+                    {project.rationale.decisions}
+                  </p>
+                </div>
+
+                <div>
+                  <div class="text-[11px] font-bold text-slate-200 mb-0.5">
+                    3. ¿Por qué se muestra en este portafolio?
+                  </div>
+                  <p class="text-slate-400 text-[11px] leading-normal font-sans">
+                    {project.rationale.whyShown}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="pt-3 border-t border-canvas-border/60 flex items-center justify-between">
+            {project.githubUrl ? (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 font-mono text-xs font-semibold text-slate-300 hover:text-telemetry transition-colors"
+              >
+                <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                <span>Inspeccionar repositorio</span>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            ) : (
+              <span class="font-mono text-xs text-slate-500">
+                Código privado / confidencial
+              </span>
+            )}
+            <span class="font-mono text-[10px] text-slate-500">
+              MIT / Open Source
+            </span>
           </div>
         </article>
       ))}
     </div>
   </div>
 </section>
+
+<!-- Accordion logic script -->
+<script>
+  const toggleButtons = document.querySelectorAll<HTMLButtonElement>('button[data-toggle-why]');
+
+  toggleButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-toggle-why');
+      if (!id) return;
+
+      const panel = document.getElementById(`rationale-${id}`);
+      const icon = btn.querySelector<HTMLElement>('.toggle-icon');
+
+      if (panel) {
+        const isHidden = panel.classList.contains('hidden');
+        if (isHidden) {
+          panel.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+          if (icon) icon.textContent = '[-]';
+        } else {
+          panel.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+          if (icon) icon.textContent = '[+]';
+        }
+      }
+    });
+  });
+</script>
