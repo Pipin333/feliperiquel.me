@@ -100,11 +100,48 @@ import Icon from '../../components/Icon.astro';
           </span>
         </div>
 
-        <!-- Realtime Audio Visualizer Canvas -->
-        <div class="relative w-full h-32 rounded-xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center">
-          <canvas id="visualizer-canvas" class="w-full h-full block"></canvas>
-          <div id="visualizer-placeholder" class="absolute inset-0 flex items-center justify-center text-xs text-slate-600 font-mono">
-            Presiona reproducir para activar el osciloscopio en tiempo real
+        <!-- Realtime Audio Visualizer Canvas en Display VFD Pioneer -->
+        <div class="relative w-full rounded-xl bg-[#030712] border-2 border-cyan-500/30 overflow-hidden shadow-[0_0_30px_rgba(6,182,212,0.18)] vfd-bezel">
+          <!-- Serigrafía superior estilo Pioneer Car Audio / Technics VFD -->
+          <div class="flex items-center justify-between px-4 py-2 bg-[#02050c] border-b border-cyan-500/20 text-[10px] font-mono tracking-widest text-cyan-400/90 select-none">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse"></span>
+              <span class="font-bold text-cyan-300">PIONEER DSP MATRIX</span>
+              <span class="text-slate-600">|</span>
+              <span class="text-slate-400 hidden sm:inline">VFD 32-BAND SPECTRUM ANALYZER</span>
+            </div>
+            <div class="flex items-center gap-3 text-cyan-300/80 font-semibold">
+              <span class="hidden sm:inline text-amber-400/90">PEAK HOLD: AUTO</span>
+              <span class="px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 text-[9px] text-cyan-300">CH L/R</span>
+              <span class="text-emerald-400">44.1 kHz</span>
+            </div>
+          </div>
+
+          <!-- Área del Canvas con textura de scanlines y gradiente de vidrio ahumado -->
+          <div class="relative w-full h-36 sm:h-44 bg-[#030810] flex items-center justify-center overflow-hidden">
+            <!-- Capa de scanlines VFD -->
+            <div class="absolute inset-0 pointer-events-none vfd-scanlines z-10 opacity-35"></div>
+            
+            <canvas id="visualizer-canvas" class="w-full h-full block relative z-0"></canvas>
+            
+            <div id="visualizer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-xs text-cyan-400/80 font-mono z-20 pointer-events-none space-y-1">
+              <span class="tracking-wider uppercase font-semibold text-cyan-300 text-shadow-vfd">STANDBY • VFD DISPLAY READY</span>
+              <span class="text-[11px] text-slate-500">Carga un audio o prueba la demo para encender el analizador de espectro</span>
+            </div>
+          </div>
+
+          <!-- Barra de marcas de frecuencia y dB inferior estilo ecualizador estéreo -->
+          <div class="flex items-center justify-between px-4 py-1.5 bg-[#02050c] border-t border-cyan-500/20 text-[9px] font-mono text-cyan-400/60 select-none overflow-x-auto">
+            <span>60Hz</span>
+            <span>150Hz</span>
+            <span>400Hz</span>
+            <span>1kHz</span>
+            <span>2.5kHz</span>
+            <span>5kHz</span>
+            <span>10kHz</span>
+            <span>15kHz</span>
+            <span class="text-amber-400/70">+3dB</span>
+            <span class="text-rose-500/80 font-bold">CLIP</span>
           </div>
         </div>
 
@@ -907,7 +944,14 @@ MGMT - Kids</textarea>
     if (masterGain) masterGain.gain.value = val;
   });
 
-  // Visualizer Animation Loop
+  // ==========================================
+  // VFD SPECTRUM ANALYZER ENGINE (Pioneer/Technics Matrix)
+  // ==========================================
+  const VFD_NUM_BANDS = 32;
+  const VFD_SEGMENTS = 16;
+  const vfdPeaks = new Float32Array(VFD_NUM_BANDS);
+  const vfdPeakDecayTimers = new Float32Array(VFD_NUM_BANDS);
+
   function drawVisualizer() {
     if (!isPlaying || !analyser || !canvasCtx) return;
 
@@ -920,23 +964,88 @@ MGMT - Kids</textarea>
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    // Fondo VFD acrílico oscuro
+    canvasCtx.fillStyle = '#030810';
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const barWidth = (canvas.width / bufferLength) * 2.5;
-    let barHeight;
-    let x = 0;
+    const paddingX = 6;
+    const paddingY = 6;
+    const usableW = canvas.width - (paddingX * 2);
+    const usableH = canvas.height - (paddingY * 2);
 
-    for (let i = 0; i < bufferLength; i++) {
-      barHeight = (dataArray[i] / 255) * canvas.height;
+    const colWidth = usableW / VFD_NUM_BANDS;
+    const barWidth = Math.max(3, colWidth - 2.5);
+    const segHeight = Math.max(2, (usableH / VFD_SEGMENTS) - 2);
 
-      const r = 56 + (i * 2);
-      const g = 189;
-      const b = 248;
+    const nowTime = performance.now();
 
-      canvasCtx.fillStyle = `rgb(${r},${g},${b})`;
-      canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+    for (let b = 0; b < VFD_NUM_BANDS; b++) {
+      // Distribución perceptual logarítmica para que el bajo, medio y agudo tengan presencia visual
+      const startBin = Math.floor(Math.pow(b / VFD_NUM_BANDS, 2.1) * (bufferLength / 2.2));
+      const endBin = Math.max(startBin + 1, Math.floor(Math.pow((b + 1) / VFD_NUM_BANDS, 2.1) * (bufferLength / 2.2)));
 
-      x += barWidth + 1;
+      let sum = 0;
+      let count = 0;
+      for (let i = startBin; i < endBin && i < bufferLength; i++) {
+        sum += dataArray[i];
+        count++;
+      }
+      const avg = count > 0 ? sum / count : 0;
+      const normalized = Math.min(1, Math.max(0, avg / 235));
+      const activeSegs = Math.round(normalized * VFD_SEGMENTS);
+
+      // Lógica de Peak Hold estilo estéreo Pioneer
+      if (activeSegs >= vfdPeaks[b]) {
+        vfdPeaks[b] = activeSegs;
+        vfdPeakDecayTimers[b] = nowTime + 480; // Suspender por 480ms
+      } else if (nowTime > vfdPeakDecayTimers[b]) {
+        vfdPeaks[b] = Math.max(0, vfdPeaks[b] - 0.35); // Caída gravitatoria
+      }
+
+      const x = paddingX + (b * colWidth);
+
+      // 1. Dibujar segmentos (primero ghosting apagado, luego encendido)
+      for (let s = 0; s < VFD_SEGMENTS; s++) {
+        const y = canvas.height - paddingY - ((s + 1) * (segHeight + 2));
+
+        // Segmento inactivo (fósforo apagado VFD)
+        canvasCtx.fillStyle = 'rgba(6, 182, 212, 0.07)';
+        canvasCtx.fillRect(x, y, barWidth, segHeight);
+
+        // Segmento activo
+        if (s < activeSegs) {
+          if (s >= VFD_SEGMENTS - 2) {
+            // Zona CLIP / Pico (Rojo Neón)
+            canvasCtx.fillStyle = '#ff0055';
+            canvasCtx.shadowColor = 'rgba(255, 0, 85, 0.8)';
+            canvasCtx.shadowBlur = 4;
+          } else if (s >= VFD_SEGMENTS - 5) {
+            // Zona media-alta (Ámbar Cálido)
+            canvasCtx.fillStyle = '#fbbf24';
+            canvasCtx.shadowColor = 'rgba(251, 191, 36, 0.7)';
+            canvasCtx.shadowBlur = 3;
+          } else {
+            // Base a medios (Aqua / Cian VFD)
+            canvasCtx.fillStyle = '#00f5d4';
+            canvasCtx.shadowColor = 'rgba(0, 245, 212, 0.7)';
+            canvasCtx.shadowBlur = 3;
+          }
+
+          canvasCtx.fillRect(x, y, barWidth, segHeight);
+          canvasCtx.shadowBlur = 0;
+        }
+      }
+
+      // 2. Dibujar segmento suspendido de Peak Hold
+      const peakSeg = Math.floor(vfdPeaks[b]);
+      if (peakSeg > 0 && peakSeg <= VFD_SEGMENTS) {
+        const peakY = canvas.height - paddingY - (peakSeg * (segHeight + 2));
+        canvasCtx.fillStyle = peakSeg >= VFD_SEGMENTS - 2 ? '#ff3366' : '#ffffff';
+        canvasCtx.shadowColor = 'rgba(255, 255, 255, 0.9)';
+        canvasCtx.shadowBlur = 4;
+        canvasCtx.fillRect(x, peakY, barWidth, Math.max(1.5, segHeight * 0.7));
+        canvasCtx.shadowBlur = 0;
+      }
     }
 
     if (audioCtx && audioBuffer) {
@@ -1050,3 +1159,21 @@ MGMT - Kids</textarea>
   generateCommand();
   updateTrackCount();
 </script>
+
+<style>
+  .vfd-bezel {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 30px rgba(6, 182, 212, 0.15);
+  }
+  .vfd-scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.35) 0px,
+      rgba(0, 0, 0, 0.35) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+  .text-shadow-vfd {
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(6, 182, 212, 0.4);
+  }
+</style>

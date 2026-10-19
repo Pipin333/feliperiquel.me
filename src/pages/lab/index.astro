@@ -56,14 +56,19 @@ const experiments: Experiment[] = [
   },
   {
     title: "SonicRip",
-    tagline: "Utilidad de Extracción & Conversor Batch de Audio",
-    description: "Suite de audio en navegador con ecualizador paramétrico de 8 bandas (BiquadFilterNode), curvas de ecualización en tiempo real, distorsión Lo-Fi Bitcrusher, analizador FFT y generador de comandos por lotes para yt-dlp.",
-    tags: ["Audio DSP", "yt-dlp", "8-Band EQ", "Web Audio"],
+    tagline: "Suite DSP, EQ de 8 Bandas & VFD Spectrum Analyzer",
+    description: "Suite de audio en navegador con ecualizador paramétrico de 8 bandas (BiquadFilterNode), curvas de ecualización en tiempo real, distorsión Lo-Fi Bitcrusher, analizador de espectro segmentado VFD estilo Pioneer y generador de comandos por lotes para yt-dlp.",
+    tags: ["Audio DSP", "VFD Matrix", "8-Band EQ", "Web Audio API"],
     href: "/lab/sonicrip",
     badge: "Interactivo",
-    badgeColor: "text-domain-audio border-domain-audio/30 bg-domain-audio/10",
+    badgeColor: "text-cyan-300 border-cyan-500/40 bg-cyan-950/40",
     isInteractive: true,
-    icon: "sliders"
+    icon: "sliders",
+    cardHoverClass: "group-hover:border-cyan-400/50 hover:shadow-[0_0_25px_rgba(6,182,212,0.22)]",
+    iconColorClass: "text-cyan-400 group-hover:border-cyan-400/50",
+    taglineClass: "font-mono text-cyan-300",
+    btnClass: "text-slate-950 bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-400 hover:from-cyan-300 hover:to-teal-200 border border-cyan-200/50 shadow-[0_0_15px_rgba(6,182,212,0.35)]",
+    btnIconClass: "text-slate-950"
   },
   {
     title: "Toodles",
