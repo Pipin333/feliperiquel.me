@@ -262,7 +262,7 @@ def build_pdf(filename: str) -> None:
 
     # Toodles
     story.append(p("Toodles: Bot de Streaming de Audio, Concurrencia & RecSys | Python, Asyncio, PostgreSQL", item_title))
-    story.append(p("Proyecto Personal | Desplegado en Linux ARM64 (Oracle Cloud)", item_meta))
+    story.append(p("Proyecto Personal | github.com/Pipin333/Toodles", item_meta))
     story.append(p(
         "&bull; <b>Arquitectura Asincrona:</b> Servicio de streaming de audio de baja latencia con procesamiento en tiempo real via FFmpeg y Asyncio. "
         "Persistencia relacional en PostgreSQL con transacciones atomicas en SQLAlchemy ORM y sistema de recomendacion de pistas musicales.",
@@ -272,7 +272,7 @@ def build_pdf(filename: str) -> None:
 
     # Whatsarr
     story.append(p("Whatsarr: Hub Domotico & Bot de Automatizacion de Medios | Node.js, TypeScript, Docker", item_title))
-    story.append(p("Proyecto Personal | Integracion APIs REST Radarr/Sonarr", item_meta))
+    story.append(p("Proyecto Personal | github.com/Pipin333/Whatsarr", item_meta))
     story.append(p(
         "&bull; <b>Automatizacion Conversacional:</b> Bot en TypeScript sobre Baileys para control remoto de servidores multimedia (*Arr stack). "
         "Gestion multi-instancia en Docker con reconexion automatica mediante backoff exponencial y parsing de lenguaje natural.",
