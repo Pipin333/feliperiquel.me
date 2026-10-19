@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { z } from 'astro/zod';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
@@ -18,7 +19,42 @@ interface RateLimitRecord {
   lastRequestTime: number;
 }
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_PAYLOAD_BYTES = 16 * 1024; // 16 KB hard limit against oversized payloads
+
+const ContactSchema = z.object({
+  name: z
+    .string({ required_error: 'Por favor ingresa un nombre valido (2 a 100 caracteres).' })
+    .trim()
+    .min(2, 'Por favor ingresa un nombre valido (2 a 100 caracteres).')
+    .max(100, 'Por favor ingresa un nombre valido (2 a 100 caracteres).'),
+  email: z
+    .string({ required_error: 'Por favor ingresa un correo electronico valido.' })
+    .trim()
+    .toLowerCase()
+    .max(150, 'Por favor ingresa un correo electronico valido.')
+    .email('Por favor ingresa un correo electronico valido.')
+    .refine((val) => !/[(),'"\\<>]/.test(val), 'Por favor ingresa un correo electronico valido.'),
+  topic: z
+    .string({ required_error: 'Por favor indica un asunto o motivo valido.' })
+    .trim()
+    .min(3, 'Por favor indica un asunto o motivo valido.')
+    .max(150, 'Por favor indica un asunto o motivo valido.'),
+  message: z
+    .string({ required_error: 'El mensaje debe contener entre 10 y 4000 caracteres.' })
+    .trim()
+    .min(10, 'El mensaje debe contener entre 10 y 4000 caracteres.')
+    .max(4000, 'El mensaje debe contener entre 10 y 4000 caracteres.'),
+  botcheck: z.string().optional().default('')
+});
+
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 // In-Memory Rate Limiting Configuration (Layer 1: Burst & instance protection)
 const MAX_REQUESTS_PER_WINDOW = 3;
@@ -56,6 +92,15 @@ function cleanExpiredRateLimitEntries(now: number) {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
+    // 0. Guard against oversized payloads before parsing body
+    const contentLength = Number(request.headers.get('content-length') || '0');
+    if (contentLength > MAX_PAYLOAD_BYTES) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'El tamano de la solicitud excede el limite permitido (16 KB).' }),
+        { status: 413, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const clientIp = getClientIp(request);
     const ipHash = await computeSha256(clientIp);
     const now = Date.now();
@@ -114,7 +159,14 @@ export const POST: APIRoute = async ({ request }) => {
     const contentType = request.headers.get('content-type') || '';
     if (contentType.includes('application/json')) {
       try {
-        payload = await request.json();
+        const rawBody = await request.text();
+        if (rawBody.length > MAX_PAYLOAD_BYTES) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'El tamano de la solicitud excede el limite permitido (16 KB).' }),
+            { status: 413, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+        payload = JSON.parse(rawBody);
       } catch (jsonErr) {
         return new Response(
           JSON.stringify({ success: false, error: 'El cuerpo de la solicitud contiene un JSON invalido.' }),
@@ -132,49 +184,33 @@ export const POST: APIRoute = async ({ request }) => {
       };
     }
 
-    const { name, email, topic, message, botcheck } = payload;
-
-    // 3. Honeypot check
-    if (botcheck) {
+    // 3. Honeypot check before schema validation
+    if (payload.botcheck) {
       return new Response(
         JSON.stringify({ success: true, message: 'Mensaje recibido con exito.' }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // 4. Input validation
-    if (!name || name.trim().length < 2 || name.trim().length > 100) {
+    // 4. Strict Schema Validation via Zod
+    const parsed = ContactSchema.safeParse(payload);
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0]?.message || 'Datos de formulario invalidos.';
       return new Response(
-        JSON.stringify({ success: false, error: 'Por favor ingresa un nombre valido (2 a 100 caracteres).' }),
+        JSON.stringify({ success: false, error: firstIssue }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!email || !EMAIL_REGEX.test(email.trim()) || email.trim().length > 150) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Por favor ingresa un correo electronico valido.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
+    const sanitizedName = parsed.data.name;
+    const sanitizedEmail = parsed.data.email;
+    const sanitizedTopic = parsed.data.topic;
+    const sanitizedMessage = parsed.data.message;
 
-    if (!topic || topic.trim().length < 3 || topic.trim().length > 150) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Por favor indica un asunto o motivo valido.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (!message || message.trim().length < 10 || message.trim().length > 4000) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'El mensaje debe contener entre 10 y 4000 caracteres.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const sanitizedName = name.trim();
-    const sanitizedEmail = email.trim().toLowerCase();
-    const sanitizedTopic = topic.trim();
-    const sanitizedMessage = message.trim();
+    const escapedName = escapeHtml(sanitizedName);
+    const escapedEmail = escapeHtml(sanitizedEmail);
+    const escapedTopic = escapeHtml(sanitizedTopic);
+    const escapedMessage = escapeHtml(sanitizedMessage);
 
     // 5. Environment variables
     const supabaseUrl = import.meta.env.SUPABASE_URL || process.env.SUPABASE_URL;
@@ -191,7 +227,7 @@ export const POST: APIRoute = async ({ request }) => {
         const { count, error: countError } = await supabase
           .from('contact_messages')
           .select('*', { count: 'exact', head: true })
-          .or(`ip_hash.eq.${ipHash},email.eq.${sanitizedEmail}`)
+          .or(`ip_hash.eq."${ipHash}",email.eq."${sanitizedEmail}"`)
           .gte('created_at', windowIsoTime);
 
         if (!countError && typeof count === 'number' && count >= MAX_REQUESTS_PER_WINDOW) {
@@ -305,15 +341,15 @@ export const POST: APIRoute = async ({ request }) => {
                     </div>
                     
                     <h2 style="color: #FFFFFF; font-size: 20px; font-weight: 700; margin: 0 0 16px 0; letter-spacing: -0.02em;">
-                      ${sanitizedTopic}
+                      ${escapedTopic}
                     </h2>
 
                     <!-- Sender Info Box -->
                     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #07090E; border: 1px solid #1B2338; border-radius: 8px; margin-bottom: 20px;">
                       <tr>
                         <td style="padding: 14px 16px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8; line-height: 1.8;">
-                          <div><strong style="color: #E2E8F0;">Remitente:</strong> ${sanitizedName}</div>
-                          <div><strong style="color: #E2E8F0;">Correo:</strong> <a href="mailto:${sanitizedEmail}" style="color: #00D2FF; text-decoration: none;">${sanitizedEmail}</a></div>
+                          <div><strong style="color: #E2E8F0;">Remitente:</strong> ${escapedName}</div>
+                          <div><strong style="color: #E2E8F0;">Correo:</strong> <a href="mailto:${escapedEmail}" style="color: #00D2FF; text-decoration: none;">${escapedEmail}</a></div>
                           <div><strong style="color: #E2E8F0;">Fecha UTC:</strong> ${new Date().toISOString()}</div>
                           <div><strong style="color: #E2E8F0;">Hash IP:</strong> <span style="color: #64748B;">${ipHash.slice(0, 16)}...</span></div>
                         </td>
@@ -325,13 +361,13 @@ export const POST: APIRoute = async ({ request }) => {
                       Cuerpo del mensaje:
                     </div>
                     <div style="background-color: #0D1322; border: 1px solid #1B2338; border-left: 3px solid #00D2FF; border-radius: 6px; padding: 16px; color: #F1F5F9; font-size: 14px; line-height: 1.6; white-space: pre-wrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-${sanitizedMessage}
+${escapedMessage}
                     </div>
 
                     <!-- Action Button -->
                     <div style="margin-top: 24px; text-align: left;">
-                      <a href="mailto:${sanitizedEmail}?subject=Re:%20${encodeURIComponent(sanitizedTopic)}" style="display: inline-block; background-color: #00D2FF; color: #05070B; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
-                        Responder a ${sanitizedName} &rarr;
+                      <a href="mailto:${escapedEmail}?subject=Re:%20${encodeURIComponent(sanitizedTopic)}" style="display: inline-block; background-color: #00D2FF; color: #05070B; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 10px 20px; border-radius: 6px; text-decoration: none;">
+                        Responder a ${escapedName} &rarr;
                       </a>
                     </div>
                   </td>
@@ -394,11 +430,11 @@ ${sanitizedMessage}
                     </h1>
 
                     <p style="color: #CBD5E1; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0;">
-                      Hola <strong style="color: #FFFFFF;">${sanitizedName}</strong>,
+                      Hola <strong style="color: #FFFFFF;">${escapedName}</strong>,
                     </p>
 
                     <p style="color: #94A3B8; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
-                      Te confirmo que he recibido tu mensaje sobre <em style="color: #E2E8F0;">"${sanitizedTopic}"</em>. Revisare los antecedentes tecnicos y me pondre en contacto contigo a la brevedad.
+                      Te confirmo que he recibido tu mensaje sobre <em style="color: #E2E8F0;">"${escapedTopic}"</em>. Revisare los antecedentes tecnicos y me pondre en contacto contigo a la brevedad.
                     </p>
 
                     <!-- Status Log Box -->
