@@ -321,6 +321,39 @@
       return;
     }
 
+    if (cleanCmd === '418' || cleanCmd === 'cafe' || cleanCmd === 'coffee') {
+      const cmdRow = document.createElement('div');
+      cmdRow.className = 'text-slate-400 mt-2 font-mono';
+      cmdRow.innerHTML = `<span class="text-amber-400 font-bold">felipe@lab:~$</span> ${cleanCmd}`;
+
+      const respRow = document.createElement('div');
+      respRow.className = 'text-amber-200 pl-4 border-l-2 border-amber-500/60 font-mono text-[11px] leading-relaxed my-1.5 space-y-1.5';
+      respRow.innerHTML = `
+        <div class="text-amber-400 font-bold tracking-wider">
+          HTTP 418 // I'M A TEAPOT (RFC 2324 / HTCPCP)
+        </div>
+        <pre class="text-amber-300 font-mono text-[10px] leading-none my-1 select-none">
+     ( (
+      ) )
+   ._______.
+   |  ☕   |]
+   \\_______/
+    \`=====\`
+        </pre>
+        <div class="text-slate-200">
+          <strong class="text-white">Error de protocolo:</strong> Este servidor es una tetera y se niega a preparar café... en teoría.
+        </div>
+        <div class="text-slate-400 text-[10px] leading-normal pt-1 border-t border-amber-500/20">
+          <span class="text-amber-300">Nota de origen:</span> De preparar litros de café en Dunkin a emprender con café de especialidad familiar y programar sistemas distribuidos. El café de verdad no se automatiza con HTTP, se extrae con paciencia.
+        </div>
+      `;
+
+      outputEl.appendChild(cmdRow);
+      outputEl.appendChild(respRow);
+      outputEl.scrollTop = outputEl.scrollHeight;
+      return;
+    }
+
     const response = commandResponses[cleanCmd] || `Comando no reconocido: '${cleanCmd}'. Escribe 'help' para ver la lista de comandos.`;
 
     const cmdRow = document.createElement('div');
