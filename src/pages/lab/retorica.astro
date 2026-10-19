@@ -44,9 +44,8 @@ import Icon from '../../components/Icon.astro';
           </svg>
         </a>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 font-serif flex items-center gap-3">
-        <span>Retórica y Descalabro</span>
-        <span class="text-amber-400 text-2xl" title="Sello Imperial">⚜️</span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 font-serif">
+        Retórica y Descalabro
       </h1>
       <p class="text-base text-purple-200/80 leading-relaxed max-w-3xl">
         Transmuta cualquier enunciado coloquial, jerga callejera o copla popular en un denso tratado ontológico decimonónico, correspondencia de cancillería imperial o en un ejercicio de entropía semántica multilingüe digno de las cortes medievales.
@@ -164,25 +163,31 @@ import Icon from '../../components/Icon.astro';
                   <Icon name="cpu" class="w-3.5 h-3.5 text-amber-400" />
                   <span>Motor de Inferencia</span>
                 </span>
-                <button
-                  id="toggle-engine-config-btn"
-                  type="button"
-                  class="hidden text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
-                  aria-expanded="false"
-                >
-                  <Icon name="gear" class="w-3 h-3" />
-                  <span>Configurar BYOK</span>
-                </button>
+                <div class="flex items-center gap-2">
+                  <span id="engine-whispers-notice" class="hidden text-[10px] text-amber-300 font-serif flex items-center gap-1 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/40">
+                    <Icon name="arrow-repeat" class="w-3 h-3 text-amber-400" />
+                    <span>Traducción MyMemory Activa</span>
+                  </span>
+                  <button
+                    id="toggle-engine-config-btn"
+                    type="button"
+                    class="hidden text-[11px] font-mono text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+                    aria-expanded="false"
+                  >
+                    <Icon name="gear" class="w-3 h-3" />
+                    <span>Configurar BYOK</span>
+                  </button>
+                </div>
               </div>
 
               <div class="grid grid-cols-2 gap-2">
                 <label id="engine-card-heuristic" class="engine-card flex items-center gap-2 p-2.5 rounded-lg border border-purple-500/80 bg-purple-950/70 cursor-pointer text-xs font-medium text-amber-100 transition-all">
-                  <input type="radio" name="engine-mode" value="heuristic" checked class="text-purple-600 focus:ring-amber-400" />
+                  <input id="heuristic-radio-input" type="radio" name="engine-mode" value="heuristic" checked class="text-purple-600 focus:ring-amber-400" />
                   <span class="truncate">Heurístico (Local)</span>
                 </label>
 
                 <label id="engine-card-llm" class="engine-card flex items-center gap-2 p-2.5 rounded-lg border border-purple-900/50 bg-slate-900/60 cursor-pointer text-xs font-medium text-purple-300 hover:text-white transition-all">
-                  <input type="radio" name="engine-mode" value="llm" class="text-purple-600 focus:ring-amber-400" />
+                  <input id="llm-radio-input" type="radio" name="engine-mode" value="llm" class="text-purple-600 focus:ring-amber-400" />
                   <span class="flex items-center gap-1.5 truncate">
                     <span>Neuronal LLM</span>
                     <span class="text-[9px] px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold border border-amber-500/30">BYOK</span>
@@ -264,8 +269,9 @@ import Icon from '../../components/Icon.astro';
                   />
                 </div>
 
-                <div class="p-2.5 rounded-lg bg-purple-950/70 border border-purple-800/70 text-[10px] text-purple-200/90 leading-relaxed">
-                  🔒 <strong>Privacidad BYOK:</strong> Tu clave se conserva exclusivamente en el <code>localStorage</code> de tu navegador y nunca se persiste en ningún servidor. Se envía a través de un proxy serverless seguro con defensa anti-SSRF para conectarse a tu proveedor.
+                <div class="p-2.5 rounded-lg bg-purple-950/70 border border-purple-800/70 text-[10px] text-purple-200/90 leading-relaxed flex items-start gap-1.5">
+                  <Icon name="shield-lock" class="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                  <span><strong>Privacidad BYOK:</strong> Tu clave se conserva exclusivamente en el <code>localStorage</code> de tu navegador y nunca se persiste en ningún servidor. Se envía a través de un proxy serverless seguro con defensa anti-SSRF para conectarse a tu proveedor.</span>
                 </div>
               </div>
             </div>
@@ -579,6 +585,35 @@ import Icon from '../../components/Icon.astro';
   const llmApiKeyInput = document.getElementById('llm-api-key') as HTMLInputElement;
   const llmBaseUrlInput = document.getElementById('llm-base-url') as HTMLInputElement;
   const toggleKeyVisibilityBtn = document.getElementById('toggle-key-visibility-btn') as HTMLButtonElement;
+  const llmRadio = document.getElementById('llm-radio-input') as HTMLInputElement;
+  const heuristicRadio = document.getElementById('heuristic-radio-input') as HTMLInputElement;
+  const engineWhispersNotice = document.getElementById('engine-whispers-notice') as HTMLElement;
+
+  function syncStyleWithEngine(styleMode: string) {
+    if (styleMode === 'whispers') {
+      if (llmRadio) {
+        llmRadio.disabled = true;
+      }
+      engineCardLlm?.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      engineCardLlm?.setAttribute('title', 'Teléfono Descompuesto se procesa exclusivamente mediante la API de traducción MyMemory');
+      engineWhispersNotice?.classList.remove('hidden');
+
+      // Auto-fallback if LLM was checked
+      if (llmRadio?.checked) {
+        if (heuristicRadio) {
+          heuristicRadio.checked = true;
+        }
+        updateEngineUI('heuristic');
+      }
+    } else {
+      if (llmRadio) {
+        llmRadio.disabled = false;
+      }
+      engineCardLlm?.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+      engineCardLlm?.removeAttribute('title');
+      engineWhispersNotice?.classList.add('hidden');
+    }
+  }
 
   const STORAGE_KEY = 'ryd_llm_config';
 
@@ -715,9 +750,12 @@ import Icon from '../../components/Icon.astro';
     });
   });
 
-  // Radio button styling feedback
+  // Radio button styling feedback & Engine synchronization
   document.querySelectorAll('input[name="style-mode"]').forEach((radio) => {
     radio.addEventListener('change', (e) => {
+      const selectedStyle = (e.target as HTMLInputElement).value;
+      syncStyleWithEngine(selectedStyle);
+
       document.querySelectorAll('.style-card').forEach((card) => {
         card.classList.remove('border-purple-500/80', 'bg-purple-950/60', 'shadow-[0_0_15px_rgba(168,85,247,0.15)]');
         card.classList.add('border-purple-900/40', 'bg-slate-950/70');
@@ -773,6 +811,12 @@ import Icon from '../../components/Icon.astro';
 
     whispersTrace.classList.add('hidden');
 
+    // Teléfono Descompuesto se procesa estrictamente vía MyMemory API gratuita
+    if (styleMode === 'whispers') {
+      executeHeuristicTransmutation(raw, 'whispers');
+      return;
+    }
+
     if (engineMode === 'llm') {
       const provider = llmProviderSelect.value;
       const apiKey = llmApiKeyInput.value.trim();
@@ -785,7 +829,7 @@ import Icon from '../../components/Icon.astro';
         outputContainer.innerHTML = `
           <div class="space-y-3 font-sans text-xs">
             <div class="p-3 rounded-lg border border-amber-500/40 bg-purple-950/50 text-amber-200">
-              <strong class="block mb-1 font-semibold font-serif">⚜️ Se requiere una API Key para el Motor Neuronal</strong>
+              <strong class="block mb-1 font-semibold font-serif">Se requiere una API Key para el Motor Neuronal</strong>
               Configura tu clave en el panel de ajustes arriba (o <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" class="underline text-amber-300">obtén una gratuita en Groq</a>).
             </div>
             <p class="text-purple-300/80">¿Prefieres no usar claves externas? Puedes usar el motor local instantáneo:</p>
@@ -919,4 +963,6 @@ import Icon from '../../components/Icon.astro';
 
   // Initialize
   loadLlmConfig();
+  const initialStyle = (document.querySelector('input[name="style-mode"]:checked') as HTMLInputElement)?.value || 'ontologico';
+  syncStyleWithEngine(initialStyle);
 </script>
