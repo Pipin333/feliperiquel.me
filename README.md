@@ -69,7 +69,37 @@ npm run build
 
 # Previsualizar el build estático
 npm run preview
+
+# Instalar Git hooks locales (pre-push y commit-msg)
+npm run setup:hooks
 ```
+
+---
+
+## 🌿 Arquitectura Git y Flujo de Ramas
+
+El repositorio utiliza una topología de ramas estructurada con integración en `dev` y producción protegida en `main`:
+
+```text
+[main] (Producción / Vercel Live)
+  ▲
+  │ (Releases probadas)
+[dev]  (Integración y staging continuo)
+  ▲
+  ├── feat/<nombre-en-kebab-case>      (Nuevas páginas o funcionalidades)
+  ├── fix/<nombre-en-kebab-case>       (Corrección de errores)
+  ├── chore/<nombre-en-kebab-case>     (Dependencias, tooling, scripts)
+  ├── refactor/<nombre-en-kebab-case>  (Mejoras de código)
+  ├── docs/<nombre-en-kebab-case>      (Documentación y guías)
+  └── test/<nombre-en-kebab-case>      (Pruebas y fixtures)
+```
+
+### Reglas obligatorias:
+1. **Ramas troncales**: `main` (solo releases) y `dev` (desarrollo activo).
+2. **Feature branches**: Ramas creadas desde `dev` con prefijo explícito (`feat/`, `fix/`, `chore/`, etc.) y nombre en minúsculas separado por guiones.
+3. **Conventional Commits**: `<tipo>(<alcance>): <descripción>` con un máximo de 72 caracteres en el encabezado.
+4. **Hooks automáticos**: Ejecuta `npm run setup:hooks` para activar la validación de `pre-push` (rechaza ramas fuera de estándar) y `commit-msg` (valida Conventional Commits).
+5. Consulta la guía completa en [docs/GIT_WORKFLOW.md](docs/GIT_WORKFLOW.md).
 
 ---
 
@@ -90,6 +120,7 @@ npm run preview
 │   ├── pages/
 │   │   ├── index.astro           # Portafolio principal orientado a software y lab
 │   │   ├── cv.astro              # Currículum interactivo bilingüe (ES/EN) listo para imprimir
+│   │   ├── mantencion.astro      # Estado 503 / Recalibración técnica y telemetría (alias /mantenimiento)
 │   │   ├── ni-idea.astro         # Alias y redirección canónica hacia /lab/quiz
 │   │   ├── 404.astro             # Terminal interactiva de recuperación ante errores 404
 │   │   ├── privacidad.astro      # Política de privacidad y tratamiento de datos
