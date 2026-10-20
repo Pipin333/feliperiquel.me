@@ -44,6 +44,11 @@ export default {
         'glow-cyan': '0 0 35px -5px rgba(0, 210, 255, 0.25)',
         'glow-audio': '0 0 35px -5px rgba(16, 185, 129, 0.25)',
         'glow-ai': '0 0 35px -5px rgba(99, 102, 241, 0.25)',
+      },
+      opacity: {
+        96: '0.96',
+        97: '0.97',
+        98: '0.98',
       }
     },
   },

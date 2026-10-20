@@ -9,13 +9,13 @@ import Icon from './Icon.astro';
   <!-- FLOATING CLI MODAL / PANEL (ANCHORED ABOVE THE DOCK) -->
   <div
     id="dock-cli-panel"
-    class="hidden pointer-events-auto w-[92vw] max-w-2xl mb-3 rounded-tech bg-canvas-surface/98 border border-canvas-border shadow-2xl backdrop-blur-xl overflow-hidden transition-all duration-140"
+    class="hidden pointer-events-auto w-[92vw] max-w-2xl mb-3 rounded-tech bg-[#0B0F19]/98 border border-canvas-border shadow-2xl backdrop-blur-xl overflow-hidden transition-all duration-140"
     role="dialog"
     aria-label="Consola de comandos flotante"
     aria-modal="true"
   >
     <!-- Terminal Header Bar (Native macOS Style) -->
-    <div class="bg-canvas border-b border-canvas-border px-3.5 py-2 flex items-center justify-between select-none">
+    <div class="bg-[#07090E] border-b border-canvas-border px-3.5 py-2 flex items-center justify-between select-none">
       <!-- Left: Interactive macOS Traffic Light Buttons -->
       <div class="group/traffic flex items-center gap-2" role="toolbar" aria-label="Controles de ventana">
         <!-- Red: Close -->
@@ -62,14 +62,13 @@ import Icon from './Icon.astro';
       </div>
 
       <!-- Right: Minimal status indicator -->
-      <div class="flex items-center gap-1.5 font-mono text-[10px] text-slate-500">
-        <span class="w-1.5 h-1.5 rounded-full bg-telemetry animate-pulse"></span>
+      <div class="flex items-center gap-1.5 font-mono text-[10px] text-slate-400">
         <span class="hidden sm:inline">ESC para cerrar</span>
       </div>
     </div>
 
     <!-- Terminal Body -->
-    <div class="p-4 sm:p-5 font-mono text-xs text-slate-300">
+    <div class="p-4 sm:p-5 font-mono text-xs text-slate-300 bg-[#0B0F19]/98">
       <div class="text-slate-400 mb-3 flex items-center justify-between">
         <span>Escribe un comando o pulsa un atajo:</span>
         <span class="text-[10px] text-slate-500">felipe@lab:~$</span>
