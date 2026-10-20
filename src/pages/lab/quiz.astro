@@ -393,31 +393,54 @@ import Icon from '../../components/Icon.astro';
       </p>
 
       <!-- Formulario de Notificación -->
-      <form id="notify-form" class="max-w-md mx-auto space-y-3 text-left">
-        <div class="relative">
-          <input
-            type="email"
-            id="notify-email"
-            name="email"
-            required
-            placeholder="tu.correo@ejemplo.com"
-            class="w-full px-4 py-3 rounded-tech bg-slate-950/90 border border-emerald-500/40 text-white placeholder-slate-500 font-mono text-xs sm:text-sm focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors"
-          />
+      <div id="notify-container" class="max-w-md mx-auto">
+        <form id="notify-form" class="space-y-3 text-left">
+          <div class="relative">
+            <input
+              type="email"
+              id="notify-email"
+              name="email"
+              required
+              placeholder="tu.correo@ejemplo.com"
+              class="w-full px-4 py-3 rounded-tech bg-slate-950/90 border border-emerald-500/40 text-white placeholder-slate-500 font-mono text-xs sm:text-sm focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="notify-submit-btn"
+            class="w-full py-3 rounded-tech font-mono text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 hover:from-emerald-300 hover:to-teal-200 shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all flex items-center justify-center gap-2"
+          >
+            <span>Reservar pase para la primera beta</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </form>
+
+        <!-- Ficha de Acceso Temática (ACK State In-Character) -->
+        <div id="notify-ticket" class="hidden text-left p-5 rounded-xl border border-emerald-500/50 bg-[#061814] space-y-3 font-mono shadow-[0_0_25px_rgba(16,185,129,0.2)] animate-fade-in">
+          <div class="flex items-center justify-between border-b border-emerald-500/30 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-emerald-300 tracking-wider">FICHA DE ACCESO BETA #001</span>
+            </div>
+            <span class="text-[10px] text-emerald-400/60 font-mono">SCL-EDGE-PARTY</span>
+          </div>
+
+          <p class="text-xs sm:text-sm text-slate-200 font-sans leading-relaxed">
+            <strong class="text-white">¡Mesa reservada!</strong> Quedaste anotado para hostear la primera partida. Cuando giremos la ruleta del servidor en Santiago, te llegará el enlace directo para armar sala y delatar a tus amigos.
+          </p>
+
+          <div class="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+            <div>
+              <span class="text-slate-500">Destinatario:</span>
+              <span id="ticket-email" class="text-emerald-300 font-semibold font-mono ml-1"></span>
+            </div>
+            <span class="text-emerald-400/80 font-mono">0 logins • 0 esperas • 100% gratis</span>
+          </div>
         </div>
-
-        <button
-          type="submit"
-          id="notify-submit-btn"
-          class="w-full py-3 rounded-tech font-mono text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 hover:from-emerald-300 hover:to-teal-200 shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all flex items-center justify-center gap-2"
-        >
-          <span>Avísame cuando esté disponible</span>
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
-
-        <p id="notify-feedback" class="hidden text-center text-xs font-mono mt-3"></p>
-      </form>
+      </div>
     </section>
 
   </main>
@@ -428,47 +451,37 @@ import Icon from '../../components/Icon.astro';
     const notifyForm = document.getElementById('notify-form') as HTMLFormElement | null;
     const notifyEmail = document.getElementById('notify-email') as HTMLInputElement | null;
     const notifyBtn = document.getElementById('notify-submit-btn') as HTMLButtonElement | null;
-    const notifyFeedback = document.getElementById('notify-feedback') as HTMLParagraphElement | null;
+    const notifyTicket = document.getElementById('notify-ticket') as HTMLDivElement | null;
+    const ticketEmail = document.getElementById('ticket-email') as HTMLSpanElement | null;
 
-    if (notifyForm && notifyEmail && notifyBtn && notifyFeedback) {
+    if (notifyForm && notifyEmail && notifyBtn && notifyTicket && ticketEmail) {
       notifyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = notifyEmail.value.trim();
         if (!email) return;
 
         notifyBtn.disabled = true;
-        notifyBtn.innerHTML = '<span>Registrando aviso...</span>';
+        notifyBtn.innerHTML = '<span>Tirando la ruleta...</span>';
+
+        // Mostrar de inmediato la ficha con el correo del usuario
+        ticketEmail.textContent = email;
 
         try {
-          // Envío directo a la pasarela de contacto del portafolio
-          const res = await fetch('/api/contact', {
+          await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              name: 'Lanzamiento Ni Idea',
+              name: 'Reserva Beta Ni Idea',
               email: email,
-              topic: 'Interés Beta · Ni Idea Party Game',
-              message: `Solicitud de aviso temprano para la primera sala beta de Ni Idea: ${email}`
+              topic: 'Ficha de Sala · Ni Idea Party Game',
+              message: `Solicitud de pase temprano para hostear la primera sala beta de Ni Idea: ${email}`
             })
           });
-
-          if (res.ok) {
-            notifyFeedback.textContent = '¡Listo! Te avisaremos al correo cuando abramos la primera beta.';
-            notifyFeedback.className = 'text-center text-xs font-mono mt-3 text-emerald-400 font-semibold';
-            notifyForm.reset();
-            notifyBtn.classList.add('hidden');
-          } else {
-            // Si el backend da rate limit o error, confirmamos el registro localmente
-            notifyFeedback.textContent = '¡Anotado! Correo registrado para la primera beta privada.';
-            notifyFeedback.className = 'text-center text-xs font-mono mt-3 text-emerald-400 font-semibold';
-            notifyForm.reset();
-            notifyBtn.classList.add('hidden');
-          }
         } catch {
-          notifyFeedback.textContent = '¡Anotado! Correo registrado para la primera beta privada.';
-          notifyFeedback.className = 'text-center text-xs font-mono mt-3 text-emerald-400 font-semibold';
-          notifyForm.reset();
-          notifyBtn.classList.add('hidden');
+          // El ticket se muestra igual aunque haya bloqueo de red temporal
+        } finally {
+          notifyForm.classList.add('hidden');
+          notifyTicket.classList.remove('hidden');
         }
       });
     }
