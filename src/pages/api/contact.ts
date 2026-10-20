@@ -494,7 +494,7 @@ ${escapedMessage}
                           </a>
                         </td>
                         <td>
-                          <a href="https://github.com/Pipin333/quizapp" target="_blank" style="display: inline-block; background-color: #042F2E; border: 1px solid rgba(16, 185, 129, 0.35); color: #E2E8F0; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 600; padding: 11px 18px; border-radius: 6px; text-decoration: none;">
+                          <a href="https://github.com/Pipin333/niideaapp" target="_blank" style="display: inline-block; background-color: #042F2E; border: 1px solid rgba(16, 185, 129, 0.35); color: #E2E8F0; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 600; padding: 11px 18px; border-radius: 6px; text-decoration: none;">
                             Ver en GitHub &rarr;
                           </a>
                         </td>
