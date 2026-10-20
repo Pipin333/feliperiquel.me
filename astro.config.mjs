@@ -7,6 +7,9 @@ export default defineConfig({
   site: 'https://feliperiquel.me',
   adapter: vercel(),
   integrations: [tailwind()],
+  redirects: {
+    '/mantenimiento': '/mantencion'
+  },
   security: {
     checkOrigin: false
   },
