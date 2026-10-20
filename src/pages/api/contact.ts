@@ -391,12 +391,147 @@ ${escapedMessage}
         }
 
         // Email 2: Auto-reply ACK to the sender
-        const autoReplyResult = await resend.emails.send({
-          from: senderFrom,
-          to: [sanitizedEmail],
-          replyTo: notificationEmail,
-          subject: 'Mensaje recibido [ACK] | Felipe Riquelme',
-          html: `
+        const isNiIdea = sanitizedTopic.toLowerCase().includes('ni idea');
+        const autoReplySubject = isNiIdea
+          ? '🎟️ Tu pase de acceso para la primera partida de Ni Idea'
+          : 'Mensaje recibido [ACK] | Felipe Riquelme';
+
+        const greetingName = isNiIdea && (sanitizedName === 'Reserva Beta Ni Idea' || sanitizedName.toLowerCase().includes('reserva'))
+          ? '¡Hola!'
+          : `¡Hola ${escapedName}!`;
+
+        const ticketNumber = Math.floor(1000 + Math.random() * 9000);
+
+        const autoReplyHtml = isNiIdea
+          ? `
+            <div style="background-color: #030712; padding: 32px 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #061814; border: 1px solid rgba(16, 185, 129, 0.45); border-radius: 14px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(16, 185, 129, 0.15);">
+                
+                <!-- Party Game Banner Header -->
+                <tr>
+                  <td style="background-color: #031e17; padding: 16px 24px; border-bottom: 1px solid rgba(16, 185, 129, 0.3);">
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td align="left" style="vertical-align: middle;">
+                          <div style="font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 800; color: #10B981; letter-spacing: 0.08em;">
+                            🎲 NI IDEA // PARTY GAME
+                          </div>
+                          <div style="font-family: 'Fira Code', monospace; font-size: 10px; color: #6EE7B7; letter-spacing: 0.04em; margin-top: 2px;">
+                            PASE DE ACCESO ANTICIPADO &bull; SALA PRIVADA
+                          </div>
+                        </td>
+                        <td align="right" style="vertical-align: middle;">
+                          <span style="display: inline-block; padding: 4px 10px; background-color: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 700; color: #34D399;">
+                            TICKET #NI-${ticketNumber}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Content Area -->
+                <tr>
+                  <td style="padding: 32px 26px;">
+                    <h1 style="color: #FFFFFF; font-size: 24px; font-weight: 800; margin: 0 0 14px 0; letter-spacing: -0.02em; line-height: 1.25;">
+                      ¡Ya estás en la lista de la puerta!
+                    </h1>
+
+                    <p style="color: #E2E8F0; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0;">
+                      ${greetingName}
+                    </p>
+
+                    <p style="color: #CBD5E1; font-size: 14px; line-height: 1.6; margin: 0 0 22px 0;">
+                      Anotamos tu correo (<strong style="color: #34D399;">${escapedEmail}</strong>) para la primera partida de prueba de <strong style="color: #FFFFFF;">Ni Idea</strong>, el party game para jugar con amigos desde el teléfono sin instalar nada.
+                    </p>
+
+                    <!-- Ticket Voucher Box -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #021a14; border: 1px dashed rgba(16, 185, 129, 0.4); border-radius: 10px; margin-bottom: 24px;">
+                      <tr>
+                        <td style="padding: 18px 20px;">
+                          <div style="font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 700; color: #10B981; letter-spacing: 0.06em; margin-bottom: 12px; text-transform: uppercase;">
+                            &bull; QUÉ SE VIENE EN LA MESA
+                          </div>
+
+                          <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; color: #CBD5E1; line-height: 1.6;">
+                            <tr>
+                              <td style="padding-bottom: 10px; vertical-align: top; width: 22px;">⚡</td>
+                              <td style="padding-bottom: 10px;">
+                                <strong style="color: #FFFFFF;">Trivia Rush:</strong> 15 segundos por pregunta. El que titubea, pierde la racha de puntos.
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding-bottom: 10px; vertical-align: top; width: 22px;">🎭</td>
+                              <td style="padding-bottom: 10px;">
+                                <strong style="color: #FFFFFF;">Ese Eres Tú:</strong> Votaciones anónimas para delatar quién en el grupo comete los peores crímenes sociales.
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="padding-bottom: 12px; vertical-align: top; width: 22px;">🎨</td>
+                              <td style="padding-bottom: 12px;">
+                                <strong style="color: #FFFFFF;">Pinturillo:</strong> Garabatos en la pantalla táctil a 30 FPS y adivinanzas a contrarreloj.
+                              </td>
+                            </tr>
+                          </table>
+
+                          <div style="border-top: 1px dashed rgba(16, 185, 129, 0.25); padding-top: 12px; margin-top: 4px; font-family: 'Fira Code', monospace; font-size: 11px; color: #94A3B8; line-height: 1.6;">
+                            <span style="color: #34D399; font-weight: 700;">REGLAS:</span> 0 logins &bull; 0 descargas &bull; Entras desde el teléfono con PIN de 4 letras &bull; Pantalla compartida en la tele o notebook
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <p style="color: #94A3B8; font-size: 13px; line-height: 1.6; margin: 0 0 24px 0;">
+                      Apenas levantemos las primeras salas de prueba en Santiago, te va a llegar un aviso directo con el enlace para que abras la partida y hagas de host con tu grupo de amigos.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
+                      <tr>
+                        <td style="padding-right: 10px;">
+                          <a href="https://feliperiquel.me/lab/quiz" target="_blank" style="display: inline-block; background-color: #10B981; color: #022C22; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 800; padding: 11px 20px; border-radius: 6px; text-decoration: none; box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);">
+                            Ver Especificación y Reglas &rarr;
+                          </a>
+                        </td>
+                        <td>
+                          <a href="https://github.com/Pipin333/quizapp" target="_blank" style="display: inline-block; background-color: #042F2E; border: 1px solid rgba(16, 185, 129, 0.35); color: #E2E8F0; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 600; padding: 11px 18px; border-radius: 6px; text-decoration: none;">
+                            Ver en GitHub &rarr;
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Signature Box -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid rgba(16, 185, 129, 0.2); padding-top: 20px;">
+                      <tr>
+                        <td>
+                          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 700; color: #FFFFFF;">
+                            Felipe Riquelme
+                          </div>
+                          <div style="font-family: 'Fira Code', monospace; font-size: 11px; color: #10B981; margin-top: 2px;">
+                            Creador de Ni Idea &bull; Ingeniero Civil en Informática
+                          </div>
+                          <div style="font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B; margin-top: 4px;">
+                            <a href="https://feliperiquel.me" style="color: #64748B; text-decoration: none;">feliperiquel.me</a> &bull; Santiago, Chile
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+
+                <!-- Terminal Footer Status -->
+                <tr>
+                  <td style="background-color: #031e17; padding: 14px 24px; border-top: 1px solid rgba(16, 185, 129, 0.25); font-family: 'Fira Code', monospace; font-size: 10px; color: #6EE7B7; text-align: center; line-height: 1.5;">
+                    <div>Cero spam garantizado. Solo recibirás este correo cuando las salas estén abiertas para jugar.</div>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+          `
+          : `
             <div style="background-color: #05070B; padding: 32px 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
               <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #090D17; border: 1px solid #1B2338; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
                 
@@ -500,7 +635,14 @@ ${escapedMessage}
 
               </table>
             </div>
-          `
+          `;
+
+        const autoReplyResult = await resend.emails.send({
+          from: senderFrom,
+          to: [sanitizedEmail],
+          replyTo: notificationEmail,
+          subject: autoReplySubject,
+          html: autoReplyHtml
         });
 
         if (autoReplyResult.data) {
