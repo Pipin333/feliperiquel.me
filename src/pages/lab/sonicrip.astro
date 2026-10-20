@@ -3,6 +3,24 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
+
+// Generar 48 bandas de EQ que calzan exactamente con la curva de altura (45%-50% en los flancos, valle central)
+const NUM_BG_BARS = 48;
+const bgEqBars = Array.from({ length: NUM_BG_BARS }, (_, i) => {
+  const x = i / (NUM_BG_BARS - 1);
+  // Doble cresta: pico 1 en x=0.20 (48vh), valle central en x=0.50 (28vh), pico 2 en x=0.80 (50vh)
+  const peak1 = Math.exp(-Math.pow((x - 0.20) / 0.16, 2)) * 22;
+  const peak2 = Math.exp(-Math.pow((x - 0.80) / 0.16, 2)) * 23;
+  const base = 25 + Math.sin(x * Math.PI) * 4;
+  const jitter = ((i * 7) % 5) * 0.6;
+  const heightPercent = Math.min(52, Math.max(22, base + peak1 + peak2 + jitter));
+  const segmentCount = Math.max(14, Math.round(heightPercent / 1.25));
+  return {
+    index: i,
+    heightPercent,
+    segmentCount
+  };
+});
 ---
 
 <Layout
@@ -11,15 +29,75 @@ import Icon from '../../components/Icon.astro';
 >
   <Header />
 
-  <!-- Fondo Ambiental Minimalista: Aura Cian VFD & Malla de Audio Digital -->
+  <!-- Fondo Ambiental: Pantalla de Ecualizador VFD Gigante que Nace del Piso de la Página -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none" aria-hidden="true">
     <!-- Resplandor central Aqua / Cian VFD difuso -->
-    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-b from-cyan-950/30 via-cyan-900/10 to-transparent blur-3xl"></div>
-    <div class="absolute bottom-10 -left-20 w-[500px] h-[350px] bg-teal-500/5 blur-3xl rounded-full"></div>
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-cyan-950/40 via-cyan-900/15 to-transparent blur-3xl"></div>
+    <div class="absolute bottom-0 inset-x-0 h-[400px] bg-gradient-to-t from-cyan-950/30 via-transparent to-transparent blur-2xl"></div>
 
-    <!-- Rejilla técnica de audio de fondo (abstracta y minimalista) -->
+    <!-- Rejilla técnica de audio de fondo -->
     <div class="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.02)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+    <!-- Gran Ecualizador de Pantalla Completa: Barras VFD con altura exacta en vh hasta el 48%-52% de la pantalla -->
+    <div class="absolute bottom-0 inset-x-0 h-full flex items-end justify-between px-2 sm:px-6 opacity-35 pointer-events-none">
+      <div class="w-full flex items-end justify-between gap-1 sm:gap-1.5 pb-2">
+        {bgEqBars.map((bar) => {
+          // Espaciado de aire dinámico para que el peak flote visiblemente sobre la barra
+          const peakAirGap = (bar.index * 13) % 5 === 0 ? 20 : (bar.index * 7) % 3 === 0 ? 15 : 11;
+          const isHighPeak = bar.heightPercent >= 45;
+          const isMidPeak = bar.heightPercent >= 35 && bar.heightPercent < 45;
+          const peakColorClass = isHighPeak
+            ? "bg-rose-400 shadow-[0_0_10px_#fb7185,0_0_16px_rgba(244,63,94,0.6)]"
+            : isMidPeak
+            ? "bg-amber-300 shadow-[0_0_10px_#fde047,0_0_16px_rgba(251,191,36,0.6)]"
+            : "bg-white shadow-[0_0_10px_#ffffff,0_0_16px_rgba(34,211,238,0.7)]";
+
+          return (
+            <div
+              class="flex-1 flex flex-col justify-end gap-[3px] sm:gap-[4px]"
+              style={`height: ${bar.heightPercent}vh;`}
+            >
+              <!-- Peak Hold Segment Flotando en el aire con separación visible -->
+              <div
+                class={`w-full h-[3.5px] sm:h-[4.5px] rounded-xs ${peakColorClass}`}
+                style={`margin-bottom: ${peakAirGap}px;`}
+              ></div>
+
+              <!-- Segmentos de fósforo VFD apilados llenando la barra -->
+              {Array.from({ length: bar.segmentCount }).map((_, sIdx) => {
+                const segFromTop = bar.segmentCount - 1 - sIdx;
+                const isClip = segFromTop >= bar.segmentCount - 3;
+                const isAmber = segFromTop >= bar.segmentCount - 8 && segFromTop < bar.segmentCount - 3;
+                const colorClass = isClip
+                  ? "bg-rose-500 shadow-[0_0_5px_#f43f5e]"
+                  : isAmber
+                  ? "bg-amber-400 shadow-[0_0_5px_#fbbf24]"
+                  : "bg-cyan-400 shadow-[0_0_5px_#22d3ee]";
+                return (
+                  <div class={`w-full h-[5px] sm:h-[7px] rounded-xs ${colorClass}`} />
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Marcas de Frecuencia Serigrafiadas en el Piso del EQ -->
+    <div class="absolute bottom-2 inset-x-0 flex items-center justify-between px-4 sm:px-10 text-[9px] font-mono text-cyan-400/40 select-none border-t border-cyan-500/10 pt-1">
+      <span>20Hz (SUB)</span>
+      <span class="hidden sm:inline">60Hz</span>
+      <span>150Hz (BASS)</span>
+      <span class="hidden sm:inline">400Hz</span>
+      <span>1kHz (MID)</span>
+      <span class="hidden sm:inline">2.5kHz</span>
+      <span>5kHz (PRESENCE)</span>
+      <span class="hidden sm:inline">10kHz</span>
+      <span>20kHz (AIR)</span>
+    </div>
   </div>
+
+  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
 
   <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
     <!-- Breadcrumb -->
