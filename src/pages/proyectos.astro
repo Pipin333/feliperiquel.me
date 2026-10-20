@@ -1,0 +1,24 @@
+---
+// src/pages/proyectos.astro
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WorkShowcase from '../components/WorkShowcase.astro';
+---
+
+<Layout
+  title="Proyectos & Repositorios de Código Abierto | Felipe Riquelme"
+  description="Catálogo completo de proyectos de ingeniería de software, arquitectura en la nube, optimización matemática y microservicios de Felipe Riquelme."
+>
+  <Header />
+  <main id="main-content" class="flex-1">
+    <WorkShowcase
+      showAll={true}
+      showViewMore={false}
+      showDescription={true}
+      title="Todos los Repositorios & Proyectos"
+      subtitle="Catálogo completo de soluciones open source, experimentación matemática y aplicaciones de producción con descripciones técnicas detalladas y decisiones de arquitectura."
+    />
+  </main>
+  <Footer />
+</Layout>
