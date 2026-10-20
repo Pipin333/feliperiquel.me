@@ -125,10 +125,6 @@ const spotlight = featuredTools[spotlightIndex];
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <!-- Header de Sección -->
     <div class="mb-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-canvas-border bg-canvas-surface text-telemetry font-mono text-xs uppercase tracking-wider mb-3">
-        <Icon name="flask" class="w-3.5 h-3.5" />
-        <span>Playground Interactivo</span>
-      </div>
       <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
         El Laboratorio: micro-apps en vivo
       </h2>
@@ -257,20 +253,9 @@ const spotlight = featuredTools[spotlightIndex];
       <!-- Contenido Frontal de la Tarjeta (Blindado con relative z-10) -->
       <div class="relative z-10">
         <!-- Barra superior de metadatos del Spotlight -->
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-5 border-b border-canvas-border">
-          <div class="flex items-center gap-2.5">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-tech font-mono text-xs font-semibold bg-telemetry/15 text-telemetry border border-telemetry/30">
-              <span class="w-2 h-2 rounded-full bg-telemetry animate-pulse"></span>
-              <span>{spotlight.highlightBadge}</span>
-            </span>
-            <span class="font-mono text-xs text-slate-400 hidden sm:inline-block">
-              Rotación diaria automática
-            </span>
-          </div>
-
-          <span class={`font-mono text-xs px-3 py-1 rounded-tech font-semibold border ${spotlight.accentColor}`}>
-            {spotlight.badge}
-          </span>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-canvas-border font-mono text-xs text-slate-400">
+          <span class="text-telemetry font-semibold">{spotlight.highlightBadge}</span>
+          <span>Rotación diaria automática</span>
         </div>
 
         <!-- Grid Principal: Contenido (Col 7) + Specs de Arquitectura (Col 5) -->

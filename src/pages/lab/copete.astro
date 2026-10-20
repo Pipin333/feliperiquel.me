@@ -23,16 +23,15 @@ import Icon from '../../components/Icon.astro';
 
     <!-- Header -->
     <div class="mb-10">
-      <div class="flex flex-wrap items-center gap-3 mb-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-amber-500/30 bg-amber-500/10 text-amber-300 font-mono text-xs font-semibold">
-          <Icon name="cup-straw" class="w-3.5 h-3.5" />
-          <span>Logística de Carrete & Cálculo de Insumos</span>
-        </div>
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-3">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          Cuánto Rinde
+        </h1>
         <a
           href="https://github.com/Pipin333/calculadoracopete"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-amber-400/50 transition-colors"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-amber-400/50 transition-colors self-start sm:self-auto"
           title="Ver repositorio canónico calculadoracopete en GitHub"
         >
           <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
@@ -44,9 +43,6 @@ import Icon from '../../components/Icon.astro';
           </svg>
         </a>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-        Cuánto Rinde
-      </h1>
       <p class="text-base text-slate-300 leading-relaxed max-w-3xl">
         Para cuando no quieres cranearte la logística ni terminar tomando pisco tibio a las 3 AM. Calcula botellas exactas, cervezas, mixers, bolsas de hielo y la cuota justa por persona ("la vaca").
       </p>

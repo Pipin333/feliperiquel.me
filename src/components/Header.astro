@@ -5,12 +5,11 @@ import Icon from './Icon.astro';
 interface NavItem {
   label: string;
   href: string;
-  badge?: string;
   icon?: string;
 }
 
 const navItems: NavItem[] = [
-  { label: "Laboratorio", href: "/lab", badge: "Live", icon: "flask" },
+  { label: "Laboratorio", href: "/lab", icon: "flask" },
   { label: "Proyectos", href: "/#proyectos" },
   { label: "Sobre mí", href: "/#sobre-mi" },
   { label: "Contacto", href: "/#contacto" }
@@ -32,8 +31,7 @@ const navItems: NavItem[] = [
           feliperiquel<span class="text-telemetry">.me</span>
         </span>
         <span class="text-canvas-border font-mono text-xs hidden xl:inline">/</span>
-        <span class="hidden xl:inline-flex items-center gap-1.5 font-mono text-xs text-slate-400">
-          <span class="w-1.5 h-1.5 rounded-full bg-telemetry animate-pulse flex-shrink-0"></span>
+        <span class="hidden xl:inline-flex items-center font-mono text-xs text-slate-400">
           Ingeniero Civil en Informática
         </span>
       </div>
@@ -48,11 +46,6 @@ const navItems: NavItem[] = [
         >
           {item.icon && <Icon name={item.icon} class="w-3.5 h-3.5 text-telemetry flex-shrink-0" />}
           <span>{item.label}</span>
-          {item.badge && (
-            <span class="text-[9px] px-1.5 py-0.2 rounded-tech-sm bg-telemetry/10 text-telemetry border border-telemetry/30 group-hover:border-telemetry/60">
-              {item.badge}
-            </span>
-          )}
         </a>
       ))}
     </nav>

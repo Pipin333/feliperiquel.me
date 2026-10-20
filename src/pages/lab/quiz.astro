@@ -214,11 +214,6 @@ import Icon from '../../components/Icon.astro';
 
     <!-- Header / Hero del Módulo -->
     <header class="mb-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-emerald-500/30 bg-emerald-950/40 text-emerald-400 font-mono text-xs mb-4">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Consola en Vivo · Cloudflare Durable Objects</span>
-      </div>
-
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h1 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
@@ -651,13 +646,8 @@ import Icon from '../../components/Icon.astro';
         <!-- Modo 1: Trivia Rush -->
         <div class="spotlight-card p-6 rounded-xl border border-emerald-500/30 bg-slate-950/80 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-10 h-10 rounded-tech bg-emerald-950/60 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                <Icon name="lightning" class="w-5 h-5" />
-              </div>
-              <span class="font-mono text-[10px] px-2 py-0.5 rounded-tech-sm font-semibold border border-emerald-500/40 text-emerald-300 bg-emerald-950/30">
-                Ego & Reflejos
-              </span>
+            <div class="w-10 h-10 rounded-tech bg-emerald-950/60 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mb-4">
+              <Icon name="lightning" class="w-5 h-5" />
             </div>
             <h3 class="text-lg font-display font-bold text-white mb-2">1. Trivia Rush</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
@@ -673,13 +663,8 @@ import Icon from '../../components/Icon.astro';
         <!-- Modo 2: Ese Eres Tú -->
         <div class="spotlight-card p-6 rounded-xl border border-rose-500/30 bg-slate-950/80 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-10 h-10 rounded-tech bg-rose-950/60 border border-rose-500/40 flex items-center justify-center text-rose-400">
-                <Icon name="people" class="w-5 h-5" />
-              </div>
-              <span class="font-mono text-[10px] px-2 py-0.5 rounded-tech-sm font-semibold border border-rose-500/40 text-rose-300 bg-rose-950/30">
-                Delación Social
-              </span>
+            <div class="w-10 h-10 rounded-tech bg-rose-950/60 border border-rose-500/40 flex items-center justify-center text-rose-400 mb-4">
+              <Icon name="people" class="w-5 h-5" />
             </div>
             <h3 class="text-lg font-display font-bold text-white mb-2">2. Ese Eres Tú</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
@@ -695,13 +680,8 @@ import Icon from '../../components/Icon.astro';
         <!-- Modo 3: Pinturillo -->
         <div class="spotlight-card p-6 rounded-xl border border-cyan-500/30 bg-slate-950/80 flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between mb-4">
-              <div class="w-10 h-10 rounded-tech bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-                <Icon name="palette" class="w-5 h-5" />
-              </div>
-              <span class="font-mono text-[10px] px-2 py-0.5 rounded-tech-sm font-semibold border border-cyan-500/40 text-cyan-300 bg-cyan-950/30">
-                Ridículo & Risa
-              </span>
+            <div class="w-10 h-10 rounded-tech bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400 mb-4">
+              <Icon name="palette" class="w-5 h-5" />
             </div>
             <h3 class="text-lg font-display font-bold text-white mb-2">3. Pinturillo</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
@@ -731,24 +711,20 @@ import Icon from '../../components/Icon.astro';
         
         <!-- Caja de Arquitectura -->
         <div class="p-6 rounded-xl border border-canvas-border bg-canvas-surface space-y-3 font-mono text-xs">
-          <div class="text-xs font-bold text-emerald-400 flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <div class="text-xs font-bold text-emerald-400">
             <span>Cloudflare Durable Objects & WebSockets</span>
           </div>
           <p class="text-slate-300 text-xs font-sans leading-relaxed">
             Cada sala es una micro-máquina uniproceso en el edge de Cloudflare (nodo Santiago <code class="text-emerald-300">SCL</code>). Todas las respuestas se serializan en orden lineal en memoria (<span class="text-emerald-300">O(1)</span>), garantizando consistencia absoluta sin necesidad de bases de datos pesadas ni bloqueos de red.
           </p>
-          <div class="pt-2 text-[11px] text-slate-400 flex flex-wrap gap-2">
-            <span class="px-2 py-0.5 rounded bg-canvas border border-canvas-border">RTT &lt; 25ms</span>
-            <span class="px-2 py-0.5 rounded bg-canvas border border-canvas-border">100.000 req/día gratuitas</span>
-            <span class="px-2 py-0.5 rounded bg-canvas border border-canvas-border">Escalabilidad horizontal</span>
+          <div class="pt-2 text-[11px] text-slate-400">
+            <span>RTT &lt; 25ms · 100.000 req/día gratuitas · Escalabilidad horizontal</span>
           </div>
         </div>
 
         <!-- Caja de Blindaje MAGI -->
         <div class="p-6 rounded-xl border border-canvas-border bg-canvas-surface space-y-3 font-mono text-xs">
-          <div class="text-xs font-bold text-rose-400 flex items-center gap-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+          <div class="text-xs font-bold text-rose-400">
             <span>Resiliencia Anti-Carrete (MAGI Shield)</span>
           </div>
           <ul class="text-slate-300 text-xs font-sans space-y-2 leading-relaxed">

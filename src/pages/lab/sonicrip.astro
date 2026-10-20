@@ -111,16 +111,15 @@ const bgEqBars = Array.from({ length: NUM_BG_BARS }, (_, i) => {
 
     <!-- Header -->
     <div class="mb-10">
-      <div class="flex flex-wrap items-center gap-3 mb-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-sky-500/30 bg-sky-500/10 text-sky-300 font-mono text-xs font-semibold">
-          <Icon name="music-note-beamed" class="w-3.5 h-3.5" />
-          <span>Web Audio DSP • EQ 8 Bandas • Lo-Fi & Batch</span>
-        </div>
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-3">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          SonicRip Studio & Audio Lab
+        </h1>
         <a
           href="https://github.com/Pipin333/Toodles"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-sky-400/50 transition-colors"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-tech font-mono text-xs font-medium text-slate-300 hover:text-white bg-canvas-surface border border-canvas-border hover:border-sky-400/50 transition-colors w-fit shrink-0"
           title="Ver ecosistema de audio Toodles en GitHub"
         >
           <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
@@ -132,9 +131,6 @@ const bgEqBars = Array.from({ length: NUM_BG_BARS }, (_, i) => {
           </svg>
         </a>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-        SonicRip Studio & Audio Lab
-      </h1>
       <p class="text-base text-slate-300 leading-relaxed max-w-3xl">
         Carga cualquier canción o prueba con el sintetizador en memoria. Ecualiza con 8 bandas paramétricas, aplica texturas Lo-Fi / Bitcrusher o genera comandos por lotes para tus playlists.
       </p>
