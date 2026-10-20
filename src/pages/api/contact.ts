@@ -656,9 +656,8 @@ ${escapedMessage}
     }
 
     const isConfigured = Boolean(supabaseUrl || resendApiKey);
-    if (!isConfigured) {
-      console.log('[Dev Contact Gateway - Sin credenciales configuradas]');
-      console.log({ sanitizedName, sanitizedEmail, sanitizedTopic, sanitizedMessage, ipHash });
+    if (!isConfigured && import.meta.env.DEV) {
+      console.info('[Dev Contact Gateway] Mensaje simulado en entorno de desarrollo local sin credenciales.');
     }
 
     return new Response(

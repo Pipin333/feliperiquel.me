@@ -90,23 +90,27 @@ npm run preview
 │   ├── pages/
 │   │   ├── index.astro           # Portafolio principal orientado a software y lab
 │   │   ├── cv.astro              # Currículum interactivo bilingüe (ES/EN) listo para imprimir
+│   │   ├── ni-idea.astro         # Alias y redirección canónica hacia /lab/quiz
 │   │   ├── 404.astro             # Terminal interactiva de recuperación ante errores 404
 │   │   ├── privacidad.astro      # Política de privacidad y tratamiento de datos
 │   │   ├── terminos.astro        # Términos y condiciones de uso del software
 │   │   ├── api/
-│   │   │   ├── contact.ts        # Endpoint serverless: rate limiting, Supabase y Resend
+│   │   │   ├── contact.ts        # Endpoint serverless: rate limiting, Supabase, Resend y tickets VIP
 │   │   │   └── lab/
 │   │   │       └── retorica.ts   # Proxy serverless anti-SSRF para inferencia BYOK LLM
 │   │   └── lab/
 │   │       ├── index.astro       # Hub central del Laboratorio & Playground
 │   │       ├── retorica.astro    # Transmutador ontológico de prosa técnica (Heurístico + BYOK)
 │   │       ├── copete.astro      # Cuánto Rinde (optimizador de insumos, repo: calculadoracopete)
-│   │       ├── quiz.astro        # Vista de mantenimiento temporal
+│   │       ├── quiz.astro        # Ni Idea Party Game (Teaser interactivo, blueprint y lista de espera VIP)
+│   │       ├── ni-idea.astro     # Alias y redirección canónica hacia /lab/quiz
 │   │       └── sonicrip.astro    # SonicRip Studio (8-band EQ & batch yt-dlp)
 │   ├── layouts/
 │   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD (Person + WebSite) y enlace a llms.txt
 │   └── styles/
 │       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
+├── docs/
+│   └── ni-idea/                  # Documentos directores congelados (BRIEF, BRAND y README)
 ├── scripts/
 │   └── supabase-schema.sql       # Esquema PostgreSQL con tabla contact_messages y RLS
 ├── public/
