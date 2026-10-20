@@ -213,10 +213,10 @@ import Icon from '../../components/Icon.astro';
     </nav>
 
     <!-- Header / Hero del Módulo -->
-    <header class="mb-14">
+    <header class="mb-10">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-tech border border-emerald-500/30 bg-emerald-950/40 text-emerald-400 font-mono text-xs mb-4">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Party Game en Especificación Congelada · Foreman 2.2.0</span>
+        <span>Consola en Vivo · Cloudflare Durable Objects</span>
       </div>
 
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -234,25 +234,407 @@ import Icon from '../../components/Icon.astro';
             href="https://github.com/Pipin333/niideaapp"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-tech font-mono text-xs font-semibold text-slate-300 hover:text-white bg-canvas hover:bg-canvas-surface border border-canvas-border hover:border-emerald-500 transition-colors"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-tech font-mono text-xs font-semibold text-slate-300 hover:text-white bg-canvas hover:bg-canvas-surface border border-canvas-border hover:border-emerald-500 transition-colors whitespace-nowrap flex-shrink-0"
           >
             <Icon name="github" class="w-4 h-4 text-slate-400" />
             <span>Ver repositorio</span>
           </a>
           <a
-            href="#notificarme"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-tech font-mono text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
+            href="https://ni-idea.pipin333.workers.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-tech font-mono text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all whitespace-nowrap flex-shrink-0"
           >
-            <Icon name="bell" class="w-3.5 h-3.5" />
-            <span>Avísame al lanzar</span>
+            <Icon name="controller" class="w-3.5 h-3.5" />
+            <span>Pantalla completa</span>
           </a>
         </div>
       </div>
 
       <p class="mt-6 text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl font-sans">
-        Diseñado para eliminar por completo la fricción de los party games tradicionales: <strong class="text-white">cero cuentas de usuario</strong>, <strong class="text-white">cero descargas de apps</strong> y <strong class="text-white">cero esperas</strong>. Un anfitrión proyecta la sala en la tele o Discord, los amigos escanean el QR o ingresan un código de cuatro letras desde su celular, y la ruleta decide el caos de la noche.
+        Diseñado para eliminar por completo la fricción de los party games tradicionales: <strong class="text-white">cero cuentas de usuario</strong>, <strong class="text-white">cero descargas de apps</strong> y <strong class="text-white">cero esperas</strong>. Crea una sala aquí mismo o únete con el código de cuatro caracteres desde cualquier teléfono o navegador.
       </p>
     </header>
+
+    <!-- CONSOLA INTERACTIVA EN VIVO -->
+    <section id="consola-en-vivo" class="mb-16" aria-label="Consola de juego en vivo Ni Idea">
+      <!-- ESTADO 1: Entrada (Crear / Unirse + Cajetín _ _ _ _) -->
+      <div
+        id="state-entry"
+        class="w-full rounded-2xl bg-[#061814] border border-[#064E3B] p-6 sm:p-8 shadow-2xl space-y-6"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#064E3B] pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#10B981]"></span>
+            <span class="font-mono text-xs uppercase tracking-widest text-[#10B981] font-bold">
+              MESA MULTIJUGADOR EN TIEMPO REAL
+            </span>
+          </div>
+          <span class="font-mono text-xs text-[#94A3B8]">HASTA 16 JUGADORES · 0 LOGINS</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+          <!-- Apodo -->
+          <div class="space-y-2">
+            <label for="input-nickname" class="block font-mono text-xs uppercase tracking-wider text-[#94A3B8]">
+              1. Tu apodo para esta partida
+            </label>
+            <input
+              id="input-nickname"
+              type="text"
+              maxlength="18"
+              autocomplete="off"
+              placeholder="Ej: Pipe, Cami, ElProfe"
+              class="w-full px-4 py-3.5 rounded-xl bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC] placeholder-[#94A3B8]/60 font-sans text-sm sm:text-base focus-visible:outline-none focus-visible:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981] transition-all"
+            />
+          </div>
+
+          <!-- Cajetín de 4 ranuras -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="pin-slot-0" class="font-mono text-xs uppercase tracking-wider text-[#94A3B8]">
+                2. Código PIN de Sala (si te unes)
+              </label>
+              <span class="font-mono text-xs text-[#10B981]">A-Z / 0-9</span>
+            </div>
+
+            <div
+              id="pin-slot-group"
+              data-complete="false"
+              class="grid grid-cols-4 gap-2.5"
+              role="group"
+              aria-label="Ranuras para el código de cuatro caracteres de la sala"
+            >
+              <input
+                id="pin-slot-0"
+                type="text"
+                maxlength="1"
+                placeholder="_"
+                aria-label="Carácter 1 del código de sala"
+                class="w-full h-14 text-center rounded-xl bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC] placeholder-[#94A3B8]/40 font-mono text-2xl font-bold uppercase focus-visible:outline-none focus-visible:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981]"
+              />
+              <input
+                id="pin-slot-1"
+                type="text"
+                maxlength="1"
+                placeholder="_"
+                aria-label="Carácter 2 del código de sala"
+                class="w-full h-14 text-center rounded-xl bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC] placeholder-[#94A3B8]/40 font-mono text-2xl font-bold uppercase focus-visible:outline-none focus-visible:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981]"
+              />
+              <input
+                id="pin-slot-2"
+                type="text"
+                maxlength="1"
+                placeholder="_"
+                aria-label="Carácter 3 del código de sala"
+                class="w-full h-14 text-center rounded-xl bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC] placeholder-[#94A3B8]/40 font-mono text-2xl font-bold uppercase focus-visible:outline-none focus-visible:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981]"
+              />
+              <input
+                id="pin-slot-3"
+                type="text"
+                maxlength="1"
+                placeholder="_"
+                aria-label="Carácter 4 del código de sala"
+                class="w-full h-14 text-center rounded-xl bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC] placeholder-[#94A3B8]/40 font-mono text-2xl font-bold uppercase focus-visible:outline-none focus-visible:border-[#10B981] focus-visible:ring-2 focus-visible:ring-[#10B981]"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p id="entry-inline-feedback" role="alert" class="hidden font-mono text-xs text-[#F43F5E]"></p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <button
+            id="btn-create-room"
+            type="button"
+            class="w-full py-3.5 px-5 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#022C22] bg-gradient-to-r from-[#10B981] to-[#34D399] hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F8FAFC]"
+          >
+            Crear Sala
+          </button>
+
+          <button
+            id="btn-join-room"
+            type="button"
+            class="w-full py-3.5 px-5 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#F8FAFC] bg-[#0B241E] border border-[#064E3B] hover:border-[#10B981] hover:text-white active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]"
+          >
+            Unirse a Sala
+          </button>
+        </div>
+      </div>
+
+      <!-- ESTADO 2: Carga -->
+      <div
+        id="state-loading"
+        aria-live="polite"
+        class="hidden w-full rounded-2xl bg-[#061814] border border-[#064E3B] p-8 text-center space-y-4"
+      >
+        <div class="w-10 h-10 mx-auto rounded-full border-2 border-[#10B981] border-t-transparent animate-spin"></div>
+        <p class="font-display text-lg font-bold text-[#F8FAFC]">Sincronizando mesa de juego...</p>
+      </div>
+
+      <!-- ESTADO 4: Error Reintentable -->
+      <div
+        id="state-error"
+        role="alert"
+        class="hidden w-full rounded-2xl bg-[#061814] border border-[#F43F5E] p-8 text-center space-y-4"
+      >
+        <p class="font-mono text-xs uppercase tracking-widest text-[#F43F5E]">CONEXIÓN INTERRUMPIDA</p>
+        <h2 class="font-display text-xl font-bold text-[#F8FAFC]">No pudimos conectar con la sala</h2>
+        <p id="error-state-message" class="text-sm text-[#94A3B8] max-w-md mx-auto">
+          Verifica el código de cuatro letras o tu conexión e intenta nuevamente.
+        </p>
+        <button
+          id="btn-retry-connection"
+          type="button"
+          class="px-6 py-3 rounded-xl font-mono text-xs font-bold text-white bg-[#F43F5E] hover:opacity-95 transition-all"
+        >
+          Reintentar conexión
+        </button>
+      </div>
+
+      <!-- ESTADO 3 & 5: Sala Activa en Vivo -->
+      <div
+        id="state-active-room"
+        class="hidden w-full rounded-2xl bg-[#061814] border border-[#064E3B] p-5 sm:p-7 shadow-2xl space-y-4"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#064E3B]">
+          <div class="flex items-center gap-2">
+            <span class="font-mono text-xs text-[#94A3B8]">SALA:</span>
+            <span
+              id="active-room-code"
+              class="font-mono text-base sm:text-lg font-bold tracking-widest text-[#10B981] bg-[#0B241E] px-2.5 py-0.5 rounded border border-[#10B981]/40"
+            >
+              K9X2
+            </span>
+            <button
+              id="btn-copy-pin"
+              type="button"
+              class="px-2.5 py-1 rounded bg-[#0B241E] border border-[#064E3B] hover:border-[#10B981] font-mono text-xs text-[#F8FAFC] transition-colors"
+            >
+              Copiar
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span
+              id="active-round-badge"
+              class="font-mono text-xs px-2.5 py-1 rounded bg-[#0B241E] border border-[#064E3B] text-[#F8FAFC]"
+            >
+              LOBBY
+            </span>
+            <span
+              id="active-timer-badge"
+              class="font-mono text-xs font-bold px-2.5 py-1 rounded bg-[#10B981]/20 border border-[#10B981] text-[#10B981]"
+            >
+              EN VIVO
+            </span>
+            <button
+              id="btn-leave-room"
+              type="button"
+              class="px-2.5 py-1 rounded bg-[#0B241E] border border-[#064E3B] hover:border-[#F43F5E] font-mono text-xs text-[#94A3B8] hover:text-white transition-colors"
+            >
+              Salir
+            </button>
+          </div>
+        </div>
+
+        <p id="active-status-banner" class="font-mono text-xs text-[#10B981]" aria-live="polite">
+          Conectado a la sala.
+        </p>
+
+        <!-- Sub-vista Lobby -->
+        <div id="subview-lobby" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="font-display text-lg font-bold text-[#F8FAFC]">Jugadores en la mesa</h2>
+            <button
+              id="btn-add-bot"
+              type="button"
+              class="px-3 py-1.5 rounded-lg bg-[#0B241E] border border-[#064E3B] hover:border-[#10B981] font-mono text-xs text-[#10B981] transition-all"
+            >
+              + Sumar Bot de prueba
+            </button>
+          </div>
+
+          <ul id="lobby-contenders-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1"></ul>
+
+          <div class="pt-2 space-y-2">
+            <p id="lobby-host-hint" class="font-sans text-xs text-[#94A3B8]"></p>
+            <button
+              id="btn-start-match"
+              type="button"
+              class="w-full py-3.5 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#022C22] bg-gradient-to-r from-[#10B981] to-[#34D399] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              Iniciar Partida (3 Rondas)
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-vista Ruleta -->
+        <div id="subview-roulette" class="hidden text-center space-y-4 py-2">
+          <div class="relative w-32 h-32 mx-auto">
+            <svg
+              id="roulette-wheel-graphic"
+              class="w-full h-full text-[#10B981]"
+              viewBox="0 0 120 120"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="60" cy="60" r="54" stroke-width="2" />
+              <circle cx="60" cy="60" r="40" stroke-width="1" stroke-dasharray="3 3" />
+              <circle cx="60" cy="60" r="14" stroke-width="2" />
+              <line x1="60" y1="6" x2="60" y2="114" stroke-width="1.5" />
+              <line x1="13" y1="33" x2="107" y2="87" stroke-width="1.5" />
+              <line x1="13" y1="87" x2="107" y2="33" stroke-width="1.5" />
+              <polygon points="60,2 65,14 55,14" fill="#F43F5E" stroke="none" />
+            </svg>
+          </div>
+
+          <div class="space-y-1">
+            <p class="font-mono text-xs uppercase text-[#94A3B8]">TURNO DE GIRAR LA RULETA</p>
+            <h2 id="roulette-roller-name" class="font-display text-2xl font-extrabold text-[#F8FAFC]">Jugador</h2>
+            <p class="text-xs text-[#94A3B8]">
+              Bolsa sin reemplazo: garantiza Trivia Rush, Ese Eres Tú y Pinturillo.
+            </p>
+          </div>
+
+          <button
+            id="btn-spin-wheel"
+            type="button"
+            class="w-full max-w-sm mx-auto py-3.5 px-6 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#022C22] bg-gradient-to-r from-[#10B981] to-[#34D399] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            Girar Ruleta de Modos
+          </button>
+        </div>
+
+        <!-- Sub-vista Trivia Rush -->
+        <div id="subview-trivia" class="hidden space-y-4">
+          <div class="space-y-1">
+            <span id="trivia-category" class="font-mono text-xs uppercase text-[#10B981] tracking-wider">TRIVIA RUSH</span>
+            <h2 id="trivia-question" class="font-display text-lg sm:text-xl font-bold text-[#F8FAFC] leading-snug"></h2>
+          </div>
+          <div id="trivia-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+
+        <!-- Sub-vista Ese Eres Tú -->
+        <div id="subview-thats-you" class="hidden space-y-4">
+          <div class="space-y-1">
+            <span class="font-mono text-xs uppercase text-[#F43F5E] tracking-wider">ESE ERES TÚ · VOTACIÓN SECRETA</span>
+            <h2 id="social-prompt-text" class="font-display text-lg sm:text-xl font-bold text-[#F8FAFC] leading-snug"></h2>
+          </div>
+          <div id="social-targets-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-52 overflow-y-auto"></div>
+        </div>
+
+        <!-- Sub-vista Pinturillo -->
+        <div id="subview-pinturillo" class="hidden space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span id="sketch-word-banner" class="font-mono text-xs sm:text-sm font-bold text-[#10B981] tracking-wider">
+              PISTA: _ _ _ _ _
+            </span>
+
+            <div id="sketch-drawer-tools" class="flex items-center gap-2">
+              <button
+                type="button"
+                data-brush-color="#10B981"
+                aria-label="Color esmeralda"
+                class="w-6 h-6 rounded-full bg-[#10B981] border border-white/40"
+              ></button>
+              <button
+                type="button"
+                data-brush-color="#F43F5E"
+                aria-label="Color carmesí"
+                class="w-6 h-6 rounded-full bg-[#F43F5E] border border-white/40"
+              ></button>
+              <button
+                type="button"
+                data-brush-color="#F8FAFC"
+                aria-label="Color marfil"
+                class="w-6 h-6 rounded-full bg-[#F8FAFC] border border-white/40"
+              ></button>
+              <button
+                id="btn-reroll-word"
+                type="button"
+                class="px-2.5 py-1 rounded bg-[#0B241E] border border-[#10B981]/60 font-mono text-xs text-[#10B981] hover:bg-[#10B981] hover:text-[#022C22] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                Re-roll (1)
+              </button>
+              <button
+                id="btn-clear-canvas"
+                type="button"
+                class="px-2.5 py-1 rounded bg-[#0B241E] border border-[#064E3B] font-mono text-xs text-[#94A3B8] hover:text-white"
+              >
+                Borrar
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-stretch">
+            <div class="md:col-span-2 rounded-xl bg-[#030712] border border-[#064E3B] overflow-hidden">
+              <canvas
+                id="pinturillo-canvas"
+                width="600"
+                height="320"
+                class="w-full h-48 sm:h-56 touch-none cursor-crosshair block"
+              ></canvas>
+            </div>
+
+            <div class="flex flex-col justify-between rounded-xl bg-[#0B241E] border border-[#064E3B] p-3 space-y-2">
+              <ul id="sketch-feed-list" class="space-y-1 overflow-y-auto max-h-36"></ul>
+
+              <form id="sketch-guess-form" class="flex gap-1.5">
+                <div id="sketch-guesser-box" class="flex w-full gap-1.5">
+                  <label for="sketch-guess-input" class="sr-only">Escribe tu adivinanza</label>
+                  <input
+                    id="sketch-guess-input"
+                    type="text"
+                    maxlength="30"
+                    placeholder="Adivina aquí..."
+                    class="flex-1 min-w-0 px-2.5 py-1.5 rounded bg-[#061814] border border-[#064E3B] text-xs font-mono text-[#F8FAFC] placeholder-[#94A3B8]/60 focus:outline-none focus:border-[#10B981]"
+                  />
+                  <button
+                    type="submit"
+                    class="px-3 py-1.5 rounded bg-[#10B981] text-[#022C22] font-mono text-xs font-bold"
+                  >
+                    Enviar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-vista Revelación de Ronda -->
+        <div id="subview-reveal" class="hidden space-y-4">
+          <div class="p-3.5 rounded-xl bg-[#0B241E] border border-[#10B981]/50">
+            <p class="font-mono text-xs uppercase text-[#10B981]">RESULTADO DE LA RONDA</p>
+            <p id="reveal-outcome-summary" class="font-display text-base sm:text-lg font-bold text-[#F8FAFC] mt-0.5"></p>
+          </div>
+          <ul id="reveal-scoreboard-list" class="space-y-2 max-h-44 overflow-y-auto"></ul>
+          <button
+            id="btn-next-round"
+            type="button"
+            class="w-full py-3.5 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#022C22] bg-gradient-to-r from-[#10B981] to-[#34D399] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
+          >
+            Continuar a la siguiente ronda
+          </button>
+        </div>
+
+        <!-- Sub-vista Podio Final -->
+        <div id="subview-podium" class="hidden space-y-4">
+          <div class="text-center space-y-1">
+            <span class="font-mono text-xs uppercase tracking-widest text-[#10B981]">PODIO FINAL DE SESIÓN</span>
+            <h2 class="font-display text-2xl font-extrabold text-[#F8FAFC]">Tabla de Campeones</h2>
+          </div>
+          <ul id="podium-ranking-list" class="space-y-2 max-h-48 overflow-y-auto"></ul>
+          <button
+            id="btn-rematch"
+            type="button"
+            class="w-full py-3.5 rounded-xl font-mono text-xs sm:text-sm font-bold text-[#022C22] bg-gradient-to-r from-[#10B981] to-[#34D399] hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all"
+          >
+            Revancha inmediata en la misma sala
+          </button>
+        </div>
+      </div>
+    </section>
 
     <!-- La Tríada de Minijuegos (Sección Central) -->
     <section class="mb-16" aria-labelledby="modes-heading">
@@ -379,111 +761,771 @@ import Icon from '../../components/Icon.astro';
       </div>
     </section>
 
-    <!-- CTA Box: Avísame cuando esté disponible -->
-    <section id="notificarme" class="spotlight-card p-8 sm:p-12 rounded-tech border border-emerald-500/40 bg-gradient-to-b from-[#061814] to-[#030712] text-center max-w-2xl mx-auto shadow-2xl relative overflow-hidden" aria-labelledby="notify-heading">
-      <div class="w-12 h-12 rounded-tech bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto mb-4">
-        <Icon name="bell" class="w-6 h-6" />
-      </div>
-
-      <h2 id="notify-heading" class="text-2xl sm:text-3xl font-display font-bold text-white mb-2">
-        ¿Quieres probar la primera sala beta?
-      </h2>
-      <p class="text-xs sm:text-sm text-slate-300 max-w-md mx-auto mb-8 font-sans leading-relaxed">
-        Déjanos tu correo y te enviaremos una invitación directa al abrir las primeras salas de prueba cerradas con tus amigos. Cero spam, solo aviso de lanzamiento.
-      </p>
-
-      <!-- Formulario de Notificación -->
-      <div id="notify-container" class="max-w-md mx-auto">
-        <form id="notify-form" class="space-y-3 text-left">
-          <div class="relative">
-            <input
-              type="email"
-              id="notify-email"
-              name="email"
-              required
-              placeholder="tu.correo@ejemplo.com"
-              class="w-full px-4 py-3 rounded-tech bg-slate-950/90 border border-emerald-500/40 text-white placeholder-slate-500 font-mono text-xs sm:text-sm focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-colors"
-            />
-          </div>
-
-          <button
-            type="submit"
-            id="notify-submit-btn"
-            class="w-full py-3 rounded-tech font-mono text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 hover:from-emerald-300 hover:to-teal-200 shadow-[0_0_20px_rgba(16,185,129,0.35)] transition-all flex items-center justify-center gap-2"
-          >
-            <span>Reservar pase para la primera beta</span>
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
-        </form>
-
-        <!-- Ficha de Acceso Temática (ACK State In-Character) -->
-        <div id="notify-ticket" class="hidden text-left p-5 rounded-xl border border-emerald-500/50 bg-[#061814] space-y-3 font-mono shadow-[0_0_25px_rgba(16,185,129,0.2)] animate-fade-in">
-          <div class="flex items-center justify-between border-b border-emerald-500/30 pb-2.5">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="text-xs font-bold text-emerald-300 tracking-wider">FICHA DE ACCESO BETA #001</span>
-            </div>
-            <span class="text-[10px] text-emerald-400/60 font-mono">SCL-EDGE-PARTY</span>
-          </div>
-
-          <p class="text-xs sm:text-sm text-slate-200 font-sans leading-relaxed">
-            <strong class="text-white">¡Mesa reservada!</strong> Quedaste anotado para hostear la primera partida. Cuando giremos la ruleta del servidor en Santiago, te llegará el enlace directo para armar sala y delatar a tus amigos.
-          </p>
-
-          <div class="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-            <div>
-              <span class="text-slate-500">Destinatario:</span>
-              <span id="ticket-email" class="text-emerald-300 font-semibold font-mono ml-1"></span>
-            </div>
-            <span class="text-emerald-400/80 font-mono">0 logins • 0 esperas • 100% gratis</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <Footer />
 
   <script>
-    const notifyForm = document.getElementById('notify-form') as HTMLFormElement | null;
-    const notifyEmail = document.getElementById('notify-email') as HTMLInputElement | null;
-    const notifyBtn = document.getElementById('notify-submit-btn') as HTMLButtonElement | null;
-    const notifyTicket = document.getElementById('notify-ticket') as HTMLDivElement | null;
-    const ticketEmail = document.getElementById('ticket-email') as HTMLSpanElement | null;
+    const SESSION_TOKEN_KEY = 'ni_idea_session_token';
+    const NICKNAME_KEY = 'ni_idea_nickname';
+    const PARTYSERVER_HOST = 'ni-idea.pipin333.workers.dev';
+    const VECTOR_BATCH_INTERVAL_MS = 33;
 
-    if (notifyForm && notifyEmail && notifyBtn && notifyTicket && ticketEmail) {
-      notifyForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = notifyEmail.value.trim();
-        if (!email) return;
+    interface VectorPoint {
+      x: number;
+      y: number;
+    }
 
-        notifyBtn.disabled = true;
-        notifyBtn.innerHTML = '<span>Tirando la ruleta...</span>';
+    interface VectorBatch {
+      strokeId: string;
+      color: string;
+      width: number;
+      points: VectorPoint[];
+    }
 
-        // Mostrar de inmediato la ficha con el correo del usuario
-        ticketEmail.textContent = email;
+    interface ContenderView {
+      id: string;
+      nickname: string;
+      isHost: boolean;
+      isConnected: boolean;
+      isBot: boolean;
+      score: number;
+      streak: number;
+      hasAnswered: boolean;
+      lastRoundDelta: number;
+    }
 
-        try {
-          await fetch('/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: 'Reserva Beta Ni Idea',
-              email: email,
-              topic: 'Ficha de Sala · Ni Idea Party Game',
-              message: `Solicitud de pase temprano para hostear la primera sala beta de Ni Idea: ${email}`
-            })
-          });
-        } catch {
-          // El ticket se muestra igual aunque haya bloqueo de red temporal
-        } finally {
-          notifyForm.classList.add('hidden');
-          notifyTicket.classList.remove('hidden');
+    interface AsymmetricProjection {
+      roomCode: string;
+      phase: 'lobby' | 'roulette' | 'playing' | 'round_reveal' | 'podium';
+      roundNumber: number;
+      totalRounds: number;
+      selfContenderId: string;
+      contenders: ContenderView[];
+      activeRollerId: string | null;
+      selectedMode: 'trivia' | 'thats_you' | 'pinturillo' | null;
+      watchdogDeadlineAt: number | null;
+      roundDeadlineAt: number | null;
+      statusBanner: string;
+      triviaView: {
+        category: string;
+        question: string;
+        options: [string, string, string, string];
+        selectedOptionIndex: number | null;
+        revealedCorrectIndex: number | null;
+      } | null;
+      socialVoteView: {
+        prompt: string;
+        votedTargetId: string | null;
+        revealedWinnerIds: string[] | null;
+        voteBreakdown: Record<string, number> | null;
+      } | null;
+      sketchView: {
+        drawerId: string;
+        drawerNickname: string;
+        isSelfDrawer: boolean;
+        secretWord: string | null;
+        wordHint: string;
+        rerollsRemaining: number;
+        strokes: VectorBatch[];
+        guessedContenderIds: string[];
+        feed: Array<{
+          contenderId: string;
+          nickname: string;
+          text: string;
+          isCorrect: boolean;
+          timestamp: number;
+        }>;
+        revealedWord: string | null;
+      } | null;
+    }
+
+    function getOrCreateSessionToken(): string {
+      try {
+        const existing = window.sessionStorage.getItem(SESSION_TOKEN_KEY);
+        if (existing && existing.length >= 8) return existing;
+        const generated =
+          typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+            ? crypto.randomUUID()
+            : `tok-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+        window.sessionStorage.setItem(SESSION_TOKEN_KEY, generated);
+        return generated;
+      } catch {
+        return `tok-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      }
+    }
+
+    function generateRoomCode(): string {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let result = '';
+      for (let i = 0; i < 4; i++) {
+        result += alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+      return result;
+    }
+
+    function escapeHtml(raw: string): string {
+      return raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const sessionToken = getOrCreateSessionToken();
+    let socket: WebSocket | null = null;
+    let currentProjection: AsymmetricProjection | null = null;
+    let activeRoomCode = '';
+    let activeNickname = '';
+    let countdownInterval: number | null = null;
+
+    const viewEntry = document.getElementById('state-entry');
+    const viewLoading = document.getElementById('state-loading');
+    const viewError = document.getElementById('state-error');
+    const viewActiveRoom = document.getElementById('state-active-room');
+    const errorMessageEl = document.getElementById('error-state-message');
+    const retryBtn = document.getElementById('btn-retry-connection');
+
+    const nicknameInput = document.getElementById('input-nickname') as HTMLInputElement | null;
+    const pinInputs = [0, 1, 2, 3].map(
+      (idx) => document.getElementById(`pin-slot-${idx}`) as HTMLInputElement | null
+    );
+    const createRoomBtn = document.getElementById('btn-create-room') as HTMLButtonElement | null;
+    const joinRoomBtn = document.getElementById('btn-join-room') as HTMLButtonElement | null;
+    const entryInlineFeedback = document.getElementById('entry-inline-feedback');
+
+    const subviewLobby = document.getElementById('subview-lobby');
+    const subviewRoulette = document.getElementById('subview-roulette');
+    const subviewTrivia = document.getElementById('subview-trivia');
+    const subviewThatsYou = document.getElementById('subview-thats-you');
+    const subviewPinturillo = document.getElementById('subview-pinturillo');
+    const subviewReveal = document.getElementById('subview-reveal');
+    const subviewPodium = document.getElementById('subview-podium');
+
+    const headerRoomCode = document.getElementById('active-room-code');
+    const headerRoundBadge = document.getElementById('active-round-badge');
+    const headerTimerBadge = document.getElementById('active-timer-badge');
+    const headerStatusBanner = document.getElementById('active-status-banner');
+    const copyPinBtn = document.getElementById('btn-copy-pin');
+    const leaveRoomBtn = document.getElementById('btn-leave-room');
+
+    try {
+      const savedNick = window.sessionStorage.getItem(NICKNAME_KEY);
+      if (savedNick && nicknameInput) nicknameInput.value = savedNick;
+      const urlRoom = new URLSearchParams(window.location.search).get('room');
+      if (urlRoom) {
+        const cleaned = urlRoom.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 4);
+        for (let i = 0; i < 4; i++) {
+          const slot = pinInputs[i];
+          if (slot) slot.value = cleaned[i] ?? '';
+        }
+      }
+    } catch {
+      // Continuar sin persistencia si sessionStorage está restringido
+    }
+
+    function getEnteredPinCode(): string {
+      return pinInputs
+        .map((input) => (input?.value ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase())
+        .join('');
+    }
+
+    pinInputs.forEach((input, idx) => {
+      if (!input) return;
+      input.addEventListener('input', () => {
+        const cleaned = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        input.value = cleaned.slice(-1);
+        if (input.value && idx < 3) {
+          pinInputs[idx + 1]?.focus();
+          pinInputs[idx + 1]?.select();
         }
       });
+      input.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Backspace' && !input.value && idx > 0) {
+          pinInputs[idx - 1]?.focus();
+        } else if (ev.key === 'ArrowLeft' && idx > 0) {
+          ev.preventDefault();
+          pinInputs[idx - 1]?.focus();
+        } else if (ev.key === 'ArrowRight' && idx < 3) {
+          ev.preventDefault();
+          pinInputs[idx + 1]?.focus();
+        } else if (ev.key === 'Enter') {
+          ev.preventDefault();
+          joinRoomBtn?.click();
+        }
+      });
+      input.addEventListener('paste', (ev) => {
+        ev.preventDefault();
+        const pasted = (ev.clipboardData?.getData('text') ?? '')
+          .replace(/[^a-zA-Z0-9]/g, '')
+          .toUpperCase()
+          .slice(0, 4);
+        for (let i = 0; i < 4; i++) {
+          const target = pinInputs[i];
+          if (target) target.value = pasted[i] ?? '';
+        }
+        pinInputs[Math.min(3, pasted.length)]?.focus();
+      });
+    });
+
+    function showPrimaryView(state: 'entry' | 'loading' | 'error' | 'active'): void {
+      viewEntry?.classList.toggle('hidden', state !== 'entry');
+      viewLoading?.classList.toggle('hidden', state !== 'loading');
+      viewError?.classList.toggle('hidden', state !== 'error');
+      viewActiveRoom?.classList.toggle('hidden', state !== 'active');
+    }
+
+    function sendCommand(cmd: Record<string, unknown>): void {
+      if (!socket || socket.readyState !== WebSocket.OPEN) return;
+      socket.send(JSON.stringify(cmd));
+    }
+
+    function connectToRoom(rawRoomCode: string, rawNickname: string): void {
+      const cleaned = rawRoomCode.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 4);
+      if (cleaned.length !== 4) {
+        if (entryInlineFeedback) {
+          entryInlineFeedback.textContent = 'Ingresa un código de 4 caracteres alfanuméricos.';
+          entryInlineFeedback.classList.remove('hidden');
+        }
+        pinInputs[0]?.focus();
+        return;
+      }
+      entryInlineFeedback?.classList.add('hidden');
+
+      const cleanNick = rawNickname.trim().slice(0, 18) || `Jugador${Math.floor(Math.random() * 90 + 10)}`;
+      activeRoomCode = cleaned;
+      activeNickname = cleanNick;
+
+      try {
+        window.sessionStorage.setItem(NICKNAME_KEY, cleanNick);
+      } catch {
+        // Ignorar si sessionStorage no está disponible
+      }
+
+      showPrimaryView('loading');
+      if (socket) {
+        socket.close();
+        socket = null;
+      }
+
+      socket = new WebSocket(`wss://${PARTYSERVER_HOST}/parties/main/${cleaned}`);
+
+      socket.addEventListener('open', () => {
+        sendCommand({
+          type: 'join_room',
+          nickname: cleanNick,
+          sessionToken
+        });
+      });
+
+      socket.addEventListener('message', (event) => {
+        try {
+          const payload = JSON.parse(String(event.data));
+          if (payload.type === 'room_state') {
+            currentProjection = payload.state as AsymmetricProjection;
+            showPrimaryView('active');
+            renderProjection(currentProjection);
+          } else if (payload.type === 'room_error') {
+            if (headerStatusBanner && currentProjection) {
+              headerStatusBanner.textContent = payload.message;
+            } else {
+              if (errorMessageEl) errorMessageEl.textContent = payload.message;
+              showPrimaryView('error');
+            }
+          }
+        } catch {
+          // Ignorar tramas malformadas
+        }
+      });
+
+      socket.addEventListener('error', () => {
+        if (!currentProjection) {
+          if (errorMessageEl) {
+            errorMessageEl.textContent = 'No se pudo conectar con el servidor de salas en vivo.';
+          }
+          showPrimaryView('error');
+        }
+      });
+    }
+
+    createRoomBtn?.addEventListener('click', () => {
+      const newCode = generateRoomCode();
+      for (let i = 0; i < 4; i++) {
+        const slot = pinInputs[i];
+        if (slot) slot.value = newCode[i] ?? '';
+      }
+      connectToRoom(newCode, nicknameInput?.value ?? '');
+    });
+
+    joinRoomBtn?.addEventListener('click', () => {
+      connectToRoom(getEnteredPinCode(), nicknameInput?.value ?? '');
+    });
+
+    retryBtn?.addEventListener('click', () => {
+      if (activeRoomCode) connectToRoom(activeRoomCode, activeNickname);
+      else showPrimaryView('entry');
+    });
+
+    leaveRoomBtn?.addEventListener('click', () => {
+      if (socket) {
+        socket.close();
+        socket = null;
+      }
+      currentProjection = null;
+      showPrimaryView('entry');
+    });
+
+    copyPinBtn?.addEventListener('click', async () => {
+      if (!currentProjection) return;
+      try {
+        await navigator.clipboard.writeText(currentProjection.roomCode);
+        if (copyPinBtn) {
+          const orig = copyPinBtn.textContent;
+          copyPinBtn.textContent = 'Copiado';
+          setTimeout(() => {
+            copyPinBtn.textContent = orig;
+          }, 1200);
+        }
+      } catch {
+        // Ignorar si clipboard no está disponible
+      }
+    });
+
+    document.getElementById('btn-add-bot')?.addEventListener('click', () => {
+      sendCommand({ type: 'add_bot', sessionToken });
+    });
+
+    document.getElementById('btn-start-match')?.addEventListener('click', () => {
+      sendCommand({ type: 'start_match', sessionToken, totalRounds: 3 });
+    });
+
+    document.getElementById('btn-spin-wheel')?.addEventListener('click', () => {
+      const wheelSvg = document.getElementById('roulette-wheel-graphic');
+      wheelSvg?.classList.add('animate-spin');
+      setTimeout(() => {
+        wheelSvg?.classList.remove('animate-spin');
+        sendCommand({ type: 'spin_roulette', sessionToken });
+      }, 350);
+    });
+
+    document.getElementById('btn-next-round')?.addEventListener('click', () => {
+      sendCommand({ type: 'next_round', sessionToken });
+    });
+
+    document.getElementById('btn-rematch')?.addEventListener('click', () => {
+      sendCommand({ type: 'rematch', sessionToken });
+    });
+
+    const sketchCanvas = document.getElementById('pinturillo-canvas') as HTMLCanvasElement | null;
+    const clearCanvasBtn = document.getElementById('btn-clear-canvas');
+    const rerollWordBtn = document.getElementById('btn-reroll-word') as HTMLButtonElement | null;
+    const sketchGuessForm = document.getElementById('sketch-guess-form') as HTMLFormElement | null;
+    const sketchGuessInput = document.getElementById('sketch-guess-input') as HTMLInputElement | null;
+
+    let isDrawing = false;
+    let activeStrokeId = '';
+    let pendingPoints: VectorPoint[] = [];
+    let selectedStrokeColor = '#10B981';
+
+    document.querySelectorAll<HTMLButtonElement>('[data-brush-color]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        selectedStrokeColor = btn.dataset.brushColor || '#10B981';
+      });
+    });
+
+    function getNormalizedCanvasPoint(ev: PointerEvent, canvas: HTMLCanvasElement): VectorPoint {
+      const rect = canvas.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1000, Math.round(((ev.clientX - rect.left) / rect.width) * 1000)));
+      const y = Math.max(0, Math.min(1000, Math.round(((ev.clientY - rect.top) / rect.height) * 1000)));
+      return { x, y };
+    }
+
+    if (sketchCanvas) {
+      sketchCanvas.addEventListener('pointerdown', (ev) => {
+        if (!currentProjection?.sketchView?.isSelfDrawer) return;
+        sketchCanvas.setPointerCapture(ev.pointerId);
+        isDrawing = true;
+        activeStrokeId = `st-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        pendingPoints.push(getNormalizedCanvasPoint(ev, sketchCanvas));
+      });
+
+      sketchCanvas.addEventListener('pointermove', (ev) => {
+        if (!isDrawing || !currentProjection?.sketchView?.isSelfDrawer) return;
+        pendingPoints.push(getNormalizedCanvasPoint(ev, sketchCanvas));
+        drawStreaksOnCanvas(sketchCanvas, [
+          ...(currentProjection.sketchView.strokes ?? []),
+          { strokeId: activeStrokeId, color: selectedStrokeColor, width: 5, points: pendingPoints }
+        ]);
+      });
+
+      const finishStroke = () => {
+        if (!isDrawing) return;
+        isDrawing = false;
+        flushVectorBatch();
+      };
+
+      sketchCanvas.addEventListener('pointerup', finishStroke);
+      sketchCanvas.addEventListener('pointercancel', finishStroke);
+    }
+
+    function flushVectorBatch(): void {
+      if (pendingPoints.length === 0 || !currentProjection?.sketchView?.isSelfDrawer) return;
+      const batch: VectorBatch = {
+        strokeId: activeStrokeId || `st-${Date.now()}`,
+        color: selectedStrokeColor,
+        width: 5,
+        points: [...pendingPoints]
+      };
+      pendingPoints = [];
+      sendCommand({ type: 'push_vector_batch', sessionToken, batch });
+    }
+
+    window.setInterval(() => {
+      if (isDrawing && pendingPoints.length >= 2) {
+        const lastPoint = pendingPoints[pendingPoints.length - 1]!;
+        flushVectorBatch();
+        pendingPoints = [lastPoint];
+      }
+    }, VECTOR_BATCH_INTERVAL_MS);
+
+    clearCanvasBtn?.addEventListener('click', () => {
+      sendCommand({ type: 'clear_canvas', sessionToken });
+    });
+
+    rerollWordBtn?.addEventListener('click', () => {
+      sendCommand({ type: 'reroll_sketch_word', sessionToken });
+    });
+
+    sketchGuessForm?.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (!sketchGuessInput) return;
+      const guess = sketchGuessInput.value.trim();
+      if (!guess) return;
+      sendCommand({ type: 'submit_sketch_guess', sessionToken, guess });
+      sketchGuessInput.value = '';
+    });
+
+    function drawStreaksOnCanvas(canvas: HTMLCanvasElement, batches: VectorBatch[]): void {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const grouped = new Map<string, { color: string; width: number; points: VectorPoint[] }>();
+      for (const b of batches) {
+        const existing = grouped.get(b.strokeId);
+        if (existing) existing.points.push(...b.points);
+        else grouped.set(b.strokeId, { color: b.color, width: b.width, points: [...b.points] });
+      }
+
+      for (const stroke of grouped.values()) {
+        if (stroke.points.length === 0) continue;
+        ctx.save();
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.width;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        const first = stroke.points[0]!;
+        ctx.moveTo((first.x / 1000) * canvas.width, (first.y / 1000) * canvas.height);
+        for (let i = 1; i < stroke.points.length; i++) {
+          const pt = stroke.points[i]!;
+          ctx.lineTo((pt.x / 1000) * canvas.width, (pt.y / 1000) * canvas.height);
+        }
+        if (stroke.points.length === 1) {
+          ctx.arc(
+            (first.x / 1000) * canvas.width,
+            (first.y / 1000) * canvas.height,
+            stroke.width / 2,
+            0,
+            Math.PI * 2
+          );
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function renderProjection(state: AsymmetricProjection): void {
+      if (headerRoomCode) headerRoomCode.textContent = state.roomCode;
+      if (headerRoundBadge) {
+        headerRoundBadge.textContent =
+          state.phase === 'lobby'
+            ? `LOBBY (${state.contenders.length}/16)`
+            : `RONDA ${state.roundNumber}/${state.totalRounds}`;
+      }
+      if (headerStatusBanner) headerStatusBanner.textContent = state.statusBanner;
+
+      if (countdownInterval !== null) {
+        window.clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      const deadline = state.roundDeadlineAt ?? state.watchdogDeadlineAt;
+      const updateTimerText = () => {
+        if (!headerTimerBadge) return;
+        if (!deadline) {
+          headerTimerBadge.textContent = 'EN VIVO';
+          return;
+        }
+        const secs = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+        headerTimerBadge.textContent = `${secs}s`;
+      };
+      updateTimerText();
+      if (deadline) countdownInterval = window.setInterval(updateTimerText, 250);
+
+      const selfContender = state.contenders.find((c) => c.id === state.selfContenderId);
+      const isHost = Boolean(selfContender?.isHost);
+
+      const isLobby = state.phase === 'lobby';
+      const isRoulette = state.phase === 'roulette';
+      const isTrivia = state.phase === 'playing' && state.selectedMode === 'trivia';
+      const isThatsYou = state.phase === 'playing' && state.selectedMode === 'thats_you';
+      const isPinturillo = state.phase === 'playing' && state.selectedMode === 'pinturillo';
+      const isReveal = state.phase === 'round_reveal';
+      const isPodium = state.phase === 'podium';
+
+      subviewLobby?.classList.toggle('hidden', !isLobby);
+      subviewRoulette?.classList.toggle('hidden', !isRoulette);
+      subviewTrivia?.classList.toggle('hidden', !isTrivia);
+      subviewThatsYou?.classList.toggle('hidden', !isThatsYou);
+      subviewPinturillo?.classList.toggle('hidden', !isPinturillo);
+      subviewReveal?.classList.toggle('hidden', !isReveal);
+      subviewPodium?.classList.toggle('hidden', !isPodium);
+
+      if (isLobby) {
+        const listEl = document.getElementById('lobby-contenders-list');
+        if (listEl) {
+          listEl.innerHTML = state.contenders
+            .map(
+              (c) => `
+              <li class="flex items-center justify-between px-3 py-2 rounded-lg bg-[#0B241E] border border-[#064E3B]/60">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="w-2 h-2 rounded-full ${c.isConnected ? 'bg-[#10B981]' : 'bg-[#F43F5E]'} shrink-0"></span>
+                  <span class="font-sans text-sm font-medium text-[#F8FAFC] truncate">${escapeHtml(c.nickname)}</span>
+                  ${c.id === state.selfContenderId ? '<span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#10B981]/20 text-[#10B981]">TÚ</span>' : ''}
+                </div>
+                <span class="font-mono text-[11px] text-[#94A3B8]">
+                  ${c.isHost ? 'ANFITRIÓN' : c.isBot ? 'BOT' : 'LISTO'}
+                </span>
+              </li>`
+            )
+            .join('');
+        }
+        const startBtn = document.getElementById('btn-start-match') as HTMLButtonElement | null;
+        const addBotBtn = document.getElementById('btn-add-bot') as HTMLButtonElement | null;
+        const hostHint = document.getElementById('lobby-host-hint');
+        if (startBtn) startBtn.disabled = !isHost || state.contenders.length < 2;
+        if (addBotBtn) addBotBtn.classList.toggle('hidden', !isHost || state.contenders.length >= 16);
+        if (hostHint) {
+          hostHint.textContent =
+            state.contenders.length < 2
+              ? 'Se requieren al menos 2 jugadores (suma un bot o comparte el código de 4 letras).'
+              : isHost
+                ? 'Mesa lista. Pulsa Iniciar Partida para girar la ruleta.'
+                : 'Esperando a que el anfitrión inicie la partida.';
+        }
+      }
+
+      if (isRoulette) {
+        const roller = state.contenders.find((c) => c.id === state.activeRollerId);
+        const rollerLabel = document.getElementById('roulette-roller-name');
+        const spinBtn = document.getElementById('btn-spin-wheel') as HTMLButtonElement | null;
+        if (rollerLabel) rollerLabel.textContent = roller?.nickname ?? 'Jugador';
+        const canSpin = state.activeRollerId === state.selfContenderId || isHost;
+        if (spinBtn) {
+          spinBtn.disabled = !canSpin;
+          spinBtn.textContent = canSpin
+            ? 'Girar Ruleta de Modos'
+            : `Esperando giro de ${roller?.nickname ?? 'Jugador'}...`;
+        }
+      }
+
+      if (isTrivia && state.triviaView) {
+        const catEl = document.getElementById('trivia-category');
+        const qEl = document.getElementById('trivia-question');
+        const optsContainer = document.getElementById('trivia-options-grid');
+        if (catEl) catEl.textContent = state.triviaView.category;
+        if (qEl) qEl.textContent = state.triviaView.question;
+        if (optsContainer) {
+          const myChoice = state.triviaView.selectedOptionIndex;
+          optsContainer.innerHTML = state.triviaView.options
+            .map((optText, idx) => {
+              const isSelected = myChoice === idx;
+              const isDisabled = myChoice !== null;
+              return `
+                <button
+                  type="button"
+                  data-trivia-opt="${idx}"
+                  ${isDisabled ? 'disabled' : ''}
+                  class="text-left p-4 rounded-lg border transition-all font-sans text-sm sm:text-base font-medium ${
+                    isSelected
+                      ? 'bg-[#10B981] text-[#022C22] border-[#10B981] font-bold'
+                      : 'bg-[#0B241E] text-[#F8FAFC] border-[#064E3B] hover:border-[#10B981]'
+                  } ${isDisabled && !isSelected ? 'opacity-60 cursor-not-allowed' : ''}"
+                >
+                  <span class="font-mono text-xs uppercase mr-2 opacity-80">[${String.fromCharCode(65 + idx)}]</span>
+                  <span>${escapeHtml(optText)}</span>
+                </button>
+              `;
+            })
+            .join('');
+
+          optsContainer.querySelectorAll<HTMLButtonElement>('[data-trivia-opt]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              sendCommand({
+                type: 'submit_trivia',
+                sessionToken,
+                optionIndex: Number(btn.dataset.triviaOpt)
+              });
+            });
+          });
+        }
+      }
+
+      if (isThatsYou && state.socialVoteView) {
+        const promptEl = document.getElementById('social-prompt-text');
+        const targetsGrid = document.getElementById('social-targets-grid');
+        if (promptEl) promptEl.textContent = state.socialVoteView.prompt;
+        if (targetsGrid) {
+          const votedId = state.socialVoteView.votedTargetId;
+          targetsGrid.innerHTML = state.contenders
+            .map((c) => {
+              const isSelected = votedId === c.id;
+              const isDisabled = votedId !== null;
+              return `
+                <button
+                  type="button"
+                  data-social-target="${c.id}"
+                  ${isDisabled ? 'disabled' : ''}
+                  class="p-3.5 rounded-lg border transition-all flex items-center justify-between font-sans text-sm font-semibold ${
+                    isSelected
+                      ? 'bg-[#F43F5E] text-white border-[#F43F5E]'
+                      : 'bg-[#0B241E] text-[#F8FAFC] border-[#064E3B] hover:border-[#F43F5E]'
+                  } ${isDisabled && !isSelected ? 'opacity-60 cursor-not-allowed' : ''}"
+                >
+                  <span class="truncate">${escapeHtml(c.nickname)}</span>
+                  <span class="font-mono text-xs">${isSelected ? 'ACUSADO' : 'VOTAR'}</span>
+                </button>
+              `;
+            })
+            .join('');
+
+          targetsGrid.querySelectorAll<HTMLButtonElement>('[data-social-target]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              sendCommand({
+                type: 'submit_social_vote',
+                sessionToken,
+                targetContenderId: btn.dataset.socialTarget || ''
+              });
+            });
+          });
+        }
+      }
+
+      if (isPinturillo && state.sketchView) {
+        const wordBanner = document.getElementById('sketch-word-banner');
+        const drawerTools = document.getElementById('sketch-drawer-tools');
+        const guesserBox = document.getElementById('sketch-guesser-box');
+        const feedList = document.getElementById('sketch-feed-list');
+
+        if (wordBanner) {
+          wordBanner.textContent = state.sketchView.isSelfDrawer
+            ? `DIBUJA: ${state.sketchView.secretWord}`
+            : `PISTA (${state.sketchView.drawerNickname}): ${state.sketchView.wordHint}`;
+        }
+        drawerTools?.classList.toggle('hidden', !state.sketchView.isSelfDrawer);
+        guesserBox?.classList.toggle('hidden', state.sketchView.isSelfDrawer);
+
+        if (rerollWordBtn) {
+          const remaining = state.sketchView.rerollsRemaining ?? 0;
+          rerollWordBtn.disabled = remaining <= 0;
+          rerollWordBtn.textContent = remaining > 0 ? `Re-roll (${remaining})` : 'Re-roll (0)';
+        }
+
+        if (sketchCanvas && !isDrawing) {
+          drawStreaksOnCanvas(sketchCanvas, state.sketchView.strokes);
+        }
+
+        if (feedList) {
+          feedList.innerHTML =
+            state.sketchView.feed.length === 0
+              ? '<li class="text-xs font-mono text-[#94A3B8]">Los intentos aparecerán aquí en vivo...</li>'
+              : state.sketchView.feed
+                  .map(
+                    (entry) => `
+                  <li class="text-xs font-mono flex items-center justify-between py-1 border-b border-[#064E3B]/40">
+                    <span class="font-bold ${entry.isCorrect ? 'text-[#10B981]' : 'text-[#F8FAFC]'}">${escapeHtml(entry.nickname)}:</span>
+                    <span class="${entry.isCorrect ? 'text-[#10B981]' : 'text-[#94A3B8]'} truncate ml-2">${escapeHtml(entry.text)}</span>
+                  </li>`
+                  )
+                  .join('');
+        }
+      }
+
+      if (isReveal) {
+        const summaryEl = document.getElementById('reveal-outcome-summary');
+        const scoreboardEl = document.getElementById('reveal-scoreboard-list');
+        if (summaryEl) {
+          if (state.selectedMode === 'trivia' && state.triviaView) {
+            const correctIdx = state.triviaView.revealedCorrectIndex ?? 0;
+            summaryEl.textContent = `Respuesta correcta: ${state.triviaView.options[correctIdx] ?? ''}`;
+          } else if (state.selectedMode === 'thats_you' && state.socialVoteView) {
+            const winners = (state.socialVoteView.revealedWinnerIds ?? [])
+              .map((id) => state.contenders.find((c) => c.id === id)?.nickname ?? 'Nadie')
+              .join(', ');
+            summaryEl.textContent = `Más votado por el grupo: ${winners || 'Empate sin votos'}`;
+          } else if (state.selectedMode === 'pinturillo' && state.sketchView) {
+            summaryEl.textContent = `Palabra secreta: ${state.sketchView.revealedWord ?? ''}`;
+          }
+        }
+        if (scoreboardEl) {
+          const sorted = [...state.contenders].sort((a, b) => b.score - a.score);
+          scoreboardEl.innerHTML = sorted
+            .map(
+              (c, index) => `
+              <li class="flex items-center justify-between px-3.5 py-2 rounded-lg bg-[#0B241E] border border-[#064E3B]/60">
+                <div class="flex items-center gap-2.5">
+                  <span class="font-mono text-xs font-bold text-[#10B981]">#${index + 1}</span>
+                  <span class="font-sans text-sm font-semibold text-[#F8FAFC]">${escapeHtml(c.nickname)}</span>
+                </div>
+                <div class="flex items-center gap-3 font-mono text-xs">
+                  ${
+                    c.lastRoundDelta > 0
+                      ? `<span class="text-[#10B981] font-bold">+${c.lastRoundDelta}</span>`
+                      : '<span class="text-[#94A3B8]">+0</span>'
+                  }
+                  <span class="px-2 py-0.5 rounded bg-[#061814] border border-[#064E3B] text-[#F8FAFC] font-bold">${c.score} pts</span>
+                </div>
+              </li>`
+            )
+            .join('');
+        }
+      }
+
+      if (isPodium) {
+        const podiumList = document.getElementById('podium-ranking-list');
+        if (podiumList) {
+          const sorted = [...state.contenders].sort((a, b) => b.score - a.score);
+          podiumList.innerHTML = sorted
+            .map(
+              (c, index) => `
+              <li class="flex items-center justify-between px-4 py-3 rounded-lg border ${
+                index === 0
+                  ? 'bg-[#10B981]/15 border-[#10B981]'
+                  : 'bg-[#0B241E] border-[#064E3B]/60'
+              }">
+                <div class="flex items-center gap-3">
+                  <span class="font-mono text-sm font-bold ${index === 0 ? 'text-[#10B981]' : 'text-[#94A3B8]'}">
+                    ${index === 0 ? '1° CAMPEÓN' : `${index + 1}° PUESTO`}
+                  </span>
+                  <span class="font-display text-base font-bold text-[#F8FAFC]">${escapeHtml(c.nickname)}</span>
+                </div>
+                <span class="font-mono text-sm font-bold text-[#10B981]">${c.score} PTS</span>
+              </li>`
+            )
+            .join('');
+        }
+      }
     }
   </script>
 </Layout>
