@@ -12,18 +12,196 @@ import Icon from '../../components/Icon.astro';
 >
   <Header />
 
-  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative">
-    
-    <!-- Background Decorativo: Grid Milimétrico & Aura Esmeralda -->
-    <div class="absolute inset-0 pointer-events-none overflow-hidden -z-10">
-      <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-b from-emerald-900/20 via-emerald-950/10 to-transparent blur-3xl"></div>
-      <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-emerald-950/20 blur-3xl rounded-full"></div>
-      <div 
-        class="absolute inset-0 opacity-[0.04]"
-        style="background-size: 28px 28px; background-image: linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px);"
-        aria-hidden="true"
-      ></div>
+  <!-- Fondo Ambiental: Blueprints de Ruleta, Dados Isométricos y Naipes Técnicos (Flanco Izquierdo y Derecho) -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none" aria-hidden="true">
+    <!-- Resplandor central Esmeralda / Fieltro Nocturno difuso -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-emerald-950/30 via-emerald-900/10 to-transparent blur-3xl"></div>
+    <div class="absolute bottom-0 inset-x-0 h-[400px] bg-gradient-to-t from-emerald-950/20 via-transparent to-transparent blur-2xl"></div>
+
+    <!-- Rejilla milimétrica técnica esmeralda de fondo -->
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.025)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+    <!-- Flanco Izquierdo: Ruleta Monumental, Naipes y Cotas de Ángulo -->
+    <div class="absolute left-0 top-0 bottom-0 w-72 sm:w-88 xl:w-[420px] overflow-hidden">
+      <svg class="w-full h-full text-emerald-400/20" viewBox="0 0 380 960" preserveAspectRatio="xMinYMin meet" fill="none" stroke="currentColor">
+        <defs>
+          <!-- Ruleta Técnica de Casino -->
+          <g id="roulette-wheel-blueprint">
+            <circle cx="120" cy="120" r="105" stroke-width="1.5" class="text-emerald-400/60" />
+            <circle cx="120" cy="120" r="92" stroke-width="0.75" stroke-dasharray="3,3" class="text-teal-300/40" />
+            <circle cx="120" cy="120" r="65" stroke-width="1" class="text-emerald-500/50" />
+            <circle cx="120" cy="120" r="38" stroke-width="1.25" class="text-emerald-300/70" />
+            <circle cx="120" cy="120" r="12" fill="currentColor" class="text-emerald-400/30" stroke-width="1" />
+            <circle cx="120" cy="120" r="4" fill="currentColor" class="text-emerald-200" />
+            
+            <!-- Divisiones radiales (Rayos de Ruleta) -->
+            <line x1="120" y1="15" x2="120" y2="225" stroke-width="0.75" class="text-emerald-400/50" />
+            <line x1="15" y1="120" x2="225" y2="120" stroke-width="0.75" class="text-emerald-400/50" />
+            <line x1="45" y1="45" x2="195" y2="195" stroke-width="0.75" class="text-emerald-500/40" />
+            <line x1="45" y1="195" x2="195" y2="45" stroke-width="0.75" class="text-emerald-500/40" />
+            <line x1="28" y1="83" x2="212" y2="157" stroke-width="0.5" stroke-dasharray="2,2" class="text-emerald-400/30" />
+            <line x1="28" y1="157" x2="212" y2="83" stroke-width="0.5" stroke-dasharray="2,2" class="text-emerald-400/30" />
+            <line x1="83" y1="28" x2="157" y2="212" stroke-width="0.5" stroke-dasharray="2,2" class="text-emerald-400/30" />
+            <line x1="157" y1="28" x2="83" y2="212" stroke-width="0.5" stroke-dasharray="2,2" class="text-emerald-400/30" />
+
+            <!-- Aguja selectora de modo superior -->
+            <polygon points="120,5 125,25 115,25" fill="currentColor" class="text-rose-400/80" stroke-width="0.75" />
+            
+            <!-- Marcas perimetrales de grados -->
+            <text x="123" y="10" font-family="monospace" font-size="7" fill="currentColor" class="text-emerald-300/60">0°</text>
+            <text x="215" y="123" font-family="monospace" font-size="7" fill="currentColor" class="text-emerald-300/60">90°</text>
+            <text x="123" y="235" font-family="monospace" font-size="7" fill="currentColor" class="text-emerald-300/60">180°</text>
+            <text x="0" y="123" font-family="monospace" font-size="7" fill="currentColor" class="text-emerald-300/60">270°</text>
+          </g>
+
+          <!-- Carta de Juego Técnica en Sección Isométrica -->
+          <g id="playing-card-blueprint">
+            <rect x="0" y="0" width="85" height="125" rx="8" stroke-width="1.25" class="text-emerald-400/60" />
+            <rect x="5" y="5" width="75" height="115" rx="5" stroke-width="0.5" stroke-dasharray="2,3" class="text-emerald-500/40" />
+            <!-- Pique heráldico central -->
+            <g transform="translate(42, 58) scale(0.9)">
+              <path d="M0,-24 C-12,-8 -22,4 -18,16 C-14,24 -4,22 0,16 C4,22 14,24 18,16 C22,4 12,-8 0,-24 Z" stroke-width="1.25" class="text-emerald-300" />
+              <path d="M-3,16 L-8,28 L8,28 L3,16 Z" stroke-width="1" class="text-teal-200" />
+            </g>
+            <!-- Índices de esquina -->
+            <text x="10" y="20" font-family="monospace" font-size="10" font-weight="bold" fill="currentColor" class="text-emerald-300">A</text>
+            <text x="70" y="115" font-family="monospace" font-size="10" font-weight="bold" fill="currentColor" class="text-emerald-300">A</text>
+          </g>
+        </defs>
+
+        <!-- Anotaciones de ingeniería de juego en margen izquierdo -->
+        <g class="text-[9px] font-mono text-emerald-400/40 select-none">
+          <text x="24" y="38">FIG. I — ROTA ALEATORIA ET CASINUM</text>
+          <text x="24" y="52">SPEC 05 • CLOUDFLARE DURABLE OBJECTS</text>
+          <text x="24" y="66">LATENCY &lt; 20ms • SANTIAGO SCL</text>
+        </g>
+
+        <!-- Ruleta técnica superior izquierda -->
+        <use href="#roulette-wheel-blueprint" x="20" y="80" transform="scale(0.95)" />
+
+        <!-- Carta técnica flotante intermedia -->
+        <use href="#playing-card-blueprint" x="50" y="360" transform="rotate(-12 90 420) scale(0.95)" />
+        <use href="#playing-card-blueprint" x="120" y="380" transform="rotate(18 160 440) scale(0.85)" />
+
+        <!-- Segunda ruleta inferior con rotación alternativa -->
+        <use href="#roulette-wheel-blueprint" x="-20" y="620" transform="scale(0.85) rotate(35 100 700)" />
+
+        <!-- Cotas y anotaciones de protocolo -->
+        <g class="text-[8px] font-mono text-emerald-500/40 select-none">
+          <line x1="24" y1="875" x2="160" y2="875" stroke-width="0.75" stroke-dasharray="3,3" />
+          <text x="24" y="890">WS PROTOCOL • BINARY FRAMES</text>
+          <text x="24" y="904">SESSION_TOKEN :: STORAGE_AUTH</text>
+          <text x="24" y="918">ZERO-LOGIN IDENTITY MATRIX</text>
+        </g>
+      </svg>
     </div>
+
+    <!-- Flanco Derecho: Dados Isométricos 3D, Casillas y Malla Vectorial Pinturillo -->
+    <div class="absolute right-0 top-0 bottom-0 w-72 sm:w-88 xl:w-[420px] overflow-hidden">
+      <svg class="w-full h-full text-emerald-400/20" viewBox="0 0 380 960" preserveAspectRatio="xMaxYMin meet" fill="none" stroke="currentColor">
+        <defs>
+          <!-- Gran Dado Isométrico 3D en Wireframe -->
+          <g id="isometric-dice-blueprint">
+            <polygon points="50,0 100,28 50,56 0,28" stroke-width="1.5" class="text-emerald-400/70" />
+            <polygon points="0,28 50,56 50,112 0,84" stroke-width="1.5" class="text-emerald-500/60" />
+            <polygon points="50,56 100,28 100,84 50,112" stroke-width="1.5" class="text-teal-400/60" />
+            
+            <!-- Puntos cara superior (3) -->
+            <circle cx="28" cy="18" r="3" fill="currentColor" class="text-emerald-200" />
+            <circle cx="50" cy="28" r="3" fill="currentColor" class="text-emerald-200" />
+            <circle cx="72" cy="38" r="3" fill="currentColor" class="text-emerald-200" />
+            
+            <!-- Puntos cara izquierda (5) -->
+            <circle cx="16" cy="48" r="3" fill="currentColor" class="text-teal-300" />
+            <circle cx="34" cy="58" r="3" fill="currentColor" class="text-teal-300" />
+            <circle cx="25" cy="70" r="3" fill="currentColor" class="text-teal-300" />
+            <circle cx="16" cy="82" r="3" fill="currentColor" class="text-teal-300" />
+            <circle cx="34" cy="92" r="3" fill="currentColor" class="text-teal-300" />
+
+            <!-- Puntos cara derecha (2) -->
+            <circle cx="68" cy="62" r="3" fill="currentColor" class="text-emerald-300" />
+            <circle cx="82" cy="78" r="3" fill="currentColor" class="text-emerald-300" />
+
+            <!-- Cotas isométricas exteriores -->
+            <line x1="108" y1="28" x2="108" y2="84" stroke-width="0.75" class="text-emerald-400/50" />
+            <line x1="104" y1="28" x2="112" y2="28" stroke-width="0.75" />
+            <line x1="104" y1="84" x2="112" y2="84" stroke-width="0.75" />
+            <text x="115" y="60" font-family="monospace" font-size="7" fill="currentColor" class="text-emerald-300/60">H=56mm</text>
+          </g>
+
+          <!-- Peón de Juego de Mesa (Meeple Clásico) en Sección Técnica -->
+          <g id="meeple-blueprint">
+            <line x1="40" y1="0" x2="40" y2="120" stroke-width="0.5" stroke-dasharray="3,3" class="text-emerald-500/40" />
+            <!-- Cabeza -->
+            <circle cx="40" cy="22" r="14" stroke-width="1.25" class="text-emerald-300" />
+            <circle cx="40" cy="22" r="10" stroke-width="0.5" stroke-dasharray="2,2" class="text-emerald-400/40" />
+            <!-- Torso / Hombros -->
+            <path d="M22,45 L10,55 L16,72 L26,62 L24,105 L56,105 L54,62 L64,72 L70,55 L58,45 Z" stroke-width="1.25" class="text-emerald-400/70" />
+            <circle cx="40" cy="65" r="4" fill="currentColor" class="text-rose-400/70" />
+          </g>
+
+          <!-- Malla Vectorial de Trazo Pinturillo (Normalización 0 a 1000) -->
+          <g id="vector-canvas-blueprint">
+            <rect x="0" y="0" width="130" height="90" rx="4" stroke-width="1" class="text-cyan-400/50" />
+            <line x1="15" y1="10" x2="15" y2="80" stroke-width="0.5" class="text-cyan-500/40" />
+            <line x1="15" y1="80" x2="120" y2="80" stroke-width="0.5" class="text-cyan-500/40" />
+            
+            <!-- Curva de trazo vectorial simulada con puntos de control -->
+            <path d="M25,65 Q50,15 75,50 T115,30" stroke-width="1.5" class="text-cyan-300" />
+            <circle cx="25" cy="65" r="2.5" fill="currentColor" class="text-cyan-200" />
+            <circle cx="50" cy="15" r="2" stroke-width="0.75" class="text-rose-400" />
+            <circle cx="75" cy="50" r="2" stroke-width="0.75" class="text-rose-400" />
+            <circle cx="115" cy="30" r="2.5" fill="currentColor" class="text-cyan-200" />
+
+            <text x="20" y="20" font-family="monospace" font-size="6" fill="currentColor" class="text-cyan-300/60">[X, Y] :: 30 FPS</text>
+            <text x="75" y="75" font-family="monospace" font-size="6" fill="currentColor" class="text-cyan-400/40">DELTA COMPRESSION</text>
+          </g>
+        </defs>
+
+        <!-- Anotaciones de ingeniería en margen derecho -->
+        <g class="text-[9px] font-mono text-emerald-400/40 select-none">
+          <text x="180" y="38">FIG. II — CUBUS ISOMETRICUS &amp; VECTORES</text>
+          <text x="180" y="52">PINTURILLO ENGINE • 30Hz SAMPLING</text>
+          <text x="180" y="66">FAILSAFE WATCHDOG • 15s ALARM</text>
+        </g>
+
+        <!-- Dado isométrico superior derecho -->
+        <use href="#isometric-dice-blueprint" x="200" y="85" transform="scale(0.95)" />
+
+        <!-- Segundo dado con rotación complementaria -->
+        <use href="#isometric-dice-blueprint" x="140" y="195" transform="scale(0.75) rotate(-24 180 230)" />
+
+        <!-- Peón de juego en sección técnica -->
+        <use href="#meeple-blueprint" x="220" y="350" transform="scale(0.90)" />
+
+        <!-- Malla vectorial de Pinturillo intermedia -->
+        <use href="#vector-canvas-blueprint" x="190" y="520" transform="scale(0.95)" />
+
+        <!-- Casillero de avance al pie -->
+        <g transform="translate(180, 680)" class="text-emerald-400/40 font-mono text-[8px]">
+          <rect x="0" y="0" width="35" height="35" rx="3" stroke-width="0.75" />
+          <text x="10" y="22">01</text>
+          <rect x="40" y="0" width="35" height="35" rx="3" stroke-width="0.75" class="text-emerald-300/60" />
+          <text x="50" y="22" class="text-emerald-200">02</text>
+          <rect x="80" y="0" width="35" height="35" rx="3" stroke-width="0.75" />
+          <text x="90" y="22">03</text>
+          <rect x="120" y="0" width="35" height="35" rx="3" stroke-width="1.25" class="text-rose-400/60" />
+          <text x="128" y="22" class="text-rose-300">★</text>
+          <line x1="0" y1="45" x2="155" y2="45" stroke-width="0.75" stroke-dasharray="2,3" />
+          <text x="0" y="60">STAGE ADVANCEMENT :: LOOP</text>
+        </g>
+
+        <!-- Notas de latencia y Cloudflare Workers -->
+        <g class="text-[8px] font-mono text-emerald-500/40 select-none">
+          <text x="180" y="890">ACTOR MODEL :: DURABLE OBJECTS</text>
+          <text x="180" y="904">FAILSAFE DISCONNECT TIMER: 15s</text>
+          <text x="180" y="918">ZERO CLUSTER OVERHEAD</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <main id="main-content" class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative z-10">
 
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 font-mono text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
