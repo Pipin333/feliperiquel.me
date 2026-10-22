@@ -159,11 +159,11 @@ def build_pdf(filename: str) -> None:
     resumen_text = (
         "Estudiante de Ingenieria Civil Informatica (UNAB) con solida preparacion practica en desarrollo backend con "
         "Python, computacion cientifica de alto rendimiento (HPC), optimizacion continua y arquitectura de sistemas distribuidos. "
-        "Creador de <b>AD-BSA v2</b>, algoritmo metaheuristico continuo vectorizado en NumPy con aceleracion de 8.0x frente a la "
-        "implementacion de referencia de L-SHADE y evaluado en la suite internacional IEEE CEC 2020 en 50 dimensiones (ranking de "
-        "Friedman de 2.30, empatado en rendimiento global con CMA-ES). Experiencia demostrada en la industria formulando especificaciones "
-        "tecnicas estructuradas y matrices de logica de negocio en J.E.J. Ingenieria, asi como liderazgo de equipos de hasta 12 "
-        "colaboradores bajo alta demanda operativa en Dunkin' Chile. Orientado al codigo limpio, observabilidad, ejecucion agil y testing en terreno."
+        "Creador de <b>AD-BSA</b>, algoritmo metaheuristico continuo vectorizado en NumPy con aceleracion de 8.0x frente a "
+        "L-SHADE y rigurosa auditoria empirica con telemetria mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. "
+        "Experiencia demostrada en la industria formulando especificaciones tecnicas estructuradas y matrices de logica de "
+        "negocio en J.E.J. Ingenieria, asi como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. "
+        "Orientado al codigo limpio, observabilidad, ejecucion agil y testing en terreno."
     )
     story.append(p(resumen_text, body_style))
     story.append(Spacer(1, 4))
@@ -224,13 +224,13 @@ def build_pdf(filename: str) -> None:
     story.append(p("PROYECTOS TECNICOS DESTACADOS", section_heading))
     story.append(hr())
 
-    # AD-BSA v2
-    story.append(p("AD-BSA v2: Algoritmo de Optimizacion Global Heuristica & HPC | Python, NumPy, SciPy", item_title))
+    # AD-BSA
+    story.append(p("AD-BSA: Algoritmo de Optimizacion Global Heuristica & Auditoria HPC | Python, NumPy, SciPy", item_title))
     story.append(p("Codigo Abierto (Licencia Apache 2.0) | github.com/Pipin333/AD-BSA", item_meta))
     story.append(p(
-        "&bull; <b>Optimizacion Continua & Algoritmia:</b> Diseno e implemento una metaheuristica continua de aprendizaje negativo activo "
-        "(repulsion cosecante |csc| y anti-atractores), evaluada en el benchmark internacional IEEE CEC 2020 (50D) con un ranking "
-        "de Friedman de 2.30 (Top #1 empatado en rendimiento global con CMA-ES).",
+        "&bull; <b>Optimizacion Continua & Auditoria Cientifica:</b> Formulo e implemento en Python un operador tripartito de aprendizaje "
+        "negativo activo (repulsion cosecante |csc| y anti-atractores) sobre L-SHADE/jSO. Instrumento telemetria para caracterizar la concentracion "
+        "de medida en 20D, benchmarks pareados con pruebas de Wilcoxon y deteccion de un defecto de signo en opfunu.",
         bullet_style,
     ))
     story.append(p(

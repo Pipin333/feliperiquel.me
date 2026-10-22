@@ -91,17 +91,17 @@ export const projects: Project[] = [
     id: "ad-bsa",
     title: "AD-BSA",
     category: "Computación Científica & Optimización",
-    tldr: "Algoritmo de optimización matemática continua que empató en el Rank #1 en el benchmark mundial IEEE CEC 2020 en 50 dimensiones.",
-    description: "Adaptive Differential Boogeyman Search Algorithm: metaheurística global continua basada en aprendizaje negativo explícito (Explicit Negative Learning). Modela baricentros de anti-atractores en las peores regiones del espacio de búsqueda y aplica una barrera de potencial basada en cosecante acotada (|csc(x)|) con enfriamiento polinomial para evacuar trampas de estancamiento local. Empató en el Rank #1 en el benchmark formal del IEEE CEC 2020 en 50 dimensiones.",
-    tags: ["Python", "Metaheurísticas", "IEEE CEC 2020", "Optimización Continua", "NumPy / SciPy", "Differential Evolution"],
+    tldr: "Investigación exploratoria en optimización continua: evaluación de aprendizaje negativo explícito, telemetría mecanicista y auditoría rigurosa sobre IEEE CEC 2020.",
+    description: "Adaptive Differential Boogeyman Search Algorithm: investigación exploratoria en metaheurísticas continuas que evalúa dinámicas de anti-atractores y escape repulsivo cosecante sobre bases de L-SHADE y jSO. Documenta mediante telemetría mecanicista la latencia del operador por concentración de medida en altas dimensiones (D >= 20), un protocolo PoC pareado con tests de Wilcoxon (n=15) y el hallazgo de un defecto crítico de inversión de signo en la librería científica opfunu (Schwefel).",
+    tags: ["Python", "Metaheurísticas", "Auditoría Científica", "L-SHADE / jSO", "NumPy / SciPy", "IEEE CEC 2020"],
     githubUrl: "https://github.com/Pipin333/AD-BSA",
     license: "Apache 2.0",
-    statusBadge: "Research / Open Source",
+    statusBadge: "Investigación & Auditoría",
     accentBadgeColor: "text-domain-algo border-domain-algo/30 bg-domain-algo/10",
     rationale: {
-      origin: "En paisajes de optimización no lineales de alta dimensión (D >= 50), los algoritmos evolutivos canónicos (DE, PSO, CMA-ES) sufren convergencia prematura al guiarse exclusivamente por atracción positiva hacia los mejores puntos conocidos, quedando atrapados en valles de engaño.",
-      decisions: "Se formuló un operador de mutación tripartito (Atracción Elite + Barrera Repulsiva Cosecante + Perturbación Diferencial) junto a memorias de éxito de Lehmer y reducción lineal de población (LPSR). La función de repulsión se desacopla a cero en valles seguros para permitir descenso puro. Evaluado rigurosamente sobre el conjunto de pruebas IEEE CEC 2020 (50 dimensiones, 50.000 evaluaciones por corrida) empatando en el primer lugar con CMA-ES.",
-      whyShown: "Demuestra capacidad de investigación en matemática aplicada y algoritmia avanzada, respaldado por código científico probado bajo PEP 8, CI automatizado en GitHub Actions y publicación con identificador formal DOI de Zenodo."
+      origin: "En paisajes de optimización multimodal, los algoritmos evolutivos canónicos (DE, L-SHADE, CMA-ES) sufren convergencia prematura al guiarse exclusivamente por atracción positiva hacia los mejores individuos. La hipótesis original planteó evacuar valles de engaño mediante aprendizaje negativo explícito, modelando repulsión activa desde baricentros de las peores soluciones.",
+      decisions: "Se formuló un operador de mutación tripartito (Atracción Elite + Escape Cosecante + Perturbación Diferencial) con memorias de Lehmer y LPSR. Tras una auditoría exhaustiva de reproducibilidad, la telemetría reveló que en D >= 20 la distancia euclidiana escala como O(sqrt(D) * sigma), manteniendo al operador inactivo en el 99.5% de generaciones. Además, se detectó un defecto matemático en la librería opfunu (Schwefel modificado) que creaba mínimos globales ficticios (-553.79), invalidando métricas previas y motivando un protocolo PoC pareado estricto (360 corridas, Wilcoxon y corrección de Holm-Bonferroni).",
+      whyShown: "Acredita honestidad intelectual y rigor analítico en computación científica: no solo diseñar metaheurísticas, sino auditar matemáticamente su formulación, instrumentar telemetría paso a paso para explicar causas raíz en vez de suponer ventajas teóricas, descubrir fallos críticos en librerías científicas upstream y reportar hallazgos con transparencia metodológica."
     }
   }
 ];
