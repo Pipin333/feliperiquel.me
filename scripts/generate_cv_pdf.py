@@ -160,7 +160,7 @@ def build_pdf(filename: str) -> None:
         "Estudiante de Ingenieria Civil Informatica (UNAB) con solida preparacion practica en desarrollo backend con "
         "Python, computacion cientifica de alto rendimiento (HPC), optimizacion continua y arquitectura de sistemas distribuidos. "
         "Creador de <b>AD-BSA</b>, prototipo de algoritmo metaheuristico basado en la familia "
-        "L-SHADE y rigurosa auditoria empirica con telemetria mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. "
+        "SHADE, con enfoque en el aprendizaje negativo explicito como motor. y rigurosa auditoria empirica con telemetria mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. "
         "Experiencia demostrada en la industria formulando especificaciones tecnicas estructuradas y matrices de logica de "
         "negocio en J.E.J. Ingenieria, asi como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. "
         "Orientado al codigo limpio, observabilidad, ejecucion agil y testing en terreno."
