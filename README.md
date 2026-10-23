@@ -28,6 +28,7 @@ El portafolio expone herramientas reales y proyectos de código abierto:
 - **UniCalendar AI:** Aplicación web integral para ingesta curricular multiformato (PDF, Word, Canvas LMS), protección de recesos institucionales y sincronización con Google Calendar.
 - **JD Watch Controller:** Captura de telemetría inercial (acelerómetro y giroscopio a 50Hz) y hápticos en Wear OS para emulación de controles de videojuegos.
 - **AD-BSA:** Metaheurística continua de optimización exploratoria (IEEE CEC 2020) con barreras cosecantes y auditoría mecanicista.
+- **Ni Idea:** Consola de party game multijugador en tiempo real sobre Cloudflare Durable Objects, WebSockets y Canvas.
 
 ---
 

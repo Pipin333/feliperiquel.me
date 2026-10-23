@@ -1,7 +1,7 @@
-"""Script de generacion de CV ATS-compliant para Felipe Riquelme Salvo.
+"""Script de generacion de CV oficial para Felipe Riquelme Salvo.
 
 Genera un documento PDF estructurado en public/cv-felipe-riquelme.pdf
-siguiendo las directrices internacionales de parsing ATS (Workday, Greenhouse, Lever)
+siguiendo directrices de diseño limpio y compatibilidad con sistemas de reclutamiento (Workday, Greenhouse, Lever)
 y manteniendo consistencia con el sistema de diseno de feliperiquel.me.
 """
 
@@ -159,11 +159,11 @@ def build_pdf(filename: str) -> None:
     resumen_text = (
         "Estudiante de Ingenieria Civil Informatica (UNAB) con solida preparacion practica en desarrollo backend con "
         "Python, computacion cientifica de alto rendimiento (HPC), optimizacion continua y arquitectura de sistemas distribuidos. "
-        "Creador de <b>AD-BSA</b>, prototipo de algoritmo metaheuristico basado en la familia SHADE, con enfoque en el aprendizaje negativo "
-        "explicito como motor. y rigurosa auditoria empirica con telemetria mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. "
+        "Creador de <b>AD-BSA</b>, prototipo de algoritmo metaheuristico basado en la familia SHADE (L-SHADE/jSO), con enfoque en el "
+        "aprendizaje negativo explicito como motor, telemetria mecanicista de dimensionalidad (20D) y rigurosa auditoria cientifica sobre la suite IEEE CEC 2020. "
         "Experiencia demostrada en la industria formulando especificaciones tecnicas estructuradas y matrices de logica de "
         "negocio en J.E.J. Ingenieria, asi como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. "
-        "Orientado al codigo limpio, observabilidad, ejecucion agil y testing en terreno."
+        "Orientado al codigo limpio, observabilidad, rigor analitico y testing en terreno."
     )
     story.append(p(resumen_text, body_style))
     story.append(Spacer(1, 4))
@@ -225,22 +225,24 @@ def build_pdf(filename: str) -> None:
     story.append(hr())
 
     # AD-BSA
-    story.append(p("AD-BSA: Algoritmo de Optimizacion Global Heuristica & Auditoria HPC | Python, NumPy, SciPy", item_title))
+    story.append(p("AD-BSA: Algoritmo de Optimizacion Global Heuristica & Auditoria Cientifica | Python, NumPy, SciPy", item_title))
     story.append(p("Codigo Abierto (Licencia Apache 2.0) | github.com/Pipin333/AD-BSA", item_meta))
     story.append(p(
-        "&bull; <b>Optimizacion Continua & Auditoria Cientifica:</b> Formulo e implemento en Python un operador tripartito de aprendizaje "
-        "negativo activo (repulsion cosecante |csc| y anti-atractores) sobre L-SHADE/jSO. Instrumento telemetria para caracterizar la concentracion "
-        "de medida en 20D, benchmarks pareados con pruebas de Wilcoxon y deteccion de un defecto de signo en opfunu.",
+        "&bull; <b>Investigacion Exploratoria & Dinamica Heuristica:</b> Formulo e implemento en Python un operador tripartito de aprendizaje "
+        "negativo activo sobre bases de L-SHADE/jSO, integrando baricentros estratificados de anti-atractores y barreras repulsivas cosecantes "
+        "acotadas para estudiar la evasion de optimos locales en optimizacion continua.",
         bullet_style,
     ))
     story.append(p(
-        "&bull; <b>Vectorizacion NumPy & Rendimiento:</b> Optimizo la arquitectura en NumPy erradicando bucles escalares mediante broadcasting "
-        "y vectorizacion matricial, alcanzando una aceleracion de 8.0x en tiempo de ejecucion (Wall-Clock) frente a la implementacion L-SHADE.",
+        "&bull; <b>Telemetria Generacional & Concentracion de Medida:</b> Instrumento telemetria mecanicista para caracterizar la dinamica "
+        "poblacional en altas dimensiones (D >= 20), descubriendo que el escalamiento dimensional euclidiano mantiene el termino de escape inactivo "
+        "en el 99.5% de generaciones debido a la concentracion de medida.",
         bullet_style,
     ))
     story.append(p(
-        "&bull; <b>Aplicaciones Reales de Ingenieria:</b> Aplico el motor a planificacion 3D de rutas para drones con evasion de obstaculos y a la "
-        "resolucion del problema de horarios universitarios (UCTP) de 172 sesiones y 62 salas en UNAB en 33 segundos. Suite de 15 pruebas en Pytest y CI en GitHub Actions.",
+        "&bull; <b>Auditoria Cientifica & Benchmarking Pareado:</b> Descubrio un defecto critico de inversion de signo en la libreria cientifica "
+        "opfunu (Schwefel modificado) que inducia minimos ficticios. Diseno un protocolo PoC pareado de 360 corridas (D=20) con pruebas estadisticas "
+        "de Wilcoxon y correccion de Holm-Bonferroni.",
         bullet_style,
     ))
     story.append(Spacer(1, 3))
@@ -286,6 +288,23 @@ def build_pdf(filename: str) -> None:
     story.append(p(
         "&bull; <b>Fusion Sensorial & Protocolos:</b> Aplicacion para smartwatches Wear OS con captura inercial IMU de 6 ejes "
         "(acelerometro y giroscopio) a 50 Hz por UDP/WebSocket sin perdida para reconocimiento cinematico de movimientos.",
+        bullet_style,
+    ))
+    story.append(Spacer(1, 3))
+
+    # Ni Idea
+    story.append(p("Ni Idea: Consola de Party Game Multijugador en Tiempo Real | TypeScript, WebSockets, Durable Objects", item_title))
+    story.append(p("Web App & Servidor Edge (Cloudflare) | github.com/Pipin333/niideaapp", item_meta))
+    story.append(p(
+        "&bull; <b>Arquitectura en el Edge & Sockets:</b> Consola web multijugador para hasta 16 participantes simultaneos por sala "
+        "(codigo PIN de 4 caracteres) sobre Cloudflare Durable Objects (PartyServer) en TypeScript y Astro, con latencia ultra-baja y "
+        "persistencia de estado en memoria en el borde.",
+        bullet_style,
+    ))
+    story.append(p(
+        "&bull; <b>Mecanicas en Tiempo Real & Resiliencia:</b> Motor determinista de partida con ruleta de modos rotativa (Trivia Rush con "
+        "reloj de 15s y bonus de racha, votacion social secreta 'Ese Eres Tu' y lienzo tactil 'Pinturillo' con muestreo vectorial a 30 Hz). "
+        "Salvaguardas con proyeccion asimetrica de estado anti-trampas, watchdog anti-AFK y reconexion transparente por token de sesion.",
         bullet_style,
     ))
     story.append(Spacer(1, 3))
@@ -350,7 +369,7 @@ if __name__ == "__main__":
         if bad in full_text:
             raise ValueError(f"CRITICO: Se encontro caracter prohibido {repr(bad)} en el PDF generado!")
 
-    # Chequeo de palabras clave ATS
+    # Chequeo de palabras clave principales
     keywords = [
         "FELIPE SEBASTIAN RIQUELME SALVO",
         "AD-BSA",
@@ -368,4 +387,4 @@ if __name__ == "__main__":
         else:
             print(f"[OK] Keyword verificada: '{kw}'")
 
-    print("\nValidacion ATS superada al 100%.")
+    print("\nValidacion de estructura y contenido superada al 100%.")
