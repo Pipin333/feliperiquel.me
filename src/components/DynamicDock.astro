@@ -161,6 +161,7 @@ import Icon from './Icon.astro';
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Laboratorio de micro-aplicaciones"
         aria-label="Ir al Laboratorio"
+        data-tooltip="Laboratorio"
       >
         <Icon name="flask" class="w-4 h-4 text-telemetry" />
       </a>
@@ -171,6 +172,7 @@ import Icon from './Icon.astro';
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Catálogo de Proyectos"
         aria-label="Ir a Proyectos"
+        data-tooltip="Proyectos"
       >
         <Icon name="gear" class="w-4 h-4 text-slate-400" />
       </a>
@@ -181,6 +183,7 @@ import Icon from './Icon.astro';
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Ver y descargar CV"
         aria-label="Ver y descargar CV"
+        data-tooltip="CV"
       >
         <Icon name="file-earmark-text" class="w-4 h-4 text-slate-400" />
       </a>
@@ -191,6 +194,7 @@ import Icon from './Icon.astro';
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Sobre mí"
         aria-label="Ir a Sobre mí"
+        data-tooltip="Sobre mí"
       >
         <Icon name="person" class="w-4 h-4 text-slate-400" />
       </a>
@@ -212,7 +216,6 @@ import Icon from './Icon.astro';
       </button>
     </nav>
   </div>
-
 </div>
 
 <style>
@@ -286,6 +289,14 @@ import Icon from './Icon.astro';
       animation: none !important;
     }
   }
+
+  /* Evitar menú contextual nativo y selección de texto en íconos del dock (móvil) */
+  [data-tooltip] {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
 </style>
 
 <!-- SCRIPT: FLOATING DOCK & TERMINAL CONTROLLER -->
@@ -305,7 +316,7 @@ import Icon from './Icon.astro';
     whoami: 'Felipe Riquelme. Ingeniero Civil en Informática especializado en desarrollo web de alto rendimiento, DSP de audio y homelab.',
     cv: 'Currículum Vitae: Descarga directa en PDF (8.7 KB): /cv-felipe-riquelme.pdf | Versión web: /cv | Perfil: Ingeniero Civil en Informática (UNAB), AD-BSA (Optimización & Auditoría), J.E.J. Ingeniería (Innovación & TI), Dunkin\' (Subgerencia).',
     help: 'Comandos disponibles: whoami, cv, lab, repos, contact, clear. También puedes pulsar los botones de atajo.',
-    lab: 'El Laboratorio contiene 3 micro-apps en vivo: SonicRip Studio (Audio DSP), Retórica y Descalabro (NLP) y Cuánto Rinde (Logística). Navega a /lab para probarlas.',
+    lab: 'El Laboratorio contiene 4 micro-apps en vivo: SonicRip Studio (Audio DSP), Retórica y Descalabro (NLP), Cuánto Rinde (Logística) y Ni Idea (Party Game y trivia). Navega a /lab para probarlas.',
     repos: 'Proyectos clave: Toodles (Discord Audio + RecSys ML), Whatsarr (WhatsApp + *Arr Stack + Plex), UniCalendar AI (Next.js + LLMs + Google Calendar), JD Watch Controller (Wear OS 6-Axis), AD-BSA (Optimización Metaheurística & HPC).',
     contact: 'Canales directos: Correo: f.riquelmesalvo@uandresbello.edu | WhatsApp: ver seccion #contacto | GitHub: @Pipin333',
     clear: ''
@@ -459,5 +470,104 @@ import Icon from './Icon.astro';
       e.preventDefault();
       toggleTerminal();
     }
+  });
+
+  // Tooltip de long-press para íconos del dock (móvil)
+  // Se crea dinámicamente en el body para evitar el bug de position:fixed
+  // dentro de contenedores con transform (el dock usa -translate-x-1/2 en móvil)
+  let tooltip: HTMLElement | null = null;
+  const tooltipTargets = document.querySelectorAll<HTMLElement>('[data-tooltip]');
+  let tooltipTimer: number | null = null;
+  let tooltipTarget: HTMLElement | null = null;
+
+  function ensureTooltip(): HTMLElement | null {
+    if (tooltip) return tooltip;
+    tooltip = document.createElement('div');
+    tooltip.id = 'dock-tooltip';
+    tooltip.className = 'fixed z-[2147483000] pointer-events-none px-2.5 py-1 rounded-tech bg-white text-[#07090E] text-[11px] font-mono font-semibold whitespace-nowrap shadow-xl border border-canvas-border';
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(tooltip);
+    return tooltip;
+  }
+
+  function showTooltip(el: HTMLElement) {
+    const tip = ensureTooltip();
+    if (!tip) return;
+    const label = el.getAttribute('data-tooltip');
+    if (!label) return;
+    tip.textContent = label;
+    tip.setAttribute('aria-hidden', 'false');
+
+    const rect = el.getBoundingClientRect();
+
+    // Reset para medir sin posición previa
+    tip.style.top = '-9999px';
+    tip.style.left = '-9999px';
+    tip.style.visibility = 'hidden';
+
+    // Medir con el texto ya aplicado
+    const tipRect = tip.getBoundingClientRect();
+    let left = rect.left + rect.width / 2 - tipRect.width / 2;
+    // 32px encima del ícono: margen intermedio que reduce solapamiento con el pulgar
+    let top = rect.top - tipRect.height - 32;
+    left = Math.max(8, Math.min(left, window.innerWidth - tipRect.width - 8));
+    top = Math.max(8, top);
+
+    tip.style.visibility = 'visible';
+    tip.style.top = `${top}px`;
+    tip.style.left = `${left}px`;
+  }
+
+  function hideTooltip() {
+    if (!tooltip) return;
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.left = '-9999px';
+    tooltip.style.top = '-9999px';
+    tooltip.setAttribute('aria-hidden', 'true');
+    tooltipTarget = null;
+    if (tooltipTimer !== null) {
+      clearTimeout(tooltipTimer);
+      tooltipTimer = null;
+    }
+  }
+
+  let longPressConfirmed = false;
+  let suppressNextClick = false;
+
+  tooltipTargets.forEach((el) => {
+    // Bloquear menú contextual nativo en cualquier dispositivo (sin afectar taps)
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    el.addEventListener('pointerdown', (e) => {
+      // Solo activar en dispositivos táctiles o si no es click rápido
+      if (e.pointerType === 'mouse' && !window.matchMedia('(hover: none)').matches) return;
+      longPressConfirmed = false;
+      suppressNextClick = false;
+      tooltipTarget = el;
+      tooltipTimer = window.setTimeout(() => {
+        longPressConfirmed = true;
+        showTooltip(el);
+      }, 500);
+    });
+
+    el.addEventListener('pointerup', () => {
+      // Si el long press se confirmó, suprimir el click siguiente (no navegar)
+      if (longPressConfirmed) {
+        suppressNextClick = true;
+      }
+      hideTooltip();
+    });
+
+    el.addEventListener('click', (e) => {
+      // Tap corto: navega normal. Long press: este click queda anulado.
+      if (suppressNextClick) {
+        e.preventDefault();
+        suppressNextClick = false;
+      }
+    });
+
+    el.addEventListener('pointerleave', hideTooltip);
+    el.addEventListener('pointercancel', hideTooltip);
   });
 </script>

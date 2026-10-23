@@ -2,9 +2,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /email-preview.html
 
-Sitemap: https://feliperiquel.me/sitemap.xml
+Sitemap: https://feliperiquel.me/sitemap-index.xml
 
 # LLM / AI Crawlers Context
 # https://feliperiquel.me/llms.txt

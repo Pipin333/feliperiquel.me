@@ -27,11 +27,11 @@ Cuatro herramientas ejecutables directamente en el cliente:
 1. SonicRip Studio: Procesador de audio y ecualizador paramétrico de 8 bandas con filtros biquad, bitcrusher digital y analizador FFT.
 2. Retórica y Descalabro: Transmutador ontológico de lenguaje cotidiano a prosa decimonónica y diplomática con simulación de teléfono descompuesto.
 3. Calculadora de Copete: Optimizador logístico y presupuestario en pesos chilenos ($ CLP) con exportación a WhatsApp.
-4. Quiz In-House: Trivia interactiva cronometrada de 10 preguntas sin anuncios ni pantallas de espera.
+4. Ni Idea: Trivia interactiva cronometrada de 10 preguntas sin anuncios ni pantallas de espera.
 
 ### Proyectos de Ingeniería y Repositorios (#proyectos)
 Cinco proyectos reales con pestaña interactiva "Por qué":
-1. Toodles: Bot de Telegram para orquestación de descargas multimedia hacia Plex.
+1. Toodles: Bot de Discord para streaming de audio desde YouTube y sistema de recomendación musical inteligente con ML.
 2. Whatsarr: Conversational bridge en WhatsApp para solicitudes de series y películas con Sonarr, Radarr y Plex.
 3. UniCalendar AI: Aplicación web de ingesta curricular multiformato y sincronización inteligente con Google Calendar.
 4. JD Watch Controller: Captura de telemetría inercial y hápticos en Wear OS para videojuegos de ritmo.
