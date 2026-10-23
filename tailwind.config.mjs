@@ -30,6 +30,9 @@ export default {
           600: '#009EC7',
         }
       },
+      spacing: {
+        '18': '4.5rem',
+      },
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
