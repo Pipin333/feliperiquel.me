@@ -2,8 +2,8 @@
 // src/pages/cv.astro
 import Layout from '../layouts/Layout.astro';
 
-const pageTitle = "Currículum Vitae (ATS) | Felipe Riquelme - Ingeniero Civil en Informática";
-const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ingeniero Civil en Informática especializado en desarrollo backend, algoritmos de optimización continua, computación científica y sistemas distribuidos. Formato optimizado para sistemas ATS.";
+const pageTitle = "Currículum Vitae | Felipe Riquelme - Ingeniero Civil en Informática";
+const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ingeniero Civil en Informática especializado en desarrollo backend, algoritmos de optimización continua, computación científica y sistemas distribuidos. Formato profesional optimizado para lectura y exportación personalizable.";
 ---
 
 <Layout title={pageTitle} description={pageDescription}>
@@ -23,12 +23,12 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 
       <!-- Recruiter Actions -->
       <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Copy ATS Plaintext Button -->
+        <!-- Copy Plaintext Button -->
         <button
           type="button"
           id="copy-text-btn"
           class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-tech font-mono text-xs font-medium text-slate-300 bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-slate-500 transition-colors"
-          title="Copiar texto plano sin formato para pegar en formularios ATS"
+          title="Copiar texto plano con el contenido actualmente seleccionado"
         >
           <svg class="w-3.5 h-3.5 text-telemetry" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -41,42 +41,179 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
           type="button"
           id="print-cv-btn"
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-tech font-mono text-xs font-medium text-slate-300 bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-colors"
-          title="Imprimir o guardar como PDF mediante el diálogo del navegador"
+          title="Imprimir o guardar selección actual como PDF mediante el navegador"
         >
           <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
           </svg>
-          <span class="hidden sm:inline">Imprimir</span>
+          <span>Imprimir / PDF</span>
         </button>
 
-        <!-- Direct PDF Download (Primary CTA) -->
+        <!-- Direct PDF Download (Master Official PDF) -->
         <a
           href="/cv-felipe-riquelme.pdf"
           download="CV-Felipe-Riquelme-Salvo.pdf"
           class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5"
-          title="Descargar PDF oficial optimizado para ATS (8.7 KB)"
+          title="Descargar PDF oficial completo de 2 páginas (8.7 KB)"
         >
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
           </svg>
-          <span>Descargar PDF</span>
+          <span class="hidden sm:inline">Descargar</span> PDF Oficial
         </a>
       </div>
     </div>
   </header>
 
-  <!-- ATS Technical Banner (No-print) -->
-  <div class="no-print bg-[#0B101D] border-b border-canvas-border py-2.5 px-4">
-    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-slate-400">
-      <div class="flex items-center gap-2">
-        <span class="text-slate-300 font-semibold">Formato ATS:</span>
-        <span class="hidden sm:inline">Flujo lineal de columna única, parseable por Workday, Greenhouse y Lever.</span>
+  <!-- CV Customization & Export Toolbar (No-print) -->
+  <aside aria-label="Controles de exportación de CV" class="no-print bg-[#0B101D] border-b border-canvas-border py-3 px-4 sm:px-6">
+    <div class="max-w-5xl mx-auto space-y-2.5">
+      <!-- Top Row: Preset selector + Estimated pages badge + Toggle drawer button -->
+      <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <span class="font-mono text-slate-300 font-semibold flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-telemetry" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            <span>Filtro de exportación:</span>
+          </span>
+
+          <!-- Preset Buttons -->
+          <div class="inline-flex rounded-tech p-0.5 bg-canvas-surface border border-canvas-border" role="group" aria-label="Perfiles predefinidos de exportación">
+            <button
+              type="button"
+              class="cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium bg-telemetry/15 text-telemetry border border-telemetry/30"
+              data-preset="one-page"
+            >
+              1 Página (General)
+            </button>
+            <button
+              type="button"
+              class="cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium text-slate-400 hover:text-white"
+              data-preset="backend"
+            >
+              Backend & Algoritmos
+            </button>
+            <button
+              type="button"
+              class="cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium text-slate-400 hover:text-white"
+              data-preset="fullstack"
+            >
+              Fullstack & Web
+            </button>
+            <button
+              type="button"
+              class="cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium text-slate-400 hover:text-white"
+              data-preset="all"
+            >
+              Completo
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Page density badge -->
+          <span
+            id="page-estimate-badge"
+            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-tech font-mono text-[11px] font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-500/30"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="page-estimate-text">~1 Página para imprimir</span>
+          </span>
+
+          <!-- Toggle details button -->
+          <button
+            type="button"
+            id="toggle-filter-drawer"
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-tech font-mono text-[11px] text-slate-300 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-slate-500 transition-colors"
+            aria-expanded="false"
+            aria-controls="filter-drawer-content"
+          >
+            <span id="toggle-filter-label">Personalizar partes (<span id="selected-projects-count">3</span>/7)</span>
+            <svg id="toggle-filter-chevron" class="w-3 h-3 text-slate-400 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="text-slate-400">
-        <span>Actualizado: Octubre 2026</span>
+
+      <!-- Expandable Checklist Drawer -->
+      <div id="filter-drawer-content" class="hidden pt-2 border-t border-canvas-border/70 space-y-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Column 1: Proyectos Técnicos (Selección individual) -->
+          <div class="space-y-1.5 md:col-span-2">
+            <div class="flex items-center justify-between text-[11px] font-mono font-semibold text-slate-300 pb-0.5">
+              <span>Proyectos Técnicos a incluir:</span>
+              <span class="text-slate-400 font-normal">Marca los más relevantes para tu búsqueda</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-adbsa" checked />
+                <span class="text-slate-200 font-medium">AD-BSA <span class="text-[10px] font-mono text-slate-400">(Optimización & HPC)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-cuanto-rinde" checked />
+                <span class="text-slate-200 font-medium">Cuánto Rinde <span class="text-[10px] font-mono text-slate-400">(Knapsack DP & ETL)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-toodles" checked />
+                <span class="text-slate-200 font-medium">Toodles <span class="text-[10px] font-mono text-slate-400">(Audio Streaming & RecSys)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-whatsarr" />
+                <span class="text-slate-200 font-medium">Whatsarr <span class="text-[10px] font-mono text-slate-400">(WhatsApp & Media Server)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-jdwatch" />
+                <span class="text-slate-200 font-medium">JD Watch <span class="text-[10px] font-mono text-slate-400">(Wear OS & IMU 50Hz)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-niidea" />
+                <span class="text-slate-200 font-medium">Ni Idea <span class="text-[10px] font-mono text-slate-400">(Party Game & Durable Objects)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1.5 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer sm:col-span-2">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="project-sonicrip" />
+                <span class="text-slate-200 font-medium">SonicRip Studio & Retórica y Descalabro <span class="text-[10px] font-mono text-slate-400">(Web Audio DSP & NLP)</span></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Column 2: Secciones & Experiencias -->
+          <div class="space-y-1.5">
+            <div class="text-[11px] font-mono font-semibold text-slate-300 pb-0.5">
+              <span>Secciones & Trayectoria:</span>
+            </div>
+            <div class="space-y-1 text-xs">
+              <label class="flex items-center gap-2 p-1 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="sec-resumen" checked />
+                <span class="text-slate-200">Resumen Profesional</span>
+              </label>
+              <label class="flex items-center gap-2 p-1 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="exp-jej" checked />
+                <span class="text-slate-200">J.E.J. Ingeniería <span class="text-[10px] font-mono text-slate-400">(Soluciones Digitales)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="exp-dunkin" checked />
+                <span class="text-slate-200">Dunkin' Chile <span class="text-[10px] font-mono text-slate-400">(Subgerencia)</span></span>
+              </label>
+              <label class="flex items-center gap-2 p-1 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="sec-educacion" checked />
+                <span class="text-slate-200">Educación (UNAB)</span>
+              </label>
+              <label class="flex items-center gap-2 p-1 rounded bg-canvas-surface/70 border border-canvas-border hover:border-telemetry/40 cursor-pointer">
+                <input type="checkbox" class="cv-checkbox accent-telemetry w-3.5 h-3.5" data-target="sec-habilidades" checked />
+                <span class="text-slate-200">Habilidades Técnicas</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-400 font-sans italic pt-1">
+          * Datos de contacto y perfil técnico siempre se incluyen. Al presionar <strong>Imprimir / PDF</strong>, se renderiza exactamente esta selección.
+        </p>
       </div>
     </div>
-  </div>
+  </aside>
 
   <!-- MAIN CV DOCUMENT CONTAINER -->
   <main class="flex-1 py-8 sm:py-12 px-4 sm:px-6">
@@ -102,7 +239,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             Ingeniero Civil en Informática | Backend, Algoritmos & Sistemas Distribuidos
           </div>
 
-          <!-- Contact Details (ATS Single-Line Parsable) -->
+          <!-- Contact Details -->
           <div class="flex flex-wrap items-center gap-y-1.5 gap-x-3 text-xs font-mono text-slate-400 pt-1">
             <span class="text-slate-300">Santiago, Chile</span>
             <span class="text-canvas-border">|</span>
@@ -127,18 +264,18 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
         </header>
 
         <!-- 2. RESUMEN PROFESIONAL -->
-        <section class="mb-7" aria-labelledby="heading-resumen">
+        <section id="sec-resumen" class="cv-item mb-7" data-cv-item="sec-resumen" aria-labelledby="heading-resumen">
           <h2 id="heading-resumen" class="section-title text-sm font-mono font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
             <span class="text-telemetry font-mono">&gt;</span> Resumen Profesional
           </h2>
           <div class="w-full h-px bg-canvas-border mb-3"></div>
           <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans text-justify">
-            Estudiante de Ingeniería Civil Informática (UNAB) con sólida preparación práctica en desarrollo backend con Python, computación científica de alto rendimiento (HPC), optimización continua y arquitectura de sistemas distribuidos. Creador de <strong class="text-white font-semibold">AD-BSA</strong>, prototipo de algoritmo metaheuristico basado en la familia SHADE y con aprendizaje negativo explicito como motor. rigurosa auditoría empírica con telemetría mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. Experiencia demostrada en la industria formulando especificaciones técnicas estructuradas y matrices de lógica de negocio en J.E.J. Ingeniería, así como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. Orientado al código limpio, observabilidad, ejecución ágil y testing en terreno.
+            Estudiante de Ingeniería Civil Informática (UNAB) con sólida preparación práctica en desarrollo backend con Python, computación científica de alto rendimiento (HPC), optimización continua y arquitectura de sistemas distribuidos. Creador de <strong class="text-white font-semibold">AD-BSA</strong>, prototipo de algoritmo metaheurístico basado en la familia SHADE (L-SHADE/jSO), con enfoque en el aprendizaje negativo explícito como motor, telemetría mecanicista de dimensionalidad (20D) y rigurosa auditoría científica sobre la suite IEEE CEC 2020. Experiencia demostrada en la industria formulando especificaciones técnicas estructuradas y matrices de lógica de negocio en J.E.J. Ingeniería, así como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. Orientado al código limpio, observabilidad, rigor analítico y testing en terreno.
           </p>
         </section>
 
         <!-- 3. EXPERIENCIA LABORAL -->
-        <section class="mb-7" aria-labelledby="heading-experiencia">
+        <section id="sec-experiencia" class="mb-7" aria-labelledby="heading-experiencia">
           <h2 id="heading-experiencia" class="section-title text-sm font-mono font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
             <span class="text-telemetry font-mono">&gt;</span> Experiencia Laboral
           </h2>
@@ -146,7 +283,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 
           <div class="space-y-5">
             <!-- J.E.J. Ingenieria -->
-            <article class="space-y-1.5">
+            <article id="exp-jej" class="cv-item space-y-1.5" data-cv-item="exp-jej">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-sm font-display font-bold text-white">
                   J.E.J. INGENIERÍA S.A. | Gerencia de Innovación y Transformación Digital
@@ -171,7 +308,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </article>
 
             <!-- Dunkin' Chile -->
-            <article class="space-y-1.5 pt-2">
+            <article id="exp-dunkin" class="cv-item space-y-1.5 pt-2" data-cv-item="exp-dunkin">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-sm font-display font-bold text-white">
                   DUNKIN' CHILE | Operaciones & Retail
@@ -195,7 +332,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
         </section>
 
         <!-- 4. EDUCACIÓN -->
-        <section class="mb-7" aria-labelledby="heading-educacion">
+        <section id="sec-educacion" class="cv-item mb-7" data-cv-item="sec-educacion" aria-labelledby="heading-educacion">
           <h2 id="heading-educacion" class="section-title text-sm font-mono font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
             <span class="text-telemetry font-mono">&gt;</span> Educación
           </h2>
@@ -219,7 +356,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
         </section>
 
         <!-- 5. PROYECTOS TÉCNICOS DESTACADOS -->
-        <section class="mb-7" aria-labelledby="heading-proyectos">
+        <section id="sec-proyectos" class="mb-7" aria-labelledby="heading-proyectos">
           <h2 id="heading-proyectos" class="section-title text-sm font-mono font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
             <span class="text-telemetry font-mono">&gt;</span> Proyectos Técnicos Destacados
           </h2>
@@ -227,31 +364,31 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 
           <div class="space-y-4">
             <!-- AD-BSA -->
-            <article class="space-y-1">
+            <article id="project-adbsa" class="cv-item space-y-1" data-cv-item="project-adbsa" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
-                  AD-BSA: Algoritmo de Optimización Global Heurística & Auditoría HPC
+                  AD-BSA: Algoritmo de Optimización Global Heurística & Auditoría Científica
                 </h3>
                 <span class="font-mono text-xs text-telemetry">Python, NumPy, SciPy</span>
               </div>
               <div class="font-mono text-[11px] text-slate-400">
-                Código Abierto (Licencia Apache 2.0) | <a href="https://github.com/Pipin333/AD-BSA" target="_blank" rel="noopener noreferrer" class="text-telemetry underline decoration-telemetry/40">github.com/Pipin333/AD-BSA</a>
+                Investigación de Código Abierto (Licencia Apache 2.0) | <a href="https://github.com/Pipin333/AD-BSA" target="_blank" rel="noopener noreferrer" class="text-telemetry underline decoration-telemetry/40">github.com/Pipin333/AD-BSA</a>
               </div>
               <ul class="list-disc list-outside pl-4 space-y-1 text-xs text-slate-300 font-sans leading-relaxed pt-0.5">
                 <li>
-                  <strong class="text-white">Optimización Continua & Auditoría Científica:</strong> Formuló e implementó en Python un operador tripartito de aprendizaje negativo activo (repulsión cosecante |csc| y anti-atractores) sobre L-SHADE/jSO. Instrumentó telemetría generacional para caracterizar la concentración de medida en altas dimensiones (D &ge; 20), ejecutó benchmarks pareados con pruebas de Wilcoxon y descubrió un defecto crítico de inversión de signo en la librería científica opfunu.
+                  <strong class="text-white">Investigación Exploratoria & Dinámica Heurística:</strong> Formuló e implementó en Python un operador tripartito de aprendizaje negativo activo sobre bases de L-SHADE/jSO, integrando baricentros estratificados de anti-atractores y barreras repulsivas cosecantes acotadas para estudiar la evasión de óptimos locales en optimización continua.
                 </li>
                 <li>
-                  <strong class="text-white">Vectorización NumPy & Rendimiento:</strong> Optimizó la arquitectura en NumPy erradicando bucles escalares mediante broadcasting y vectorización matricial, alcanzando una aceleración de 8.0x en tiempo de ejecución (Wall-Clock) frente a la implementación base de L-SHADE.
+                  <strong class="text-white">Telemetría Generacional & Concentración de Medida:</strong> Instrumentó telemetría mecanicista para caracterizar la dinámica poblacional en altas dimensiones (D &ge; 20), descubriendo que el escalamiento dimensional euclidiano mantiene el término de escape inactivo en el 99.5% de generaciones debido a la concentración de medida.
                 </li>
                 <li>
-                  <strong class="text-white">Aplicaciones Reales de Ingeniería:</strong> Aplicó el motor a planificación 3D de rutas para drones con evasión de obstáculos y a la resolución del problema de horarios universitarios (UCTP) de 172 sesiones y 62 salas en UNAB en 33 segundos. Suite de 15 pruebas en Pytest y CI en GitHub Actions.
+                  <strong class="text-white">Auditoría Científica & Benchmarking Pareado:</strong> Descubrió un defecto crítico de inversión de signo en la librería científica opfunu (Schwefel modificado) que inducía mínimos globales ficticios. Diseñó un protocolo PoC pareado de 360 corridas (D=20) con pruebas estadísticas de Wilcoxon y corrección de Holm-Bonferroni.
                 </li>
               </ul>
             </article>
 
             <!-- Cuanto Rinde -->
-            <article class="space-y-1 pt-1">
+            <article id="project-cuanto-rinde" class="cv-item space-y-1 pt-1" data-cv-item="project-cuanto-rinde" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
                   Cuánto Rinde: PWA de Optimización Combinatoria & Data Pipeline
@@ -272,7 +409,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </article>
 
             <!-- Toodles -->
-            <article class="space-y-1 pt-1">
+            <article id="project-toodles" class="cv-item space-y-1 pt-1" data-cv-item="project-toodles" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
                   Toodles: Bot de Streaming de Audio, Concurrencia & RecSys
@@ -290,7 +427,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </article>
 
             <!-- Whatsarr -->
-            <article class="space-y-1 pt-1">
+            <article id="project-whatsarr" class="cv-item space-y-1 pt-1" data-cv-item="project-whatsarr" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
                   Whatsarr: Hub Domótico & Bot de Automatización de Medios
@@ -308,7 +445,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </article>
 
             <!-- JD Watch Controller -->
-            <article class="space-y-1 pt-1">
+            <article id="project-jdwatch" class="cv-item space-y-1 pt-1" data-cv-item="project-jdwatch" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
                   JD Watch Controller: Telemetría Inercial Wearable a 50 Hz
@@ -325,8 +462,29 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
               </ul>
             </article>
 
+            <!-- Ni Idea -->
+            <article id="project-niidea" class="cv-item space-y-1 pt-1" data-cv-item="project-niidea" data-type="project">
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                <h3 class="text-xs sm:text-sm font-display font-bold text-white">
+                  Ni Idea: Consola de Party Game Multijugador en Tiempo Real
+                </h3>
+                <span class="font-mono text-xs text-telemetry">TypeScript, WebSockets, Cloudflare Durable Objects</span>
+              </div>
+              <div class="font-mono text-[11px] text-slate-400">
+                Web App & Servidor Edge | <a href="https://github.com/Pipin333/niideaapp" target="_blank" rel="noopener noreferrer" class="text-telemetry underline decoration-telemetry/40">github.com/Pipin333/niideaapp</a>
+              </div>
+              <ul class="list-disc list-outside pl-4 space-y-1 text-xs text-slate-300 font-sans leading-relaxed pt-0.5">
+                <li>
+                  <strong class="text-white">Arquitectura en el Edge & Sockets:</strong> Consola web multijugador para hasta 16 participantes simultáneos por sala (código PIN de 4 caracteres) sobre Cloudflare Workers y Durable Objects (PartyServer) en TypeScript y Astro, con latencia ultra-baja y persistencia de estado en memoria en el borde.
+                </li>
+                <li>
+                  <strong class="text-white">Mecánicas en Tiempo Real & Resiliencia:</strong> Motor determinista de partida con ruleta de modos rotativa (Trivia Rush con reloj de 15s y bonus de racha, votación social secreta "Ese Eres Tú" y lienzo táctil "Pinturillo" con muestreo vectorial a 30 Hz). Salvaguardas con proyección asimétrica de estado anti-trampas, watchdog anti-AFK y reconexión transparente por token de sesión.
+                </li>
+              </ul>
+            </article>
+
             <!-- SonicRip Studio & Retórica y Descalabro (RyD) -->
-            <article class="space-y-1 pt-1">
+            <article id="project-sonicrip" class="cv-item space-y-1 pt-1" data-cv-item="project-sonicrip" data-type="project">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <h3 class="text-xs sm:text-sm font-display font-bold text-white">
                   SonicRip Studio & Retórica y Descalabro (RyD)
@@ -349,7 +507,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
         </section>
 
         <!-- 6. HABILIDADES TÉCNICAS & HERRAMIENTAS -->
-        <section aria-labelledby="heading-habilidades">
+        <section id="sec-habilidades" class="cv-item" data-cv-item="sec-habilidades" aria-labelledby="heading-habilidades">
           <h2 id="heading-habilidades" class="section-title text-sm font-mono font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
             <span class="text-telemetry font-mono">&gt;</span> Habilidades Técnicas & Herramientas
           </h2>
@@ -370,7 +528,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </div>
             <div>
               <strong class="text-white font-mono">Frameworks & Ecosistema Web:</strong>
-              <span class="text-slate-300"> Astro 5, React / Next.js, Tailwind CSS, FastAPI, Node.js, Web Audio API, Service Workers (PWA).</span>
+              <span class="text-slate-300"> Astro 5, React / Next.js, Tailwind CSS, FastAPI, Node.js, Web Audio API, Cloudflare Durable Objects, Service Workers (PWA).</span>
             </div>
             <div>
               <strong class="text-white font-mono">Idiomas & Certificaciones:</strong>
@@ -387,7 +545,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             ¿Deseas guardar o compartir este currículum?
           </h3>
           <p class="text-xs text-slate-400 font-sans">
-            El archivo PDF pesa 8.7 KB, está construido con fuentes vectoriales y libre de tablas complejas para máxima compatibilidad ATS.
+            El archivo PDF pesa 8.7 KB, está construido con fuentes vectoriales y libre de tablas complejas para máxima legibilidad y portabilidad.
           </p>
         </div>
         <div class="flex items-center gap-3 flex-shrink-0 w-full sm:w-auto">
@@ -396,7 +554,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             download="CV-Felipe-Riquelme-Salvo.pdf"
             class="w-full sm:w-auto text-center px-4 py-2 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all"
           >
-            Descargar PDF (8.7 KB)
+            Descargar PDF Oficial (8.7 KB)
           </a>
         </div>
       </aside>
@@ -406,10 +564,15 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 </Layout>
 
 <style>
+  /* Base hidden class for customizer */
+  .cv-item-hidden {
+    display: none !important;
+  }
+
   /* Print Media Styles: Turns the dark card into a pristine paper document */
   @media print {
     @page {
-      margin: 12mm 15mm;
+      margin: 10mm 12mm;
       size: letter;
     }
 
@@ -418,15 +581,16 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
     header.no-print,
     nav,
     button,
-    aside {
+    aside,
+    .cv-item-hidden {
       display: none !important;
     }
 
     body {
       background-color: #ffffff !important;
       color: #0f172a !important;
-      font-size: 10pt !important;
-      line-height: 1.35 !important;
+      font-size: 9.5pt !important;
+      line-height: 1.3 !important;
     }
 
     main {
@@ -446,22 +610,23 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 
     h1 {
       color: #0f172a !important;
-      font-size: 18pt !important;
+      font-size: 16pt !important;
+      margin-bottom: 2pt !important;
     }
 
     h2.section-title {
       color: #0f172a !important;
-      font-size: 11pt !important;
+      font-size: 10.5pt !important;
       border-bottom: 1px solid #cbd5e1 !important;
-      padding-bottom: 2pt !important;
-      margin-top: 10pt !important;
-      margin-bottom: 4pt !important;
+      padding-bottom: 1pt !important;
+      margin-top: 6pt !important;
+      margin-bottom: 3pt !important;
       page-break-after: avoid;
     }
 
     h3 {
       color: #0f172a !important;
-      font-size: 10pt !important;
+      font-size: 9.5pt !important;
     }
 
     p, li, span, div {
@@ -485,17 +650,180 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
       background-color: #cbd5e1 !important;
     }
 
+    ul {
+      margin-top: 1pt !important;
+      margin-bottom: 2pt !important;
+    }
+
+    li {
+      margin-bottom: 1.5pt !important;
+    }
+
     article {
       page-break-inside: avoid;
+      margin-bottom: 3.5pt !important;
     }
 
     section {
       page-break-inside: auto;
+      margin-bottom: 5pt !important;
     }
   }
 </style>
 
 <script>
+  // Presets definition
+  const presets: Record<string, string[]> = {
+    'one-page': [
+      'sec-resumen',
+      'exp-jej',
+      'exp-dunkin',
+      'sec-educacion',
+      'project-adbsa',
+      'project-cuanto-rinde',
+      'project-toodles',
+      'sec-habilidades'
+    ],
+    'backend': [
+      'sec-resumen',
+      'exp-jej',
+      'exp-dunkin',
+      'sec-educacion',
+      'project-adbsa',
+      'project-toodles',
+      'project-whatsarr',
+      'project-jdwatch',
+      'sec-habilidades'
+    ],
+    'fullstack': [
+      'sec-resumen',
+      'exp-jej',
+      'exp-dunkin',
+      'sec-educacion',
+      'project-cuanto-rinde',
+      'project-whatsarr',
+      'project-niidea',
+      'project-sonicrip',
+      'sec-habilidades'
+    ],
+    'all': [
+      'sec-resumen',
+      'exp-jej',
+      'exp-dunkin',
+      'sec-educacion',
+      'project-adbsa',
+      'project-cuanto-rinde',
+      'project-toodles',
+      'project-whatsarr',
+      'project-jdwatch',
+      'project-niidea',
+      'project-sonicrip',
+      'sec-habilidades'
+    ]
+  };
+
+  const checkboxes = document.querySelectorAll<HTMLInputElement>('.cv-checkbox');
+  const presetBtns = document.querySelectorAll<HTMLButtonElement>('.cv-preset-btn');
+  const pageEstimateBadge = document.getElementById('page-estimate-badge');
+  const pageEstimateText = document.getElementById('page-estimate-text');
+  const selectedProjectsCount = document.getElementById('selected-projects-count');
+  const toggleFilterDrawer = document.getElementById('toggle-filter-drawer');
+  const filterDrawerContent = document.getElementById('filter-drawer-content');
+  const toggleFilterChevron = document.getElementById('toggle-filter-chevron');
+
+  function isVisible(id: string): boolean {
+    const el = document.getElementById(id);
+    return el !== null && !el.classList.contains('cv-item-hidden');
+  }
+
+  function updateMetrics() {
+    const projectCbs = Array.from(checkboxes).filter(cb => cb.getAttribute('data-target')?.startsWith('project-'));
+    const visibleProjects = projectCbs.filter(cb => cb.checked).length;
+
+    if (selectedProjectsCount) {
+      selectedProjectsCount.textContent = String(visibleProjects);
+    }
+
+    if (pageEstimateBadge && pageEstimateText) {
+      if (visibleProjects <= 3) {
+        pageEstimateBadge.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-tech font-mono text-[11px] font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-500/30';
+        pageEstimateText.textContent = '~1 Página para imprimir';
+      } else {
+        pageEstimateBadge.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-tech font-mono text-[11px] font-medium bg-sky-950/60 text-sky-400 border border-sky-500/30';
+        pageEstimateText.textContent = '~2 Páginas completas';
+      }
+    }
+  }
+
+  function applyPreset(presetKey: string) {
+    const targets = new Set(presets[presetKey] || presets['one-page']);
+    checkboxes.forEach((cb) => {
+      const target = cb.getAttribute('data-target');
+      if (!target) return;
+      const isChecked = targets.has(target);
+      cb.checked = isChecked;
+      const el = document.getElementById(target);
+      if (el) {
+        if (isChecked) {
+          el.classList.remove('cv-item-hidden');
+        } else {
+          el.classList.add('cv-item-hidden');
+        }
+      }
+    });
+
+    presetBtns.forEach((btn) => {
+      if (btn.getAttribute('data-preset') === presetKey) {
+        btn.className = 'cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium bg-telemetry/15 text-telemetry border border-telemetry/30';
+      } else {
+        btn.className = 'cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium text-slate-400 hover:text-white';
+      }
+    });
+
+    updateMetrics();
+  }
+
+  // Drawer toggle
+  if (toggleFilterDrawer && filterDrawerContent && toggleFilterChevron) {
+    toggleFilterDrawer.addEventListener('click', () => {
+      const isExpanded = toggleFilterDrawer.getAttribute('aria-expanded') === 'true';
+      toggleFilterDrawer.setAttribute('aria-expanded', String(!isExpanded));
+      filterDrawerContent.classList.toggle('hidden', isExpanded);
+      toggleFilterChevron.classList.toggle('rotate-180', !isExpanded);
+    });
+  }
+
+  // Preset button listeners
+  presetBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const presetKey = btn.getAttribute('data-preset');
+      if (presetKey) {
+        applyPreset(presetKey);
+      }
+    });
+  });
+
+  // Individual checkbox listeners
+  checkboxes.forEach((cb) => {
+    cb.addEventListener('change', () => {
+      const target = cb.getAttribute('data-target');
+      if (!target) return;
+      const el = document.getElementById(target);
+      if (el) {
+        if (cb.checked) {
+          el.classList.remove('cv-item-hidden');
+        } else {
+          el.classList.add('cv-item-hidden');
+        }
+      }
+      // Clear preset highlight when manual change happens
+      presetBtns.forEach((btn) => {
+        btn.className = 'cv-preset-btn px-2.5 py-1 text-[11px] font-mono rounded-tech transition-colors font-medium text-slate-400 hover:text-white';
+      });
+      updateMetrics();
+    });
+  });
+
   // Print button handler
   const printBtn = document.getElementById('print-cv-btn');
   if (printBtn) {
@@ -504,58 +832,71 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
     });
   }
 
+  // Build plain text dynamically from active items
+  function buildSelectedPlainText(): string {
+    let text = `FELIPE SEBASTIÁN RIQUELME SALVO\nSantiago, Chile | feliperiquelme34@gmail.com | +56 9 7520 0121 | feliperiquel.me | linkedin.com/in/friquelmes | github.com/Pipin333\nInglés: C1 (Avanzado)\n\n`;
+
+    if (isVisible('sec-resumen')) {
+      text += `RESUMEN PROFESIONAL\nEstudiante de Ingeniería Civil Informática (UNAB) con sólida preparación práctica en desarrollo backend con Python, computación científica de alto rendimiento (HPC), optimización continua y arquitectura de sistemas distribuidos. Creador de AD-BSA, prototipo de algoritmo metaheurístico basado en la familia SHADE (L-SHADE/jSO), con enfoque en el aprendizaje negativo explícito como motor, telemetría mecanicista de dimensionalidad (20D) y rigurosa auditoría científica sobre la suite IEEE CEC 2020. Experiencia demostrada en la industria formulando especificaciones técnicas estructuradas y matrices de lógica de negocio en J.E.J. Ingeniería, así como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. Orientado al código limpio, observabilidad, rigor analítico y testing en terreno.\n\n`;
+    }
+
+    const hasJej = isVisible('exp-jej');
+    const hasDunkin = isVisible('exp-dunkin');
+    if (hasJej || hasDunkin) {
+      text += `EXPERIENCIA LABORAL\n`;
+      if (hasJej) {
+        text += `J.E.J. INGENIERÍA S.A. | Gerencia de Innovación y Transformación Digital\nPracticante de Soluciones Digitales & TI | Julio 2026 - Agosto 2026 | Santiago, Chile\n- Levantamiento & Especificación Funcional: Lideró el levantamiento de requerimientos corporativos y redactó especificaciones funcionales y técnicas estructuradas como única fuente de verdad previo a la construcción en Power Platform, traduciendo necesidades de negocio a modelos de datos relacionales y flujos de ejecución.\n- Arquitectura Lógica & Reglas de Negocio: Diseñó matrices tridimensionales de acceso por Centro de Costos, motores de urgencia automática y asignación ponderada de desarrolladores para el sistema de solicitudes corporativas.\n- SLA & Deflexión Activa: Modeló flujos BPMN con tiempos de respuesta estructurados, trazabilidad integral de estados y mecanismos de deflexión activa de requerimientos mediante bases de conocimiento corporativas.\n\n`;
+      }
+      if (hasDunkin) {
+        text += `DUNKIN' CHILE | Operaciones & Retail\nSegundo Subgerente (Sept. 2025 - Ene. 2026) | Colaborador (Abr. 2023 - Sept. 2025) | Santiago, Chile\n- Liderazgo Operativo: Dirigió la operación de turnos críticos y supervisó equipos de hasta 12 colaboradores bajo alta afluencia de público, resolviendo incidencias técnicas, administrativas y de atención en tiempo real.\n- Control de Inventarios & BPM: Lideró auditorías de existencias, control de mermas y recepción de materias primas bajo estrictos estándares BPM. Distinguido como Empleado del Mes y seleccionado para el programa de formación gerencial.\n\n`;
+      }
+    }
+
+    if (isVisible('sec-educacion')) {
+      text += `EDUCACIÓN\nUNIVERSIDAD ANDRÉS BELLO (UNAB)\nIngeniería Civil Informática (Grado en Ingeniería) | 2021 - 2027 (Estimada) | Santiago, Chile\n- Enfoque: Algoritmos Avanzados, Estructuras de Datos, Computación Científica, Inteligencia Artificial, Redes y Sistemas Distribuidos, Bases de Datos Relacionales y Arquitectura de Software.\n\n`;
+    }
+
+    const activeProjects: string[] = [];
+    if (isVisible('project-adbsa')) {
+      activeProjects.push(`- AD-BSA: Algoritmo de Optimización Global Heurística & Auditoría Científica | Python, NumPy, SciPy (Apache 2.0)\n  Investigación exploratoria en metaheurísticas continuas sobre L-SHADE/jSO con aprendizaje negativo activo, anti-atractores y escape cosecante. Telemetría mecanicista de dimensionalidad (concentración de medida en D >= 20), PoC pareado de 360 corridas con Wilcoxon y detección de defecto crítico en opfunu.`);
+    }
+    if (isVisible('project-cuanto-rinde')) {
+      activeProjects.push(`- Cuánto Rinde: PWA de Optimización Combinatoria & Data Pipeline | JavaScript, Python, Firebase\n  Motor de optimización Knapsack DP en JS (pipin333.github.io/calculadoracopete). Pipeline ETL en Python con Playwright Stealth y matriz paralela de 6 runners en GitHub Actions.`);
+    }
+    if (isVisible('project-toodles')) {
+      activeProjects.push(`- Toodles: Bot de Streaming de Audio, Concurrencia & RecSys | Python, Asyncio, PostgreSQL\n  github.com/Pipin333/Toodles - Streaming de baja latencia con FFmpeg y Asyncio en Linux ARM64. Persistencia relacional en PostgreSQL con transacciones atómicas en SQLAlchemy ORM y RecSys musical.`);
+    }
+    if (isVisible('project-whatsarr')) {
+      activeProjects.push(`- Whatsarr: Hub Domótico & Bot de Automatización de Medios | Node.js, TypeScript, Docker\n  github.com/Pipin333/Whatsarr - Bot en TypeScript con Baileys para control remoto del stack *Arr. Despliegue multi-instancia en Docker.`);
+    }
+    if (isVisible('project-jdwatch')) {
+      activeProjects.push(`- JD Watch Controller: Telemetría Inercial Wearable a 50 Hz | Kotlin, Wear OS, Android Jetpack\n  Fusión sensorial IMU de 6 ejes a 50 Hz continuos por UDP/WebSocket sin pérdida para reconocimiento cinemático de bailes.`);
+    }
+    if (isVisible('project-niidea')) {
+      activeProjects.push(`- Ni Idea: Consola de Party Game Multijugador en Tiempo Real | TypeScript, WebSockets, Cloudflare Durable Objects\n  github.com/Pipin333/niideaapp - Consola web para 16 jugadores en salas con PIN de 4 caracteres. Motor determinista de juego en tiempo real con Trivia Rush, Ese Eres Tú y Pinturillo en Canvas.`);
+    }
+    if (isVisible('project-sonicrip')) {
+      activeProjects.push(`- SonicRip Studio & Retórica y Descalabro (RyD) | Web Audio API, Canvas API, NLP Cliente\n  Micro-apps cliente en feliperiquel.me/lab: procesamiento de audio DSP con ecualizador de 8 bandas y FFT en tiempo real, junto a motor heurístico NLP de transmutación estilística.`);
+    }
+
+    if (activeProjects.length > 0) {
+      text += `PROYECTOS TÉCNICOS DESTACADOS\n` + activeProjects.join('\n') + `\n\n`;
+    }
+
+    if (isVisible('sec-habilidades')) {
+      text += `HABILIDADES TÉCNICAS\n- Lenguajes: Python 3.11+ (Avanzado: NumPy, SciPy, Asyncio, Pytest), JavaScript (ES6+), TypeScript, SQL (PostgreSQL), Kotlin, HTML5/CSS3.\n- Algoritmos, Computación & Datos: Metaheurísticas (DE, L-SHADE, CMA-ES, PSO), Programación Dinámica, Vectorización Matricial, Estadística No Paramétrica, Web Scraping (Playwright Stealth), Pipelines ETL, HPC.\n- Cloud & DevOps: Linux (Ubuntu Server), Docker, PostgreSQL, Supabase, Firebase RTDB, SQLAlchemy ORM, Oracle Cloud (ARM64), Git, GitHub Actions, Vercel.\n- Frameworks Web: Astro 5, React / Next.js, Tailwind CSS, FastAPI, Node.js, Web Audio API, Cloudflare Durable Objects.\n- Idiomas: Español (Nativo) | Inglés: C1 Avanzado.\n- Certificaciones: Fundamentos de IA & Machine Learning (LinkedIn Learning, 2025) | Liderazgo y Resolución de Conflictos (SENCE, 2025).`;
+    }
+
+    return text.trim();
+  }
+
   // Copy plain text handler
   const copyBtn = document.getElementById('copy-text-btn');
   const copyLabel = document.getElementById('copy-btn-label');
 
   if (copyBtn && copyLabel) {
     copyBtn.addEventListener('click', async () => {
-      const plainText = `FELIPE SEBASTIÁN RIQUELME SALVO
-Santiago, Chile | feliperiquelme34@gmail.com | +56 9 7520 0121 | feliperiquel.me | linkedin.com/in/friquelmes | github.com/Pipin333
-Inglés: C1 (Avanzado)
-
-RESUMEN PROFESIONAL
-Estudiante de Ingeniería Civil Informática (UNAB) con sólida preparación práctica en desarrollo backend con Python, computación científica de alto rendimiento (HPC), optimización continua y arquitectura de sistemas distribuidos. Creador de AD-BSA, algoritmo metaheurístico continuo vectorizado en NumPy con aceleración de 8.0x frente a L-SHADE y rigurosa auditoría empírica con telemetría mecanicista y protocolos pareados sobre la suite IEEE CEC 2020. Experiencia demostrada en la industria formulando especificaciones técnicas estructuradas y matrices de lógica de negocio en J.E.J. Ingeniería, así como liderazgo de equipos de hasta 12 colaboradores bajo alta demanda operativa en Dunkin' Chile. Orientado al código limpio, observabilidad, ejecución ágil y testing en terreno.
-
-EXPERIENCIA LABORAL
-J.E.J. INGENIERÍA S.A. | Gerencia de Innovación y Transformación Digital
-Practicante de Soluciones Digitales & TI | Julio 2026 - Agosto 2026 | Santiago, Chile
-- Levantamiento & Especificación Funcional: Lideró el levantamiento de requerimientos corporativos y redactó especificaciones funcionales y técnicas estructuradas como única fuente de verdad previo a la construcción en Power Platform, traduciendo necesidades de negocio a modelos de datos relacionales y flujos de ejecución.
-- Arquitectura Lógica & Reglas de Negocio: Diseñó matrices tridimensionales de acceso por Centro de Costos, motores de urgencia automática y asignación ponderada de desarrolladores para el sistema de solicitudes corporativas.
-- SLA & Deflexión Activa: Modeló flujos BPMN con tiempos de respuesta estructurados, trazabilidad integral de estados y mecanismos de deflexión activa de requerimientos mediante bases de conocimiento corporativas.
-
-DUNKIN' CHILE | Operaciones & Retail
-Segundo Subgerente (Sept. 2025 - Ene. 2026) | Colaborador (Abr. 2023 - Sept. 2025) | Santiago, Chile
-- Liderazgo Operativo: Dirigió la operación de turnos críticos y supervisó equipos de hasta 12 colaboradores bajo alta afluencia de público, resolviendo incidencias técnicas, administrativas y de atención en tiempo real.
-- Control de Inventarios & BPM: Lideró auditorías de existencias, control de mermas y recepción de materias primas bajo estrictos estándares BPM. Distinguido como Empleado del Mes y seleccionado para el programa de formación gerencial.
-
-EDUCACIÓN
-UNIVERSIDAD ANDRÉS BELLO (UNAB)
-Ingeniería Civil Informática (Grado en Ingeniería) | 2021 - 2027 (Estimada) | Santiago, Chile
-- Enfoque: Algoritmos Avanzados, Estructuras de Datos, Computación Científica, Inteligencia Artificial, Redes y Sistemas Distribuidos, Bases de Datos Relacionales y Arquitectura de Software.
-
-PROYECTOS TÉCNICOS DESTACADOS
-- AD-BSA: Algoritmo de Optimización Global Heurística & Auditoría HPC | Python, NumPy, SciPy (Apache 2.0)
-  Formulación de metaheurística exploratoria sobre L-SHADE/jSO con escape repulsivo cosecante. Telemetría generacional mecanicista (concentración de medida en 20D), validación pareada con Wilcoxon y detección de defecto crítico en opfunu. Aceleración de 8.0x frente a L-SHADE mediante vectorización NumPy.
-- Cuánto Rinde: PWA de Optimización Combinatoria & Data Pipeline | JavaScript, Python, Firebase
-  Motor de optimización Knapsack DP en JS (pipin333.github.io/calculadoracopete). Pipeline ETL en Python con Playwright Stealth y matriz paralela de 6 runners en GitHub Actions.
-- Toodles: Bot de Streaming de Audio, Concurrencia & RecSys | Python, Asyncio, PostgreSQL
-  github.com/Pipin333/Toodles - Streaming de baja latencia con FFmpeg y Asyncio en Linux ARM64. Persistencia relacional en PostgreSQL con transacciones atómicas en SQLAlchemy ORM y RecSys musical.
-- Whatsarr: Hub Domótico & Bot de Automatización de Medios | Node.js, TypeScript, Docker
-  github.com/Pipin333/Whatsarr - Bot en TypeScript con Baileys para control remoto del stack *Arr. Despliegue multi-instancia en Docker.
-- JD Watch Controller: Telemetría Inercial Wearable a 50 Hz | Kotlin, Wear OS, Android Jetpack
-  Fusión sensorial IMU de 6 ejes a 50 Hz continuos por UDP/WebSocket sin pérdida para reconocimiento cinemático de bailes.
-- SonicRip Studio & Retórica y Descalabro (RyD) | Web Audio API, Canvas API, NLP Cliente
-  Micro-apps cliente en feliperiquel.me/lab: procesamiento de audio DSP con ecualizador de 8 bandas y FFT en tiempo real, junto a motor heurístico NLP de transmutación estilística.
-
-HABILIDADES TÉCNICAS
-- Lenguajes: Python 3.11+ (Avanzado: NumPy, SciPy, Asyncio, Pytest), JavaScript (ES6+), TypeScript, SQL (PostgreSQL), Kotlin, HTML5/CSS3.
-- Algoritmos, Computación & Datos: Metaheurísticas (DE, L-SHADE, CMA-ES, PSO), Programación Dinámica, Vectorización Matricial, Estadística No Paramétrica, Web Scraping (Playwright Stealth), Pipelines ETL, HPC.
-- Cloud & DevOps: Linux (Ubuntu Server), Docker, PostgreSQL, Supabase, Firebase RTDB, SQLAlchemy ORM, Oracle Cloud (ARM64), Git, GitHub Actions, Vercel.
-- Frameworks Web: Astro 5, React / Next.js, Tailwind CSS, FastAPI, Node.js, Web Audio API.
-- Idiomas: Español (Nativo) | Inglés: C1 Avanzado.
-- Certificaciones: Fundamentos de IA & Machine Learning (LinkedIn Learning, 2025) | Liderazgo y Resolución de Conflictos (SENCE, 2025).`;
-
+      const plainText = buildSelectedPlainText();
       try {
         await navigator.clipboard.writeText(plainText);
         const originalText = copyLabel.textContent;
@@ -570,4 +911,7 @@ HABILIDADES TÉCNICAS
       }
     });
   }
+
+  // Apply default 1-page selection on page load
+  applyPreset('one-page');
 </script>

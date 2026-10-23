@@ -5,8 +5,8 @@
 - Nombre: Felipe Riquelme Salvo
 - Profesión: Ingeniero Civil en Informática (UNAB)
 - [Sitio web](https://feliperiquel.me): portafolio y laboratorio interactivo.
-- [Currículum Vitae (ATS)](https://feliperiquel.me/cv): versión web estructurada para reclutadores.
-- [Descargar CV en PDF](https://feliperiquel.me/cv-felipe-riquelme.pdf): documento vectorial de 8.7 KB optimizado para ATS.
+- [Currículum Vitae](https://feliperiquel.me/cv): versión web estructurada y personalizable para reclutadores.
+- [Descargar CV en PDF](https://feliperiquel.me/cv-felipe-riquelme.pdf): documento vectorial de alta fidelidad.
 - [GitHub](https://github.com/Pipin333): repositorios open source.
 - [LinkedIn](https://linkedin.com/in/friquelmes): perfil profesional.
 - Correo: feliperiquelme34@gmail.com / f.riquelmesalvo@uandresbello.edu
@@ -22,3 +22,4 @@
 - [SonicRip Studio](https://feliperiquel.me/lab/sonicrip): Suite de audio en navegador con ecualizador paramétrico de 8 bandas (BiquadFilterNode), distorsión Lo-Fi Bitcrusher, analizador FFT y generador batch para yt-dlp.
 - [Retórica y Descalabro](https://feliperiquel.me/lab/retorica): Transmutador lingüístico de jerga coloquial a tratados decimonónicos y diplomacia barroca. Código en [GitHub](https://github.com/Pipin333/retorica-y-descalabro).
 - [Cuánto Rinde](https://feliperiquel.me/lab/copete): Optimizador logístico y presupuestario en $ CLP para juntas y eventos con desglose para WhatsApp. Código en [GitHub](https://github.com/Pipin333/calculadoracopete).
+- [Ni Idea](https://feliperiquel.me/lab/quiz): Party game multijugador en tiempo real con salas efímeras, WebSockets, Cloudflare Durable Objects y 3 modos de juego rotativos (Trivia, Ese Eres Tú y Pinturillo en Canvas). Código en [GitHub](https://github.com/Pipin333/niideaapp).

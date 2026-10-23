@@ -103,5 +103,22 @@ export const projects: Project[] = [
       decisions: "Se formuló un operador de mutación tripartito (Atracción Elite + Escape Cosecante + Perturbación Diferencial) con memorias de Lehmer y LPSR. Tras una auditoría exhaustiva de reproducibilidad, la telemetría reveló que en D >= 20 la distancia euclidiana escala como O(sqrt(D) * sigma), manteniendo al operador inactivo en el 99.5% de generaciones. Además, se detectó un defecto matemático en la librería opfunu (Schwefel modificado) que creaba mínimos globales ficticios (-553.79), invalidando métricas previas y motivando un protocolo PoC pareado estricto (360 corridas, Wilcoxon y corrección de Holm-Bonferroni).",
       whyShown: "Acredita honestidad intelectual y rigor analítico en computación científica: no solo diseñar metaheurísticas, sino auditar matemáticamente su formulación, instrumentar telemetría paso a paso para explicar causas raíz en vez de suponer ventajas teóricas, descubrir fallos críticos en librerías científicas upstream y reportar hallazgos con transparencia metodológica."
     }
+  },
+  {
+    id: "niidea",
+    title: "Ni Idea",
+    category: "Sistemas Distribuidos & Party Game Edge",
+    tldr: "Consola de party game en tiempo real para 16 jugadores sobre Cloudflare Durable Objects, WebSockets y Canvas.",
+    description: "Consola multijugador interactiva en tiempo real sobre la red Edge de Cloudflare con PartyServer (Durable Objects), WebSockets y Astro. Permite a hasta 16 jugadores conectarse al instante mediante PIN de 4 caracteres desde su navegador móvil para rondas de Trivia Rush, votación social 'Ese Eres Tú' y lienzo táctil colaborativo 'Pinturillo' con coordenadas vectoriales muestreadas a 30 Hz.",
+    tags: ["Cloudflare Durable Objects", "PartyServer", "WebSockets", "TypeScript", "Astro 5", "HTML5 Canvas", "Tailwind CSS"],
+    githubUrl: "https://github.com/Pipin333/niideaapp",
+    license: "MIT",
+    statusBadge: "En Vivo / Edge",
+    accentBadgeColor: "text-emerald-400 border-emerald-500/30 bg-emerald-950/40",
+    rationale: {
+      origin: "Los party games tradicionales exigen descargar aplicaciones pesadas, crear cuentas de usuario o tolerar publicidad intrusiva, fragmentando reuniones sociales y dinámicas grupales.",
+      decisions: "Se implementó el patrón de actores distribuidos mediante Cloudflare Durable Objects y WebSockets, manteniendo el estado de sala en memoria en el borde más cercano con latencia mínima. Integra proyección asimétrica de estado anti-trampas (la palabra o respuesta correcta no viaja a adivinadores), watchdog anti-AFK de 15 segundos y reconexión transparente sin pérdida de puntuación mediante sessionToken.",
+      whyShown: "Evidencia dominio de arquitecturas reactivas en tiempo real con WebSockets, consistencia de estado distribuido en el edge con Cloudflare Durable Objects y desarrollo de experiencias web colaborativas con cero fricción de adopción."
+    }
   }
 ];

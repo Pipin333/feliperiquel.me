@@ -101,3 +101,18 @@
     display: none;
   }
 }
+
+/* Reglas universales para medios de impresión (Cero artefactos de UI interactiva en papel/PDF) */
+@media print {
+  .no-print,
+  .print\:hidden,
+  #dynamic-dock-root,
+  #dock-cli-panel,
+  .dock-ambient-glow,
+  #dynamic-dock-bar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
