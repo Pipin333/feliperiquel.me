@@ -14,7 +14,7 @@ El sitio integra un playground de micro-aplicaciones y experimentos que se ejecu
    - Transmutador ontológico de lenguaje cotidiano hacia prosa decimonónica, cancillería diplomática y culteranismo barroco, con motor dual: heurísticas locales instantáneas y motor neuronal LLM (**BYOK** con Groq / Llama 3.3 70B, OpenRouter y Ollama) respaldado por un proxy serverless seguro anti-SSRF.
 3. **Cuánto Rinde (`/lab/copete` - Repo: `calculadoracopete`):**
    - Optimizador logístico y presupuestario para eventos y juntas en Chile. Cálculo de destilados, cerveza, mixers y hielo con cuota por persona en \$ CLP y exportación formateada a WhatsApp.
-4. **Quiz In-House (`/lab/quiz`):**
+4. **Ni Idea (`/lab/quiz`):**
    - Motor de trivia interactiva en tiempo real sin anuncios ni paywalls con temporizador de cuenta regresiva, racha de puntos y generador de retos.
 
 ---
