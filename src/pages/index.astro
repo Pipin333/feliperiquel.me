@@ -7,6 +7,7 @@ import LabShowcase from '../components/LabShowcase.astro';
 import WorkShowcase from '../components/WorkShowcase.astro';
 import AboutMe from '../components/AboutMe.astro';
 import ContactGateway from '../components/ContactGateway.astro';
+import SectionDivider from '../components/SectionDivider.astro';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -17,10 +18,15 @@ import Footer from '../components/Footer.astro';
   <Header />
   <main id="main-content" class="flex-1">
     <Hero />
+    <SectionDivider variant="cyan" />
     <LabShowcase />
+    <SectionDivider />
     <WorkShowcase />
+    <SectionDivider />
     <AboutMe />
+    <SectionDivider />
     <ContactGateway />
   </main>
+  <SectionDivider />
   <Footer />
 </Layout>
