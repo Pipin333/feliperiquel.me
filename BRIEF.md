@@ -31,7 +31,7 @@ Cuatro herramientas ejecutables directamente en el cliente:
 
 ### Proyectos de Ingeniería y Repositorios (#proyectos)
 Cinco proyectos reales con pestaña interactiva "Por qué":
-1. Toodles: Bot de Telegram para orquestación de descargas multimedia hacia Plex.
+1. Toodles: Bot de Discord para streaming de audio desde YouTube y sistema de recomendación musical inteligente con ML.
 2. Whatsarr: Conversational bridge en WhatsApp para solicitudes de series y películas con Sonarr, Radarr y Plex.
 3. UniCalendar AI: Aplicación web de ingesta curricular multiformato y sincronización inteligente con Google Calendar.
 4. JD Watch Controller: Captura de telemetría inercial y hápticos en Wear OS para videojuegos de ritmo.
