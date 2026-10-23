@@ -7,6 +7,16 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://feliperiquel.me',
   adapter: vercel(),
+  build: {
+    // CSP estricta de estilos: todo el CSS va a archivos externos, nunca inline
+    inlineStylesheets: 'always'
+  },
+  vite: {
+    build: {
+      // CSP estricta de scripts: cero scripts inline en el HTML (limite de inline en 0)
+      assetsInlineLimit: 0
+    }
+  },
   integrations: [
     tailwind(),
     sitemap({
@@ -17,7 +27,7 @@ export default defineConfig({
     '/mantenimiento': '/mantencion'
   },
   security: {
-    checkOrigin: false
+    checkOrigin: true
   },
   server: {
     port: 4321,
