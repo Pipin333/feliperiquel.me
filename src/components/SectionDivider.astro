@@ -1,0 +1,17 @@
+---
+// src/components/SectionDivider.astro
+interface Props {
+  variant?: 'soft' | 'cyan';
+  maxWidthClass?: string;
+}
+
+const { variant = 'soft', maxWidthClass = 'max-w-4xl' } = Astro.props;
+---
+
+<div class={`w-full ${maxWidthClass} mx-auto px-4 sm:px-6 pointer-events-none select-none`} aria-hidden="true">
+  {variant === 'cyan' ? (
+    <div class="h-[1px] w-full bg-[linear-gradient(90deg,transparent_0%,#1B2338_25%,rgba(0,210,255,0.35)_50%,#1B2338_75%,transparent_100%)]"></div>
+  ) : (
+    <div class="h-[1px] w-full bg-[linear-gradient(90deg,transparent_0%,#1B2338_25%,#253350_50%,#1B2338_75%,transparent_100%)]"></div>
+  )}
+</div>
