@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
@@ -8,17 +8,17 @@ export default defineConfig({
   site: 'https://feliperiquel.me',
   adapter: vercel(),
   build: {
-    // CSP estricta de estilos: todo el CSS va a archivos externos, nunca inline
-    inlineStylesheets: 'always'
+    // En Astro 7 + Tailwind 4, todo el CSS se compila a archivo externo (.css)
+    inlineStylesheets: 'never'
   },
   vite: {
+    plugins: [tailwindcss()],
     build: {
       // CSP estricta de scripts: cero scripts inline en el HTML (limite de inline en 0)
       assetsInlineLimit: 0
     }
   },
   integrations: [
-    tailwind(),
     sitemap({
       filter: (page) => !page.includes('/mantencion') && !page.includes('/ni-idea')
     })

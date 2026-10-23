@@ -68,6 +68,9 @@ npm run dev
 # Compilar para producción (Vercel Ready)
 npm run build
 
+# Ejecutar validación y sitemap diff (QA Gate)
+npm test
+
 # Previsualizar el build estático
 npm run preview
 
