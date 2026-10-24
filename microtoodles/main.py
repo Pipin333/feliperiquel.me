@@ -25,7 +25,7 @@ logger = logging.getLogger("microtoodles.main")
 
 settings = get_settings()
 db = Database(settings.DATABASE_PATH)
-resolver = AudioResolver(db)
+resolver = AudioResolver(db, settings)
 radio_engine = RadioEngine(settings, db, resolver)
 spotify_client = SpotifyClient(settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_CLIENT_SECRET)
 scheduler = AsyncIOScheduler()

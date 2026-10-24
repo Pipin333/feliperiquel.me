@@ -56,6 +56,10 @@ class Settings(BaseSettings):
         default="ffmpeg",
         description="Ruta o nombre del ejecutable de FFmpeg en el sistema.",
     )
+    PROXY_LIST: str = Field(
+        default="",
+        description="Lista separada por comas de proxies (SOCKS5/HTTP) para eludir bloqueos de datacenter.",
+    )
     ENV: str = Field(
         default="development",
         description="Entorno de ejecución (development, staging, production).",

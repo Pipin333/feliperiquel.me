@@ -6,6 +6,7 @@ la tubería de streaming con FFmpeg y la distribución en tiempo real a clientes
 
 import asyncio
 import logging
+import os
 import shutil
 import time
 from typing import AsyncGenerator
@@ -21,13 +22,15 @@ logger = logging.getLogger("microtoodles.engine")
 class AudioResolver:
     """Resuelve URLs directas de streaming de audio a partir de metadatos de canciones."""
 
-    def __init__(self, db: Database) -> None:
+    def __init__(self, db: Database, settings: Settings | None = None) -> None:
         """Inicializa el resolvedor de audio.
 
         Args:
             db: Instancia de la base de datos para consulta y almacenamiento en caché.
+            settings: Configuración opcional con lista de proxies de rescate.
         """
         self.db = db
+        self.settings = settings
 
     async def resolve_audio_url(self, track: Track) -> str | None:
         """Obtiene la URL directa de streaming para una pista, consultando caché o yt-dlp.
@@ -42,33 +45,55 @@ class AudioResolver:
         if cached_url:
             return cached_url
 
-        query = f"ytsearch1:{track.artist} - {track.title} audio"
+        search_queries = [
+            f"ytsearch1:{track.artist} - {track.title} audio",
+            f"scsearch1:{track.artist} - {track.title}",
+        ]
         logger.info(f"Resolviendo audio para '{track.artist} - {track.title}' vía yt-dlp...")
 
-        def _extract() -> dict | None:
+        proxies = [
+            p.strip() for p in self.settings.PROXY_LIST.split(",") if p.strip()
+        ] if (self.settings and self.settings.PROXY_LIST) else []
+        candidates = [None] + proxies
+
+        def _extract(target_query: str, proxy_url: str | None = None) -> dict | None:
+            cookie_path = "cookies.txt" if os.path.exists("cookies.txt") else None
             ydl_opts = {
-                "format": "bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio",
+                "format": "bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best",
                 "extract_flat": False,
                 "skip_download": True,
                 "quiet": True,
                 "no_warnings": True,
                 "nocheckcertificate": True,
                 "noplaylist": True,
-                "default_search": "ytsearch1",
+                "cookiefile": cookie_path,
+                "proxy": proxy_url,
+                "extractor_args": {
+                    "youtube": {
+                        "player_client": ["android", "ios", "mweb", "web"]
+                    }
+                },
             }
             try:
                 with YoutubeDL(ydl_opts) as ydl:
-                    info = ydl.extract_info(query, download=False)
+                    info = ydl.extract_info(target_query, download=False)
                     if not info:
                         return None
                     if "entries" in info and info["entries"]:
                         return info["entries"][0]
                     return info
             except Exception as exc:
-                logger.error(f"Fallo en extracción con yt-dlp para '{query}': {exc}")
+                logger.warning(f"Fallo en extracción yt-dlp con '{target_query}' (proxy={bool(proxy_url)}): {exc}")
                 return None
 
-        entry = await asyncio.to_thread(_extract)
+        entry = None
+        for q in search_queries:
+            for candidate_proxy in candidates:
+                entry = await asyncio.to_thread(_extract, q, candidate_proxy)
+                if entry and entry.get("url"):
+                    break
+            if entry and entry.get("url"):
+                break
         if not entry or not entry.get("url"):
             logger.warning(f"No se encontró flujo de audio para '{track.title}'")
             return None
@@ -271,7 +296,7 @@ class RadioEngine:
                         pass
                     continue
 
-                # Comando FFmpeg: Lectura a velocidad nativa (-re) y copia directa Opus en contenedor Ogg
+                # Comando FFmpeg: Lectura a velocidad nativa (-re) y encoding ultraliviano a Opus (audio/ogg)
                 ffmpeg_cmd = [
                     ffmpeg_bin,
                     "-re",
@@ -279,7 +304,9 @@ class RadioEngine:
                     audio_url,
                     "-vn",
                     "-c:a",
-                    "copy",
+                    "libopus",
+                    "-b:a",
+                    "128k",
                     "-f",
                     "ogg",
                     "-",
@@ -288,7 +315,7 @@ class RadioEngine:
                 proc = await asyncio.create_subprocess_exec(
                     *ffmpeg_cmd,
                     stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.DEVNULL,
+                    stderr=asyncio.subprocess.PIPE,
                 )
 
                 try:

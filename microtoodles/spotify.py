@@ -1,12 +1,17 @@
-"""Cliente asíncrono para interactuar con la Web API de Spotify.
+"""Cliente asíncrono para interactuar con Spotify.
 
-Implementa el flujo de autorización Client Credentials para consultar
-playlists públicas y extraer metadatos estructurados de canciones.
+Implementa autenticación mediante Client Credentials Flow y un extractor de alta
+resiliencia que recurre al embed público para evitar bloqueos por cambios de API.
 """
 
+import json
+import logging
+import re
 import time
 import httpx
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger("microtoodles.spotify")
 
 
 class Track(BaseModel):
@@ -85,62 +90,122 @@ class SpotifyClient:
     async def fetch_playlist_tracks(self, playlist_id: str) -> list[Track]:
         """Descarga y pagina todos los temas de una playlist de Spotify.
 
+        Intenta primero la Web API oficial. Si responde con error (por ejemplo
+        restricciones de scope en playlists públicas), activa automáticamente el
+        extractor de embed público de alta resiliencia.
+
         Args:
             playlist_id: ID alfanumérico de la playlist en Spotify.
 
         Returns:
             list[Track]: Lista de canciones normalizadas con metadatos completos.
-
-        Raises:
-            RuntimeError: Si la petición a la API falla o la playlist no existe.
         """
         if not playlist_id:
             return []
 
-        token = await self.get_access_token()
-        headers = {"Authorization": f"Bearer {token}"}
-        url = f"{self.API_BASE_URL}/playlists/{playlist_id}/tracks?limit=100"
-
         client = await self._get_client()
-        tracks: list[Track] = []
-
         try:
-            while url:
-                response = await client.get(url, headers=headers)
-                response.raise_for_status()
-                payload = response.json()
+            # 1. Intento primario con Web API
+            try:
+                token = await self.get_access_token()
+                headers = {"Authorization": f"Bearer {token}"}
+                url = f"{self.API_BASE_URL}/playlists/{playlist_id}/tracks?limit=100"
+                tracks: list[Track] = []
 
-                for item in payload.get("items", []):
-                    raw_track = item.get("track")
-                    if not raw_track or not raw_track.get("id"):
-                        continue
+                while url:
+                    response = await client.get(url, headers=headers)
+                    response.raise_for_status()
+                    payload = response.json()
 
-                    track_id = str(raw_track["id"])
-                    title = str(raw_track.get("name", "Unknown Title"))
-                    artists_list = [a.get("name", "") for a in raw_track.get("artists", []) if a.get("name")]
-                    artist = ", ".join(artists_list) if artists_list else "Unknown Artist"
+                    for item in payload.get("items", []):
+                        raw_track = item.get("track")
+                        if not raw_track or not raw_track.get("id"):
+                            continue
 
-                    album_data = raw_track.get("album", {})
-                    album = str(album_data.get("name", ""))
+                        track_id = str(raw_track["id"])
+                        title = str(raw_track.get("name", "Unknown Title"))
+                        artists_list = [a.get("name", "") for a in raw_track.get("artists", []) if a.get("name")]
+                        artist = ", ".join(artists_list) if artists_list else "Unknown Artist"
 
-                    images = album_data.get("images", [])
-                    cover_url = images[0].get("url", "") if images else ""
+                        album_data = raw_track.get("album", {})
+                        album = str(album_data.get("name", ""))
 
-                    duration_ms = int(raw_track.get("duration_ms", 0))
+                        images = album_data.get("images", [])
+                        cover_url = images[0].get("url", "") if images else ""
+                        duration_ms = int(raw_track.get("duration_ms", 0))
 
-                    tracks.append(
-                        Track(
-                            id=track_id,
-                            title=title,
-                            artist=artist,
-                            album=album,
-                            cover_url=cover_url,
-                            duration_ms=duration_ms,
+                        tracks.append(
+                            Track(
+                                id=track_id,
+                                title=title,
+                                artist=artist,
+                                album=album,
+                                cover_url=cover_url,
+                                duration_ms=duration_ms,
+                            )
                         )
-                    )
+                    url = payload.get("next")
 
-                url = payload.get("next")
-            return tracks
+                if tracks:
+                    return tracks
+            except Exception as api_err:
+                logger.info(f"Web API de Spotify no disponible para tracks ({api_err}). Activando extractor público...")
+
+            # 2. Fallback de alta resiliencia vía Embed Público
+            return await self._fetch_via_public_embed(client, playlist_id)
         finally:
             if self._http_client is None:
                 await client.aclose()
+
+    async def _fetch_via_public_embed(self, client: httpx.AsyncClient, playlist_id: str) -> list[Track]:
+        """Extrae canciones desde el componente embed público de Spotify.
+
+        Args:
+            client: Cliente HTTP asíncrono.
+            playlist_id: ID de la playlist.
+
+        Returns:
+            list[Track]: Lista de canciones normalizadas.
+        """
+        embed_url = f"https://open.spotify.com/embed/playlist/{playlist_id}"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        }
+        response = await client.get(embed_url, headers=headers, follow_redirects=True)
+        response.raise_for_status()
+
+        match = re.search(r'__NEXT_DATA__.*?>(.*?)</script>', response.text)
+        if not match:
+            logger.warning("No se encontró el bloque __NEXT_DATA__ en la página embed de Spotify.")
+            return []
+
+        data = json.loads(match.group(1))
+        entity = data.get("props", {}).get("pageProps", {}).get("state", {}).get("data", {}).get("entity", {})
+        track_list = entity.get("trackList", [])
+
+        cover_sources = entity.get("coverArt", {}).get("sources", [])
+        default_cover = cover_sources[0].get("url", "") if cover_sources else ""
+        album_name = entity.get("name", "Spotify Playlist")
+
+        tracks: list[Track] = []
+        for item in track_list:
+            uri = str(item.get("uri", ""))
+            track_id = uri.split(":")[-1] if uri else str(item.get("uid", ""))
+            title = str(item.get("title", "Unknown Title"))
+            artist = str(item.get("subtitle", "Unknown Artist"))
+            duration_ms = int(item.get("duration", 0))
+
+            tracks.append(
+                Track(
+                    id=track_id,
+                    title=title,
+                    artist=artist,
+                    album=album_name,
+                    cover_url=default_cover,
+                    duration_ms=duration_ms,
+                )
+            )
+
+        logger.info(f"Extractor público de Spotify recuperó exitosamente {len(tracks)} canciones.")
+        return tracks
