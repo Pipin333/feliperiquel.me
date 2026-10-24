@@ -296,7 +296,7 @@ class RadioEngine:
                         pass
                     continue
 
-                # Comando FFmpeg: Lectura a velocidad nativa (-re) y encoding ultraliviano a Opus (audio/ogg)
+                # Comando FFmpeg: Lectura a velocidad nativa (-re) y encoding MP3 ultra-compatible y auto-sincronizado
                 ffmpeg_cmd = [
                     ffmpeg_bin,
                     "-re",
@@ -304,11 +304,11 @@ class RadioEngine:
                     audio_url,
                     "-vn",
                     "-c:a",
-                    "libopus",
+                    "libmp3lame",
                     "-b:a",
                     "128k",
                     "-f",
-                    "ogg",
+                    "mp3",
                     "-",
                 ]
 

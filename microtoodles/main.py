@@ -127,10 +127,10 @@ async def get_now_playing() -> dict:
 
 @app.get("/api/stream", summary="Transmisión continua de audio en chunks")
 async def stream_audio() -> StreamingResponse:
-    """Emite un flujo continuo de paquetes de audio Ogg/Opus para el reproductor web."""
+    """Emite un flujo continuo de paquetes de audio MP3 para el reproductor web."""
     return StreamingResponse(
         radio_engine.stream_audio_generator(),
-        media_type="audio/ogg; codecs=opus",
+        media_type="audio/mpeg",
         headers={
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "Pragma": "no-cache",

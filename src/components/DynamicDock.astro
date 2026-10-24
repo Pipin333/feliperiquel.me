@@ -255,7 +255,6 @@ import Icon from './Icon.astro';
   <audio
     id="microtoodles-stream"
     preload="none"
-    crossorigin="anonymous"
     data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || (import.meta.env.PROD ? "https://radio.feliperiquel.me" : "http://localhost:8080")}
   ></audio>
 
@@ -763,7 +762,7 @@ import Icon from './Icon.astro';
         if (radioTitle) radioTitle.textContent = data.track.title || 'En Vivo';
         if (radioArtist) radioArtist.textContent = data.track.artist || 'Desconocido';
         if (radioStatusBadge) {
-          radioStatusBadge.textContent = 'Opus 128k • En Vivo';
+          radioStatusBadge.textContent = '128k MP3 • En Vivo';
           radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/40';
         }
         if (data.track.cover_url && radioCover) {
@@ -814,10 +813,11 @@ import Icon from './Icon.astro';
         await radioAudio.play();
         setPlayingUI(true);
         startPolling();
-      } catch {
+      } catch (err) {
+        console.error('[MicroToodles Playback Error]:', err);
         setPlayingUI(false, true);
-        if (radioTitle) radioTitle.textContent = 'Radio fuera de línea';
-        if (radioArtist) radioArtist.textContent = 'Inicia el backend en Docker';
+        if (radioTitle) radioTitle.textContent = 'Error al reproducir';
+        if (radioArtist) radioArtist.textContent = 'Reintenta en unos segundos';
       }
     } else {
       radioAudio.pause();
