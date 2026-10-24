@@ -51,6 +51,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Gestiona el ciclo de vida de la aplicación, bases de datos y workers."""
     logger.info("Iniciando MicroToodles Engine...")
     await db.init_db()
+    # Purgar caché previa para asegurar resolución de pistas limpias de estudio
+    cleared = await db.clear_all_stream_cache()
+    if cleared:
+        logger.info(f"Caché de audio anterior purgada ({cleared} registros eliminados).")
 
     # Ejecutar primera sincronización en segundo plano
     if settings.SPOTIFY_PLAYLIST_ID:

@@ -5,8 +5,10 @@ la tubería de streaming con FFmpeg y la distribución en tiempo real a clientes
 """
 
 import asyncio
+import difflib
 import logging
 import os
+import re
 import shutil
 import time
 from typing import AsyncGenerator
@@ -32,6 +34,64 @@ class AudioResolver:
         self.db = db
         self.settings = settings
 
+    def _score_candidate(self, candidate: dict, target_track: Track) -> float:
+        """Calcula una puntuación de precisión para un resultado de búsqueda de audio.
+
+        Descarta versiones en vivo, bootlegs y recopilaciones de álbum completo,
+        priorizando la duración exacta del master de Spotify y coincidencia de artista.
+
+        Args:
+            candidate: Metadatos devueltos por yt-dlp.
+            target_track: Pista de Spotify original con título, artista y duración.
+
+        Returns:
+            float: Puntuación de fidelidad. Valores negativos altos indican versiones descartadas.
+        """
+        title = str(candidate.get("title", "")).lower()
+        uploader = str(candidate.get("uploader", "")).lower()
+        channel = str(candidate.get("channel", "")).lower()
+        duration = float(candidate.get("duration") or 0)
+        target_dur = target_track.duration_ms / 1000.0
+
+        target_title_lower = target_track.title.lower()
+        target_artist_lower = target_track.artist.lower()
+
+        # Palabras prohibidas que arruinan la experiencia (conciertos, covers, bootlegs, etc.)
+        forbidden = [
+            "live", "en vivo", "concert", "concierto", "cover", "tributo",
+            "tribute", "full album", "album completo", "remix", "karaoke",
+            "slowed", "reverb", "acapella", "instrumental", "acoustic", "acustico"
+        ]
+        for word in forbidden:
+            if word in title and word not in target_title_lower:
+                return -1000.0
+
+        # Si la duración difiere por más de 30 segundos, es muy probable que sea una versión extendida o errónea
+        dur_diff = abs(duration - target_dur) if duration > 0 else 50.0
+        if dur_diff > 30.0:
+            return -500.0 - dur_diff
+
+        # Limpiar el título del candidato para comparar similitud de pista
+        clean_title = re.sub(r'from\s+.*|\(.*?\)|\[.*?\]', '', title.replace(target_artist_lower, '')).replace('-', ' ').strip()
+        title_similarity = difflib.SequenceMatcher(None, target_title_lower, clean_title).ratio()
+
+        # Si el título del candidato no coincide en lo absoluto con la canción buscada (ej. otra canción del mismo álbum)
+        if title_similarity < 0.35 and target_title_lower not in title:
+            return -800.0
+
+        # Puntuación base en función de cercanía de duración y similitud de título
+        score = 80.0 - (dur_diff * 4.0) + (title_similarity * 50.0)
+
+        # Bonificación si el artista exacto aparece en el título o uploader
+        if target_artist_lower in title or target_artist_lower in uploader or target_artist_lower in channel:
+            score += 30.0
+
+        # Bonificación para canales oficiales de la disquera o Topic
+        if "topic" in uploader or "topic" in channel or "official audio" in title:
+            score += 35.0
+
+        return score
+
     async def resolve_audio_url(self, track: Track) -> str | None:
         """Obtiene la URL directa de streaming para una pista, consultando caché o yt-dlp.
 
@@ -46,8 +106,8 @@ class AudioResolver:
             return cached_url
 
         search_queries = [
-            f"ytsearch1:{track.artist} - {track.title} audio",
-            f"scsearch1:{track.artist} - {track.title}",
+            f"scsearch10:{track.artist} - {track.title}",
+            f"ytsearch5:{track.artist} - {track.title} audio",
         ]
         logger.info(f"Resolviendo audio para '{track.artist} - {track.title}' vía yt-dlp...")
 
@@ -56,7 +116,7 @@ class AudioResolver:
         ] if (self.settings and self.settings.PROXY_LIST) else []
         candidates = [None] + proxies
 
-        def _extract(target_query: str, proxy_url: str | None = None) -> dict | None:
+        def _extract(target_query: str, proxy_url: str | None = None) -> list[dict]:
             cookie_path = "cookies.txt" if os.path.exists("cookies.txt") else None
             ydl_opts = {
                 "format": "bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio/best",
@@ -78,28 +138,42 @@ class AudioResolver:
                 with YoutubeDL(ydl_opts) as ydl:
                     info = ydl.extract_info(target_query, download=False)
                     if not info:
-                        return None
+                        return []
                     if "entries" in info and info["entries"]:
-                        return info["entries"][0]
-                    return info
+                        return [e for e in info["entries"] if e and e.get("url")]
+                    if info.get("url"):
+                        return [info]
+                    return []
             except Exception as exc:
                 logger.warning(f"Fallo en extracción yt-dlp con '{target_query}' (proxy={bool(proxy_url)}): {exc}")
-                return None
+                return []
 
-        entry = None
+        all_candidates: list[dict] = []
         for q in search_queries:
             for candidate_proxy in candidates:
-                entry = await asyncio.to_thread(_extract, q, candidate_proxy)
-                if entry and entry.get("url"):
+                entries = await asyncio.to_thread(_extract, q, candidate_proxy)
+                if entries:
+                    all_candidates.extend(entries)
                     break
-            if entry and entry.get("url"):
+            if all_candidates:
                 break
-        if not entry or not entry.get("url"):
+
+        if not all_candidates:
             logger.warning(f"No se encontró flujo de audio para '{track.title}'")
             return None
 
-        stream_url = str(entry["url"])
-        format_id = str(entry.get("format_id", ""))
+        # Ordenar candidatos por puntuación de fidelidad de audio
+        scored = [(self._score_candidate(c, track), c) for c in all_candidates]
+        scored.sort(key=lambda x: x[0], reverse=True)
+
+        best_score, best_entry = scored[0]
+        logger.info(
+            f"Pista seleccionada para '{track.artist} - {track.title}': "
+            f"'{best_entry.get('title')}' (dur={best_entry.get('duration')}s, score={best_score:.1f})"
+        )
+
+        stream_url = str(best_entry["url"])
+        format_id = str(best_entry.get("format_id", ""))
 
         # Guardar en caché con TTL de 4 horas
         await self.db.set_cached_url(

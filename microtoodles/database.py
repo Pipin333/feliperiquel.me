@@ -304,3 +304,14 @@ class Database:
             queue.append(tracks[(current_idx + i) % len(tracks)])
 
         return queue
+
+    async def clear_all_stream_cache(self) -> int:
+        """Elimina todas las URLs resueltas de la tabla de caché para forzar re-resolución limpia.
+
+        Returns:
+            int: Número de registros eliminados.
+        """
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute("DELETE FROM stream_cache")
+            await db.commit()
+            return cursor.rowcount
