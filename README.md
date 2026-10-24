@@ -76,6 +76,9 @@ npm test
 # Previsualizar el build estático
 npm run preview
 
+# Regenerar tarjetas Open Graph por ruta (1200x630)
+npm run generate:og
+
 # Instalar Git hooks locales (pre-push y commit-msg)
 npm run setup:hooks
 ```
