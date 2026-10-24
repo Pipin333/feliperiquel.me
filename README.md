@@ -146,6 +146,7 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   └── styles/
 │       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
 ├── docs/
+│   ├── adr/                      # Architecture Decision Records (ADRs)
 │   └── ni-idea/                  # Documentos directores congelados (BRIEF, BRAND y README)
 ├── scripts/
 │   └── supabase-schema.sql       # Esquema PostgreSQL con tabla contact_messages y RLS
