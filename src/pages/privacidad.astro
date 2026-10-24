@@ -26,7 +26,7 @@ import Icon from '../components/Icon.astro';
         Política de Privacidad
       </h1>
       <p class="font-mono text-xs text-slate-400">
-        Última actualización: 19 de octubre de 2026 // Versión 1.1
+        Última actualización: 24 de octubre de 2026 // Versión 1.2
       </p>
     </header>
 
@@ -39,6 +39,9 @@ import Icon from '../components/Icon.astro';
         <p class="mb-3">
           En <strong class="text-white">feliperiquel.me</strong> la privacidad no es un documento decorativo, sino un principio de diseño arquitectónico. Este sitio web no comercializa información personal, no emplea redes de rastreo entre sitios (ad-tracking), no aloja banners publicitarios invasivos ni transfiere datos de comportamiento a corredores de datos (data brokers).
         </p>
+        <p class="mb-3">
+          Asimismo, el sitio no realiza conexiones a redes de distribución de fuentes de terceros: las tipografías (Space Grotesk, Inter y Fira Code) se sirven directamente desde el dominio local de feliperiquel.me, impidiendo cualquier recolección de direcciones IP o metadatos de navegación por parte de proveedores externos.
+        </p>
         <p>
           La navegación es libre, abierta y respetuosa de las libertades digitales de cada visitante.
         </p>
@@ -49,12 +52,13 @@ import Icon from '../components/Icon.astro';
           2. Procesamiento Cliente en El Laboratorio (/lab)
         </h2>
         <p class="mb-3">
-          Las herramientas interactivas alojadas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">El Laboratorio</a> (como SonicRip Studio, Retórica y Descalabro y Calculadora de Copete) han sido concebidas para ejecutarse prioritariamente del lado del cliente (<em class="text-slate-200">client-side</em>) a través de las APIs nativas del navegador (Web Audio API, JavaScript y TypeScript).
+          Las herramientas interactivas alojadas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">El Laboratorio</a> (como SonicRip Studio, Retórica y Descalabro, Ni Idea y Cuánto Rinde) han sido concebidas para ejecutarse prioritariamente del lado del cliente (<em class="text-slate-200">client-side</em>) a través de las APIs nativas del navegador (Web Audio API, WebSockets, JavaScript y TypeScript).
         </p>
-        <ul class="list-disc pl-5 space-y-2 text-xs sm:text-sm text-slate-300 font-mono">
-          <li><strong>Audio DSP (SonicRip Studio):</strong> Los archivos de audio que cargas para ecualización o análisis FFT se procesan estrictamente en la memoria RAM de tu dispositivo. No son subidos ni almacenados en servidores externos.</li>
-          <li><strong>Calculadora Logística:</strong> Los presupuestos, listas de asistentes y estimaciones de bebidas se calculan localmente y sólo se formatean para que tú decidas compartirlos voluntariamente en tus canales privados.</li>
-          <li><strong>Procesamiento de Texto:</strong> Las entradas de texto para experimentos lingüísticos se gestionan de forma efímera durante tu sesión activa.</li>
+        <ul class="list-disc pl-5 space-y-2.5 text-xs sm:text-sm text-slate-300 font-mono">
+          <li><strong>Audio DSP (SonicRip Studio):</strong> Los archivos de audio que cargas para ecualización o análisis FFT se procesan estrictamente en la memoria RAM de tu dispositivo mediante Web Audio API. No son subidos ni almacenados en servidores externos.</li>
+          <li><strong>Party Game &amp; Salas Multijugador (Ni Idea):</strong> La sincronización en tiempo real se canaliza mediante WebSockets y memoria volátil. Las sesiones no requieren registro previo ni conservan identificadores personales persistentes tras la desconexión.</li>
+          <li><strong>Inferencia y Procesamiento de Texto (Retórica y Descalabro):</strong> El modo heurístico opera 100% en el cliente. En caso de activar inferencia neuronal BYOK opcional, las peticiones transitan por un proxy serverless seguro anti-SSRF sin persistencia en bases de datos ni retención de credenciales.</li>
+          <li><strong>Calculadora Logística (Cuánto Rinde / calculadoracopete):</strong> Los presupuestos, estimaciones de insumos y cuotas se calculan localmente en tu navegador. El módulo se encuentra en transición hacia su propia arquitectura y dominio independiente.</li>
         </ul>
       </section>
 
