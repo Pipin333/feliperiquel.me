@@ -42,6 +42,29 @@ Cada tarjeta incluye el desglose de tres preguntas:
 - Arquitectura: ¿Por qué se tomaron estas decisiones técnicas?
 - Presencia: ¿Por qué se exhibe en este portafolio?
 
+### Página Sobre Mí (/sobre-mi)
+- **Propósito**: Responder a la curiosidad genuina de quien ya navegó el sitio y quiere conocer a la persona real detrás del código, sin inflar credenciales ni inventar frases corporativas.
+- **Acción tras 90 segundos**: Lectura pura. Cero formularios forzados o llamadas a la acción agresivas.
+- **Estructura (3 bloques limpios)**:
+  1. **Bloque 1: Cabecera y Retrato Editorial**:
+     - Retrato editorial cuadrado (1:1) con esquinas redondeadas técnicas de 6px y borde de superficie.
+     - Epígrafe destacado debajo de la foto: "Ícaro se rió mientras caía, porque sabía que había tocado el sol."
+     - Presentación sincera: Felipe Riquelme, Ingeniero Civil en Informática (Santiago, Chile).
+  2. **Bloque 2: Trayectoria Real y Temple**:
+     - La escuela del trabajo real: Dunkin' (crew a subgerente 2) y KFC (crew) como forja de temple bajo presión, prolijidad, transparencia y calma operativa ante el caos.
+     - Práctica en JEJ Ingeniería: contexto corporativo, dinámicas de TI/TD y convivencia de equipo.
+     - La mentalidad ingenieril: buscarle la quinta pata al gato para resolver problemas no convencionales (conectado a la línea de los tres por qué de los proyectos).
+  3. **Bloque 3: El Rincón de Audio y Música**:
+     - La música como parte intrínseca de su vida y conexión directa con el laboratorio DSP de audio (SonicRip).
+     - El setup de audio real: Galaxy Buds FE, Samson SR850, AKG K52, NiceHCK EB2S Pro, Logitech X540, interfaz Behringer UMC22.
+     - Gustos sin etiquetas: Michael Jackson, Bad Bunny, Luis Miguel, Guns N' Roses. Álbumes emblemáticos: Thriller (1982), POST MORTEM (Dillom, 2021), Chinese Democracy (GnR, 2008), Debí Tirar Más Fotos (Bad Bunny, 2025), 20 Años (Luis Miguel, 1990).
+- **Lo que NO debe tener (Restricciones estrictas)**:
+  - Cero AI slop (prohibidas fórmulas binarias "no es X, es Y", conectores vacíos o palabras como delve, tapestry, testament, blueprint).
+  - Cero clichés de autoayuda o motivación prefabricada.
+  - Cero carruseles o sliders interactivos.
+  - Cero barras de porcentaje de habilidades.
+  - Cero em dashes y cero en dashes en cualquier texto.
+
 ### Canales de Contacto (#contacto)
 - WhatsApp directo con mensaje precargado.
 - Correo institucional `f.riquelmesalvo@uandresbello.edu` con botón de copia en un clic.
