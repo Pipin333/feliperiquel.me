@@ -16,7 +16,7 @@
 
 ### Portada y Hero
 - Frase de apertura (Opening): "Ideo soluciones sólidas hasta para el problema más mundano."
-- Oración de apoyo (Support): "En este sitio encontrarás mis proyectos destacados y mi laboratorio de pruebas. Soy Felipe Riquelme: desarrollador detallista, con foco ingenieril y recién entrando al mercado."
+- Oración de apoyo (Support): "En este sitio encontrarás mis proyectos destacados y mi laboratorio de pruebas. Soy Felipe Riquelme: desarrollador detallista, enfocado en rigor técnico y en construir software sin rodeos."
 - Acciones principales (Actions):
   - Botón primario: "Explorar el Laboratorio" (enlace a `/lab`).
   - Botón secundario: "Ver Proyectos" (ancla a `#proyectos`).
