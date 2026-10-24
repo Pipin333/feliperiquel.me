@@ -123,6 +123,8 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   └── Icon.astro            # Renderizador en build-time de íconos SVG (Bootstrap Icons)
 │   ├── pages/
 │   │   ├── index.astro           # Portafolio principal orientado a software y lab
+│   │   ├── sobre-mi.astro        # Perfil editorial, trayectoria real, templanza y música
+│   │   ├── proyectos.astro       # Catálogo completo con desglose de tres por qué
 │   │   ├── cv.astro              # Currículum interactivo bilingüe (ES/EN) listo para imprimir
 │   │   ├── mantencion.astro      # Estado 503 / Recalibración técnica y telemetría (alias /mantenimiento)
 │   │   ├── ni-idea.astro         # Alias y redirección canónica hacia /lab/quiz
