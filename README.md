@@ -112,6 +112,7 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 ```text
 ├── src/
 │   ├── components/
+│   │   ├── watermarks/           # Marcas de agua técnicas de las herramientas del Lab
 │   │   ├── Header.astro          # Navegación accesible y estado de disponibilidad
 │   │   ├── Hero.astro            # Perfil Software Engineer & Builder y pilares técnicos
 │   │   ├── LabShowcase.astro     # Destacado interactivo de las herramientas del /lab
@@ -120,6 +121,9 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   ├── ContactGateway.astro  # Canales directos y formulario conectado a /api/contact
 │   │   ├── Footer.astro          # Navegación, políticas y enlaces de pie de página
 │   │   └── Icon.astro            # Renderizador en build-time de íconos SVG (Bootstrap Icons)
+│   ├── data/
+│   │   ├── projects.ts           # Catálogo tipado de proyectos y casos de estudio
+│   │   └── tools.ts              # Catálogo tipado de herramientas y specs del Lab
 │   ├── pages/
 │   │   ├── index.astro           # Portafolio principal orientado a software y lab
 │   │   ├── sobre-mi.astro        # Perfil editorial, trayectoria real, templanza y música
@@ -144,12 +148,14 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   ├── layouts/
 │   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD (Person + WebSite) y enlace a llms.txt
 │   └── styles/
+│       ├── fonts.css             # Declaraciones @font-face para fuentes locales
 │       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
 ├── docs/
 │   └── ni-idea/                  # Documentos directores congelados (BRIEF, BRAND y README)
 ├── scripts/
 │   └── supabase-schema.sql       # Esquema PostgreSQL con tabla contact_messages y RLS
 ├── public/
+│   ├── fonts/                    # Fuentes autohospedadas (Inter, Space Grotesk, Fira Code en woff2)
 │   ├── og-image.png              # Tarjeta social de previsualización 1200x630
 │   ├── apple-touch-icon.png      # Ícono 180x180 para iOS
 │   ├── manifest.webmanifest      # Manifest web (nombre, colores, íconos)
