@@ -56,6 +56,32 @@ export const featuredTools: LabTool[] = [
     ]
   },
   {
+    id: "finflow",
+    title: "FinFlow",
+    tagline: "Terminal Financiero PWA & Ciclos de Tarjetas Offline-First",
+    description: "Control inteligente de finanzas personales, múltiples cuentas bancarias, billeteras de efectivo y tarjetas de crédito con compras en cuotas y ciclos de facturación personalizados. Cero trackers, 100% privado en LocalStorage.",
+    icon: "wallet2",
+    tags: ["React 19", "TypeScript", "Offline-First", "PWA", "LocalStorage", "Vitest"],
+    href: "/lab/finflow",
+    canonicalHref: "https://github.com/Pipin333/finflow",
+    canonicalLabel: "Repo Canónico",
+    accentColor: "text-emerald-400 border-emerald-500/40 bg-emerald-950/40",
+    badge: "PWA Offline-First",
+    highlightBadge: "Destacado del Día: Finanzas & Privacidad",
+    cardGlowClass: "border-emerald-500/50 shadow-[0_0_35px_rgba(16,185,129,0.2)]",
+    iconColorClass: "text-emerald-400 bg-emerald-950/60 border-emerald-500/40",
+    taglineClass: "font-mono text-emerald-300",
+    btnClass: "text-slate-950 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-400 hover:from-emerald-300 hover:to-teal-200 border border-emerald-200/50 shadow-[0_0_20px_rgba(16,185,129,0.35)]",
+    btnIconClass: "text-slate-950",
+    gridColor: "rgba(16, 185, 129, 0.22)",
+    ambientAuraClass: "from-emerald-500/15 via-emerald-950/5 to-transparent",
+    specs: [
+      { label: "Modelo de Datos", value: "100% LocalStorage sin servidores" },
+      { label: "Financiamiento", value: "Ciclos de corte y cuotas sin interés" },
+      { label: "Comprobantes", value: "Compresión Canvas en cliente (80KB)" }
+    ]
+  },
+  {
     id: "retorica",
     title: "Retórica y Descalabro",
     tagline: "Transmutador Ontológico & Scriptorium Medieval",

@@ -10,11 +10,13 @@ El sitio integra un playground de micro-aplicaciones y experimentos que se ejecu
 
 1. **SonicRip Studio (`/lab/sonicrip`):**
    - Procesador de audio en vivo con **Ecualizador Paramétrico de 8 Bandas** (`BiquadFilterNode`), distorsión digital Lo-Fi Bitcrusher, analizador de espectro FFT con `requestAnimationFrame` y generador de comandos por lotes para `yt-dlp`.
-2. **Retórica y Descalabro (`/lab/retorica`):**
+2. **FinFlow (`/lab/finflow` - Repo: `finflow`):**
+   - Progressive Web App (PWA) de finanzas personales *offline-first* construida en React 19 + TypeScript + Vite. Control de múltiples cuentas bancarias, efectivo, tarjetas de crédito con ciclos de facturación personalizados, simulador de compras en cuotas y compresión de comprobantes en cliente vía Canvas (80KB). Persistencia privada en `LocalStorage` sin trackers ni servidores.
+3. **Retórica y Descalabro (`/lab/retorica`):**
    - Transmutador ontológico de lenguaje cotidiano hacia prosa decimonónica, cancillería diplomática y culteranismo barroco, con motor dual: heurísticas locales instantáneas y motor neuronal LLM (**BYOK** con Groq / Llama 3.3 70B, OpenRouter y Ollama) respaldado por un proxy serverless seguro anti-SSRF.
-3. **Cuánto Rinde (`/lab/copete` - Repo: `calculadoracopete`):**
+4. **Cuánto Rinde (`/lab/copete` - Repo: `calculadoracopete`):**
    - Optimizador logístico y presupuestario para eventos y juntas en Chile. Cálculo de destilados, cerveza, mixers y hielo con cuota por persona en \$ CLP y exportación formateada a WhatsApp.
-4. **Ni Idea (`/lab/quiz`):**
+5. **Ni Idea (`/lab/quiz`):**
    - Motor de trivia interactiva en tiempo real sin anuncios ni paywalls con temporizador de cuenta regresiva, racha de puntos y generador de retos.
 
 ---

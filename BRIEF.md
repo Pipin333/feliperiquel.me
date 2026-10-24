@@ -23,11 +23,12 @@
 - Consola interactiva: Terminal compacta en la portada con comandos interactivos en vivo (`help`, `lab`, `whoami`, `contact`, `clear`).
 
 ### Módulo del Laboratorio (/lab)
-Cuatro herramientas ejecutables directamente en el cliente:
+Cinco herramientas ejecutables directamente en el cliente:
 1. SonicRip Studio: Procesador de audio y ecualizador paramétrico de 8 bandas con filtros biquad, bitcrusher digital y analizador FFT.
-2. Retórica y Descalabro: Transmutador ontológico de lenguaje cotidiano a prosa decimonónica y diplomática con simulación de teléfono descompuesto.
-3. Calculadora de Copete: Optimizador logístico y presupuestario en pesos chilenos ($ CLP) con exportación a WhatsApp.
-4. Ni Idea: Trivia interactiva cronometrada de 10 preguntas sin anuncios ni pantallas de espera.
+2. FinFlow: PWA offline-first en React 19 + TypeScript para control de finanzas personales, tarjetas de crédito, cuotas y cycles de facturación.
+3. Retórica y Descalabro: Transmutador ontológico de lenguaje cotidiano a prosa decimonónica y diplomática con simulación de teléfono descompuesto.
+4. Calculadora de Copete: Optimizador logístico y presupuestario en pesos chilenos ($ CLP) con exportación a WhatsApp.
+5. Ni Idea: Trivia interactiva cronometrada de 10 preguntas sin anuncios ni pantallas de espera.
 
 ### Proyectos de Ingeniería y Repositorios (#proyectos)
 Cinco proyectos reales con pestaña interactiva "Por qué":

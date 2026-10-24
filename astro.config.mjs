@@ -13,6 +13,15 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      proxy: {
+        '/lab/finflow': {
+          target: 'https://finflow-beta-two.vercel.app',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/lab\/finflow/, '')
+        }
+      }
+    },
     build: {
       // CSP estricta de scripts: cero scripts inline en el HTML (limite de inline en 0)
       assetsInlineLimit: 0
@@ -20,7 +29,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/mantencion') && !page.includes('/ni-idea')
+      filter: (page) => !page.includes('/mantencion') && !page.includes('/ni-idea'),
+      customPages: ['https://feliperiquel.me/lab/finflow/']
     })
   ],
   redirects: {
