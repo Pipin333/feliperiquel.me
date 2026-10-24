@@ -102,3 +102,42 @@ async def test_cors_headers():
         )
         assert response_preview.status_code == 200
         assert response_preview.headers.get("access-control-allow-origin") == preview_origin
+
+
+@pytest.mark.asyncio
+async def test_previous_track_endpoint():
+    """Valida el endpoint /api/previous-track."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post("/api/previous-track")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert data["action"] == "previous"
+        assert data["prev_track"] is not None
+
+
+@pytest.mark.asyncio
+async def test_shuffle_endpoint():
+    """Valida el endpoint /api/shuffle."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post("/api/shuffle")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert data["action"] == "shuffle"
+        assert isinstance(data["is_shuffle"], bool)
+
+
+@pytest.mark.asyncio
+async def test_seek_endpoint():
+    """Valida el endpoint /api/seek para scrubbing."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        response = await client.post("/api/seek?seconds=45.5")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert data["action"] == "seek"
+        assert data["position_seconds"] == 45.5

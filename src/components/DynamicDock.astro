@@ -187,9 +187,60 @@ import Icon from './Icon.astro';
         </div>
       </div>
 
+      <!-- Scrubbing Timeline Slider -->
+      <div class="flex items-center gap-2 select-none pt-0.5">
+        <span id="dock-radio-curr-time" class="text-[10px] text-slate-400 font-mono w-9 text-right tabular-nums">00:00</span>
+        <div class="relative flex-1 flex items-center group py-0.5">
+          <input
+            type="range"
+            id="dock-radio-scrub-bar"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="w-full h-1 bg-canvas-border hover:bg-canvas-subtle rounded-lg appearance-none cursor-pointer accent-emerald-400 focus:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 transition-colors"
+            aria-label="Posición de reproducción (Scrubbing)"
+            title="Arrastra para avanzar o retroceder"
+          />
+        </div>
+        <span id="dock-radio-total-time" class="text-[10px] text-slate-500 font-mono w-9 text-left tabular-nums">00:00</span>
+      </div>
+
       <!-- Controls Row -->
       <div class="flex items-center justify-between pt-2 border-t border-canvas-border/70 select-none">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5">
+          <!-- Shuffle Toggle Button -->
+          <button
+            type="button"
+            id="dock-radio-shuffle-btn"
+            class="flex items-center justify-center w-7 h-7 rounded-full bg-canvas-raised hover:bg-canvas-subtle border border-canvas-border text-slate-400 hover:text-white transition-all focus-visible:ring-1 focus-visible:ring-emerald-400"
+            aria-label="Modo aleatorio (Shuffle)"
+            title="Reproducción aleatoria [Desactivada]"
+            aria-pressed="false"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+          </button>
+
+          <!-- Previous Track Button -->
+          <button
+            type="button"
+            id="dock-radio-prev-btn"
+            class="flex items-center justify-center w-7 h-7 rounded-full bg-canvas-raised hover:bg-canvas-subtle border border-canvas-border text-slate-300 hover:text-white transition-colors focus-visible:ring-1 focus-visible:ring-emerald-400"
+            aria-label="Canción anterior"
+            title="Pista anterior"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="19 20 9 12 19 4 19 20"></polygon>
+              <line x1="5" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5"></line>
+            </svg>
+          </button>
+
           <!-- Play / Pause Button -->
           <button
             type="button"
@@ -671,7 +722,12 @@ import Icon from './Icon.astro';
   const radioCardPlayBtn = document.getElementById('dock-radio-card-play-btn');
   const radioCardPlayIcon = document.getElementById('dock-radio-card-play-icon');
   const radioCardPauseIcon = document.getElementById('dock-radio-card-pause-icon');
+  const radioPrevBtn = document.getElementById('dock-radio-prev-btn');
   const radioSkipBtn = document.getElementById('dock-radio-skip-btn');
+  const radioShuffleBtn = document.getElementById('dock-radio-shuffle-btn');
+  const radioScrubBar = document.getElementById('dock-radio-scrub-bar') as HTMLInputElement | null;
+  const radioCurrTime = document.getElementById('dock-radio-curr-time');
+  const radioTotalTime = document.getElementById('dock-radio-total-time');
   const radioVolumeSlider = document.getElementById('dock-radio-volume') as HTMLInputElement | null;
   const radioStaticIcon = document.getElementById('dock-radio-static-icon');
   const radioVumeter = document.getElementById('dock-radio-vumeter');
@@ -689,15 +745,49 @@ import Icon from './Icon.astro';
   let clockTicker: number | null = null;
   let currentElapsed = 0;
   let currentDuration = 0;
+  let isScrubbing = false;
   const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
 
+  function formatTime(seconds: number): string {
+    const s = Math.max(0, Math.floor(seconds));
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+  }
+
   function renderClock() {
-    if (!radioTime) return;
-    const elM = Math.floor(currentElapsed / 60);
-    const elS = Math.floor(currentElapsed % 60);
-    const durM = Math.floor(currentDuration / 60);
-    const durS = Math.floor(currentDuration % 60);
-    radioTime.textContent = `${String(elM).padStart(2, '0')}:${String(elS).padStart(2, '0')} / ${String(durM).padStart(2, '0')}:${String(durS).padStart(2, '0')}`;
+    const formattedCurr = formatTime(currentElapsed);
+    const formattedTotal = formatTime(currentDuration);
+
+    if (radioTime) {
+      radioTime.textContent = `${formattedCurr} / ${formattedTotal}`;
+    }
+    if (radioCurrTime) {
+      radioCurrTime.textContent = formattedCurr;
+    }
+    if (radioTotalTime) {
+      radioTotalTime.textContent = formattedTotal;
+    }
+
+    if (radioScrubBar && !isScrubbing) {
+      radioScrubBar.max = String(currentDuration > 0 ? currentDuration : 100);
+      radioScrubBar.value = String(currentElapsed);
+    }
+  }
+
+  function setShuffleUI(isShuffle: boolean) {
+    if (!radioShuffleBtn) return;
+    if (isShuffle) {
+      radioShuffleBtn.classList.remove('text-slate-400', 'bg-canvas-raised');
+      radioShuffleBtn.classList.add('text-emerald-400', 'bg-emerald-950/70', 'border-emerald-600/60', 'shadow-sm');
+      radioShuffleBtn.setAttribute('title', 'Reproducción aleatoria [Activada]');
+      radioShuffleBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      radioShuffleBtn.classList.remove('text-emerald-400', 'bg-emerald-950/70', 'border-emerald-600/60', 'shadow-sm');
+      radioShuffleBtn.classList.add('text-slate-400', 'bg-canvas-raised');
+      radioShuffleBtn.setAttribute('title', 'Reproducción aleatoria [Desactivada]');
+      radioShuffleBtn.setAttribute('aria-pressed', 'false');
+    }
   }
 
   function startClock() {
@@ -810,6 +900,10 @@ import Icon from './Icon.astro';
           if (radioPlaceholder) radioPlaceholder.classList.add('hidden');
         }
 
+        if (data.is_shuffle !== undefined) {
+          setShuffleUI(Boolean(data.is_shuffle));
+        }
+
         if (data.elapsed_seconds !== undefined) {
           currentElapsed = Math.floor(data.elapsed_seconds);
           currentDuration = Math.floor(data.duration_seconds || 0);
@@ -911,6 +1005,64 @@ import Icon from './Icon.astro';
 
   if (radioCardPlayBtn) {
     radioCardPlayBtn.addEventListener('click', () => togglePlayback());
+  }
+
+  if (radioShuffleBtn) {
+    radioShuffleBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch(`${rawApiUrl}/api/shuffle`, { method: 'POST' });
+        const data = await res.json();
+        setShuffleUI(Boolean(data.is_shuffle));
+      } catch (err) {
+        console.error('[MicroToodles Shuffle Error]:', err);
+      }
+    });
+  }
+
+  if (radioPrevBtn) {
+    radioPrevBtn.addEventListener('click', async () => {
+      try {
+        await fetch(`${rawApiUrl}/api/previous-track`, { method: 'POST' });
+        setTimeout(() => {
+          if (radioAudio && !radioAudio.paused) {
+            radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
+            radioAudio.play().catch(() => {});
+          }
+          updateNowPlaying();
+        }, 400);
+      } catch (err) {
+        console.error('[MicroToodles Prev Error]:', err);
+      }
+    });
+  }
+
+  if (radioScrubBar) {
+    radioScrubBar.addEventListener('input', () => {
+      isScrubbing = true;
+      const targetSec = parseFloat(radioScrubBar.value);
+      if (radioCurrTime) {
+        radioCurrTime.textContent = formatTime(targetSec);
+      }
+    });
+
+    radioScrubBar.addEventListener('change', async () => {
+      const targetSec = parseFloat(radioScrubBar.value);
+      currentElapsed = targetSec;
+      renderClock();
+      try {
+        await fetch(`${rawApiUrl}/api/seek?seconds=${targetSec}`, { method: 'POST' });
+        if (radioAudio && !radioAudio.paused) {
+          radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
+          await radioAudio.play().catch(() => {});
+        }
+      } catch (err) {
+        console.error('[MicroToodles Seek Error]:', err);
+      } finally {
+        setTimeout(() => {
+          isScrubbing = false;
+        }, 600);
+      }
+    });
   }
 
   if (radioSkipBtn) {

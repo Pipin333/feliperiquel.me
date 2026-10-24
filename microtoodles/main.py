@@ -167,3 +167,36 @@ async def next_track(
         "action": "skip",
         "next_track": new_track.model_dump() if new_track else None,
     }
+
+
+@app.api_route("/api/previous-track", methods=["GET", "POST"], summary="Retroceder a la canción anterior")
+async def previous_track() -> dict:
+    """Fuerza el regreso inmediato a la pista anterior de la lista."""
+    prev_track = await radio_engine.previous_track()
+    return {
+        "status": "success",
+        "action": "previous",
+        "prev_track": prev_track.model_dump() if prev_track else None,
+    }
+
+
+@app.api_route("/api/shuffle", methods=["GET", "POST"], summary="Alternar o consultar modo aleatorio")
+async def toggle_shuffle() -> dict:
+    """Alterna el modo aleatorio de reproducción (Shuffle)."""
+    is_shuffle = radio_engine.toggle_shuffle()
+    return {
+        "status": "success",
+        "action": "shuffle",
+        "is_shuffle": is_shuffle,
+    }
+
+
+@app.api_route("/api/seek", methods=["GET", "POST"], summary="Adelantar o retroceder posición temporal (Scrubbing)")
+async def seek_track(seconds: float = Query(..., ge=0, description="Posición en segundos")) -> dict:
+    """Ajusta la posición de reproducción (Scrubbing) dentro de la canción actual."""
+    new_pos = await radio_engine.seek(seconds)
+    return {
+        "status": "success",
+        "action": "seek",
+        "position_seconds": round(new_pos, 1),
+    }

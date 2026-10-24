@@ -221,6 +221,9 @@ class RadioEngine:
         self._listeners: set[asyncio.Queue[bytes]] = set()
         self._skip_event: asyncio.Event = asyncio.Event()
         self._worker_task: asyncio.Task | None = None
+        self.is_shuffle: bool = False
+        self._target_track: Track | None = None
+        self._seek_seconds: float | None = None
 
     def subscribe(self) -> asyncio.Queue[bytes]:
         """Registra un nuevo oyente HTTP y le asigna una cola de chunks de audio.
@@ -266,17 +269,64 @@ class RadioEngine:
             self._listeners.discard(queue)
 
     async def skip_track(self) -> Track | None:
-        """Fuerza el salto inmediato de la canción en curso hacia la siguiente.
+        """Fuerza el salto inmediato de la canción en curso hacia la siguiente o aleatoria.
 
         Returns:
             Track | None: Nueva canción en reproducción o None si no hay tracks.
         """
         logger.info("Comando de salto de pista recibido (Skip).")
-        next_track = await self.db.get_next_track(
-            self.current_track.id if self.current_track else None
-        )
+        current_id = self.current_track.id if self.current_track else None
+        if self.is_shuffle:
+            next_track = await self.db.get_random_track(exclude_track_id=current_id)
+        else:
+            next_track = await self.db.get_next_track(current_id)
+        self._target_track = next_track
+        self._seek_seconds = 0.0
         self._skip_event.set()
         return next_track
+
+    async def previous_track(self) -> Track | None:
+        """Fuerza el regreso inmediato a la canción anterior.
+
+        Returns:
+            Track | None: Canción anterior en reproducción o None si no hay tracks.
+        """
+        logger.info("Comando de canción anterior recibido (Previous).")
+        current_id = self.current_track.id if self.current_track else None
+        prev_track = await self.db.get_previous_track(current_id)
+        self._target_track = prev_track
+        self._seek_seconds = 0.0
+        self._skip_event.set()
+        return prev_track
+
+    def toggle_shuffle(self) -> bool:
+        """Alterna el modo aleatorio de reproducción.
+
+        Returns:
+            bool: Estado resultante del modo aleatorio (True = activado).
+        """
+        self.is_shuffle = not self.is_shuffle
+        logger.info(f"Modo aleatorio (Shuffle) cambiado a: {self.is_shuffle}")
+        return self.is_shuffle
+
+    async def seek(self, seconds: float) -> float:
+        """Adelanta o retrocede la reproducción actual a una posición temporal específica.
+
+        Args:
+            seconds: Posición en segundos donde reanudar la reproducción.
+
+        Returns:
+            float: Posición normalizada y aplicada.
+        """
+        if not self.current_track:
+            return 0.0
+        max_duration = self.current_track.duration_ms / 1000.0
+        target = max(0.0, min(max_duration - 1.0, seconds))
+        logger.info(f"Scrubbing solicitado a {target:.1f}s para '{self.current_track.title}'")
+        self._target_track = self.current_track
+        self._seek_seconds = target
+        self._skip_event.set()
+        return target
 
     def get_now_playing(self) -> dict:
         """Calcula el estado y posición temporal actual de la canción en emisión.
@@ -287,6 +337,7 @@ class RadioEngine:
         if not self.current_track:
             return {
                 "is_playing": False,
+                "is_shuffle": self.is_shuffle,
                 "track": None,
                 "elapsed_seconds": 0,
                 "duration_seconds": 0,
@@ -298,6 +349,7 @@ class RadioEngine:
 
         return {
             "is_playing": self.is_running,
+            "is_shuffle": self.is_shuffle,
             "track": {
                 "id": self.current_track.id,
                 "title": self.current_track.title,
@@ -351,21 +403,31 @@ class RadioEngine:
 
         while self.is_running:
             try:
-                # Obtener la siguiente canción
-                current_id = self.current_track.id if self.current_track else None
-                track = await self.db.get_next_track(current_id)
+                # Obtener la siguiente canción (o target_track si se forzó skip/prev/seek)
+                if self._target_track:
+                    track = self._target_track
+                    self._target_track = None
+                elif self.is_shuffle:
+                    current_id = self.current_track.id if self.current_track else None
+                    track = await self.db.get_random_track(exclude_track_id=current_id)
+                else:
+                    current_id = self.current_track.id if self.current_track else None
+                    track = await self.db.get_next_track(current_id)
 
                 if not track:
                     logger.warning("No hay pistas disponibles en la base de datos. Esperando 10s...")
                     await asyncio.sleep(10)
                     continue
 
+                start_offset = self._seek_seconds or 0.0
+                self._seek_seconds = None
+
                 self.current_track = track
-                self.started_at = time.time()
+                self.started_at = time.time() - start_offset
                 self._skip_event.clear()
                 await self.db.set_playback_state(track.id, self.started_at, is_playing=True)
 
-                logger.info(f"Iniciando reproducción: '{track.artist} - {track.title}'")
+                logger.info(f"Iniciando reproducción: '{track.artist} - {track.title}' (offset={start_offset:.1f}s)")
 
                 # Resolver enlace directo de audio
                 audio_url = await self.resolver.resolve_audio_url(track)
@@ -379,19 +441,24 @@ class RadioEngine:
                     logger.warning(f"Binario FFmpeg '{ffmpeg_bin}' no disponible en el sistema.")
                     # Si no hay FFmpeg en el host local, esperar la duración o el evento de skip
                     try:
-                        duration_s = max(5.0, track.duration_ms / 1000.0)
+                        duration_s = max(5.0, (track.duration_ms / 1000.0) - start_offset)
                         await asyncio.wait_for(self._skip_event.wait(), timeout=duration_s)
                     except asyncio.TimeoutError:
                         pass
                     continue
 
-                # Comando FFmpeg: Lectura a velocidad nativa (-re) y encoding MP3 ultra-compatible y auto-sincronizado
+                # Comando FFmpeg con offset opcional para scrubbing
                 ffmpeg_cmd = [
                     ffmpeg_bin,
                     "-re",
                     "-nostats",
                     "-loglevel",
                     "warning",
+                ]
+                if start_offset > 0.5:
+                    ffmpeg_cmd.extend(["-ss", f"{start_offset:.2f}"])
+
+                ffmpeg_cmd.extend([
                     "-i",
                     audio_url,
                     "-vn",
@@ -402,7 +469,7 @@ class RadioEngine:
                     "-f",
                     "mp3",
                     "-",
-                ]
+                ])
 
                 proc = await asyncio.create_subprocess_exec(
                     *ffmpeg_cmd,
@@ -410,7 +477,7 @@ class RadioEngine:
                     stderr=asyncio.subprocess.DEVNULL,
                 )
 
-                max_track_duration = (track.duration_ms / 1000.0) + 4.0
+                max_track_duration = ((track.duration_ms / 1000.0) - start_offset) + 4.0
 
                 try:
                     while self.is_running and proc.returncode is None:

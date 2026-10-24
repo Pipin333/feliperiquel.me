@@ -276,6 +276,45 @@ class Database:
 
         return tracks[0]
 
+    async def get_previous_track(self, current_track_id: str | None = None) -> Track | None:
+        """Devuelve la pista anterior en la secuencia cíclica de la playlist.
+
+        Args:
+            current_track_id: ID de la pista actual para determinar la anterior.
+
+        Returns:
+            Track | None: Objeto Track anterior o None si no hay pistas disponibles.
+        """
+        tracks = await self.get_all_tracks()
+        if not tracks:
+            return None
+
+        if not current_track_id:
+            return tracks[-1]
+
+        for index, track in enumerate(tracks):
+            if track.id == current_track_id:
+                prev_index = (index - 1) % len(tracks)
+                return tracks[prev_index]
+
+        return tracks[-1]
+
+    async def get_random_track(self, exclude_track_id: str | None = None) -> Track | None:
+        """Devuelve una pista seleccionada al azar de la lista.
+
+        Args:
+            exclude_track_id: ID de pista a omitir para no repetir inmediatamente.
+
+        Returns:
+            Track | None: Objeto Track aleatorio o None si no hay pistas disponibles.
+        """
+        import random
+        tracks = await self.get_all_tracks()
+        if not tracks:
+            return None
+        candidates = [t for t in tracks if t.id != exclude_track_id] if len(tracks) > 1 else tracks
+        return random.choice(candidates)
+
     async def get_queue(self, current_track_id: str | None = None, limit: int = 10) -> list[Track]:
         """Devuelve la cola de las próximas canciones a reproducir.
 
