@@ -116,7 +116,6 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   ├── Hero.astro            # Perfil Software Engineer & Builder y pilares técnicos
 │   │   ├── LabShowcase.astro     # Destacado interactivo de las herramientas del /lab
 │   │   ├── WorkShowcase.astro    # Casos de estudio y repositorios de código abierto
-│   │   ├── AboutMe.astro         # Perfil, filosofía de ingeniería y matriz de tecnologías
 │   │   ├── DynamicDock.astro     # Isla dinámica y consola interactiva flotante (CLI)
 │   │   ├── ContactGateway.astro  # Canales directos y formulario conectado a /api/contact
 │   │   ├── Footer.astro          # Navegación, políticas y enlaces de pie de página

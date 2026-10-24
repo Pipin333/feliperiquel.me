@@ -5,7 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const pageTitle = "Sobre mí | Felipe Riquelme";
-const pageDescription = "Felipe Riquelme, Ingeniero Civil en Informática en Santiago, Chile. Trayectoria en cocinas, práctica en JEJ Ingeniería, audio y la conexión con el laboratorio SonicRip.";
+const pageDescription = "Felipe Riquelme, Ingeniero Civil en Informática en Santiago, Chile. Trayectoria en cocinas, práctica en la Gerencia de Innovación y TD de JEJ Ingeniería, audio y la conexión con el laboratorio SonicRip.";
 
 const hardware = [
   {
@@ -22,7 +22,7 @@ const hardware = [
   },
   {
     nombre: "NiceHCK EB2S Pro",
-    uso: "IEM para revisar graves y subgraves."
+    uso: "Earbuds clásicos de formato abierto. Buena respuesta en bajos, sonido equilibrado y descanso para sesiones prolongadas."
   },
   {
     nombre: "Logitech X540",
@@ -46,31 +46,41 @@ const albumes = [
     titulo: "Thriller",
     artista: "Michael Jackson",
     anio: "1982",
+    portada: "/images/albums/thriller.jpg",
+    spotify: "https://open.spotify.com/album/2ANVost0y2y52ema1E9xAZ",
     nota: "Producción en capas, cada elemento con su sitio."
-  },
-  {
-    titulo: "POST MORTEM",
-    artista: "Dillom",
-    anio: "2021",
-    nota: "Sampleo y ruido tratados como material de mezcla."
-  },
-  {
-    titulo: "Chinese Democracy",
-    artista: "Guns N' Roses",
-    anio: "2008",
-    nota: "Guitarras superpuestas y un estudio que se extendió por años."
-  },
-  {
-    titulo: "Debí Tirar Más Fotos",
-    artista: "Bad Bunny",
-    anio: "2025",
-    nota: "Plena, protesta y producción contemporánea."
   },
   {
     titulo: "20 Años",
     artista: "Luis Miguel",
     anio: "1990",
+    portada: "/images/albums/20-anos.jpg",
+    spotify: "https://open.spotify.com/album/3D9NENGfg4DFmYJrEaxRHd",
     nota: "Dinámica, fraseo y control vocal."
+  },
+  {
+    titulo: "Chinese Democracy",
+    artista: "Guns N' Roses",
+    anio: "2008",
+    portada: "/images/albums/chinese-democracy.jpg",
+    spotify: "https://open.spotify.com/album/0suNLpB9xraAv1FcdlITjQ",
+    nota: "Guitarras superpuestas y un estudio que se extendió por años."
+  },
+  {
+    titulo: "POST MORTEM",
+    artista: "Dillom",
+    anio: "2021",
+    portada: "/images/albums/post-mortem.jpg",
+    spotify: "https://open.spotify.com/album/39g3CsFBc9YK9Z6AbvvkgF",
+    nota: "Sampleo y ruido tratados como material de mezcla."
+  },
+  {
+    titulo: "Debí Tirar Más Fotos",
+    artista: "Bad Bunny",
+    anio: "2025",
+    portada: "/images/albums/debi-tirar-mas-fotos.png",
+    spotify: "https://open.spotify.com/album/5K79FLRUCSysQnVESLcTdb",
+    nota: "Plena, protesta y producción contemporánea."
   }
 ];
 ---
@@ -168,7 +178,7 @@ const albumes = [
               <span class="font-mono text-[11px] uppercase tracking-wider text-telemetry">crew a sub2</span>
             </div>
             <p class="mt-4 text-sm leading-relaxed text-slate-300">
-              Entré como crew y terminé como subgerente 2. Aperturas, horas punta con fila hasta la calle, control de merma, inventario y turnos de más de diez personas. La operación no perdona el desorden: si falta un insumo, la venta se detiene.
+              Entré como crew y terminé como subgerente 2. Aperturas, horas punta con fila hasta la calle, control de merma e inventario. Éramos hasta cuatro personas por turno en un equipo de diez a doce en el local. La operación no perdona el desorden: si falta un insumo, la venta se detiene.
             </p>
           </article>
 
@@ -178,7 +188,7 @@ const albumes = [
               <span class="font-mono text-[11px] uppercase tracking-wider text-telemetry">crew</span>
             </div>
             <p class="mt-4 text-sm leading-relaxed text-slate-300">
-              Crew en freidora, ventana de despacho y cierre. Cada pedido tiene un tiempo, una temperatura y un orden. Aprendí a moverme rápido sin saltarme pasos, incluso cuando la fila no daba tregua.
+              Principalmente en freidora (fritos como papas o empanadas), mesón de entrega, apoyo general como pivote y cierres prácticamente todos los días. Cada pedido tiene un tiempo, una temperatura y un orden: aprendí a moverme rápido sin saltarme pasos cuando la fila no daba tregua.
             </p>
           </article>
 
@@ -196,9 +206,9 @@ const albumes = [
           <article class="spotlight-card rounded-tech border border-canvas-border bg-canvas-surface p-6 sm:p-7">
             <p class="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-500">02 / Corporativo</p>
             <h3 class="mt-2 font-display text-xl font-bold text-white">JEJ Ingeniería</h3>
-            <p class="mt-1 font-mono text-xs text-telemetry">Práctica / TI y TD</p>
+            <p class="mt-1 font-mono text-xs text-telemetry">Práctica / Gerencia de Innovación y TD</p>
             <p class="mt-4 text-sm leading-relaxed text-slate-300">
-              Práctica en JEJ Ingeniería, en el área de TI y Transformación Digital. Vi de cerca la dinámica corporativa: prioridades que compiten, alcances que cambian y reuniones donde la misma palabra significa cosas distintas según quién habla. Aprendí a preguntar antes de asumir y a moverme dentro de un equipo multidisciplinario.
+              Práctica en JEJ Ingeniería, en la Gerencia de Innovación y Transformación Digital. Vi de cerca la dinámica corporativa: prioridades que compiten, alcances que cambian y reuniones donde la misma palabra significa cosas distintas según quién habla. Aprendí a preguntar antes de asumir y a moverme dentro de un equipo multidisciplinario.
             </p>
           </article>
 
@@ -268,45 +278,91 @@ const albumes = [
           </dl>
         </article>
 
-        <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <article class="rounded-tech border border-canvas-border bg-canvas-surface p-6 sm:p-7 lg:col-span-5">
+        <!-- En rotación: compacto, sin espacio en blanco desperdiciado -->
+        <article class="mt-4 rounded-tech border border-canvas-border bg-canvas-surface p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
             <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-telemetry">
               En rotación
             </h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-400">
+            <p class="mt-1 text-xs text-slate-400">
               Cuatro nombres que aparecen seguido en la biblioteca, sin orden de importancia.
             </p>
-            <ul class="mt-5 flex flex-wrap gap-2" role="list">
-              {artistas.map((artista) => (
-                <li class="rounded-tech-sm border border-canvas-border bg-canvas px-3 py-1.5 font-mono text-xs text-slate-300">
-                  {artista}
-                </li>
-              ))}
-            </ul>
-          </article>
+          </div>
+          <ul class="flex flex-wrap items-center gap-2" role="list">
+            {artistas.map((artista) => (
+              <li class="rounded-tech-sm border border-canvas-border bg-canvas px-3 py-1.5 font-mono text-xs text-slate-200">
+                {artista}
+              </li>
+            ))}
+          </ul>
+        </article>
 
-          <article class="rounded-tech border border-canvas-border bg-canvas-surface p-6 sm:p-7 lg:col-span-7">
+        <!-- Álbumes emblemáticos ordenados cronológicamente con carátulas -->
+        <article class="mt-4 rounded-tech border border-canvas-border bg-canvas-surface p-6 sm:p-8">
+          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-6">
             <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-telemetry">
               Álbumes emblemáticos
             </h3>
-            <ol class="mt-4 divide-y divide-canvas-border">
-              {albumes.map((album, index) => (
-                <li class="grid grid-cols-[2rem_1fr_auto] items-baseline gap-3 py-3">
-                  <span class="font-mono text-[11px] text-slate-500" aria-hidden="true">
+            <span class="font-mono text-[11px] text-slate-500">
+              Orden cronológico por año de lanzamiento
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {albumes.map((album, index) => (
+              <a
+                href={album.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex flex-col rounded-tech-sm border border-canvas-border bg-canvas p-3.5 transition-all duration-140 hover:border-telemetry/60 hover:-translate-y-0.5 focus-visible:rounded-tech-sm"
+                title={`Escuchar ${album.titulo} de ${album.artista} en Spotify`}
+              >
+                <div class="relative aspect-square w-full overflow-hidden rounded-tech-sm bg-canvas-surface border border-canvas-border">
+                  <img
+                    src={album.portada}
+                    alt={`Carátula del álbum ${album.titulo} de ${album.artista}`}
+                    width="400"
+                    height="400"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <span class="absolute top-2 right-2 rounded-tech-sm bg-canvas/90 px-2 py-0.5 font-mono text-[11px] font-bold text-telemetry backdrop-blur-sm border border-canvas-border">
+                    {album.anio}
+                  </span>
+                  <span class="absolute bottom-2 left-2 rounded-tech-sm bg-canvas/90 px-1.5 py-0.5 font-mono text-[10px] text-slate-400 backdrop-blur-sm border border-canvas-border">
                     {String(index + 1).padStart(2, "0")}
                   </span>
+                </div>
+
+                <div class="mt-3 flex-1 flex flex-col justify-between">
                   <div>
-                    <p class="font-display text-sm font-semibold text-white">{album.titulo}</p>
-                    <p class="mt-0.5 text-xs leading-relaxed text-slate-400">
-                      {album.artista}. {album.nota}
+                    <div class="flex items-start justify-between gap-1.5">
+                      <h4 class="font-display text-sm font-bold text-white tracking-tight group-hover:text-telemetry transition-colors line-clamp-1" title={album.titulo}>
+                        {album.titulo}
+                      </h4>
+                      <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-telemetry transition-colors shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </div>
+                    <p class="mt-0.5 font-mono text-xs text-slate-400 truncate">
+                      {album.artista}
                     </p>
                   </div>
-                  <span class="font-mono text-[11px] text-telemetry">{album.anio}</span>
-                </li>
-              ))}
-            </ol>
-          </article>
-        </div>
+                  <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
+                    {album.nota}
+                  </p>
+                  <div class="mt-3 pt-2.5 border-t border-canvas-border/60 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-telemetry transition-colors">
+                    <span>Spotify</span>
+                    <span aria-hidden="true">-&gt;</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </article>
 
         <p class="mt-8 font-mono text-[11px] text-slate-500">
           El laboratorio está abierto en <a href="/lab" class="text-telemetry transition-colors hover:text-telemetry-hover">/lab</a>. Sin registro ni formularios.
