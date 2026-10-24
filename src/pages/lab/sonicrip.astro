@@ -175,6 +175,14 @@ const bgEqBars = Array.from({ length: NUM_BG_BARS }, (_, i) => {
             >
               o probar con tono sintetizado demo
             </button>
+            <button
+              id="load-radio-btn"
+              type="button"
+              class="ml-0 sm:ml-3 mt-2 sm:mt-0 text-xs text-emerald-400 hover:text-emerald-300 underline font-medium inline-flex items-center gap-1"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>conectar Toodles Radio en vivo</span>
+            </button>
           </div>
 
           <span id="audio-file-name" class="text-xs font-mono text-slate-400 truncate max-w-xs">
@@ -267,10 +275,10 @@ const bgEqBars = Array.from({ length: NUM_BG_BARS }, (_, i) => {
               min="0"
               max="1.5"
               step="0.05"
-              value="1.0"
+              value="0.65"
               class="flex-1 h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-sky-500"
             />
-            <span id="volume-val" class="font-mono text-xs text-slate-300 w-10 text-right">100%</span>
+            <span id="volume-val" class="font-mono text-xs text-slate-300 w-10 text-right">65%</span>
           </div>
         </div>
       </div>
@@ -887,6 +895,53 @@ MGMT - Kids</textarea>
     timeDisplay.textContent = `00:00 / ${formatTime(audioBuffer.duration)}`;
   });
 
+  // Toodles Radio Live Streaming Integration via Web Audio API
+  let isRadioStream = false;
+  let radioStreamAudio: HTMLAudioElement | null = null;
+  let radioMediaSource: MediaElementAudioSourceNode | null = null;
+  const loadRadioBtn = document.getElementById('load-radio-btn') as HTMLButtonElement | null;
+
+  async function loadRadioStream() {
+    initAudioNodes();
+    if (audioCtx!.state === 'suspended') {
+      await audioCtx!.resume();
+    }
+
+    if (isPlaying) {
+      if (sourceNode) {
+        try { sourceNode.stop(); } catch (e) {}
+      }
+    }
+
+    if (!radioStreamAudio) {
+      radioStreamAudio = new Audio();
+      radioStreamAudio.crossOrigin = 'anonymous';
+      const radioUrl = window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me';
+      radioStreamAudio.src = `${radioUrl}/api/stream?_t=${Date.now()}`;
+      radioMediaSource = audioCtx!.createMediaElementSource(radioStreamAudio);
+      radioMediaSource.connect(eqFilters[0]);
+    }
+
+    isRadioStream = true;
+    audioBuffer = null;
+    fileNameDisplay.textContent = "Toodles Radio // Live Stream (MP3 128k)";
+    timeDisplay.textContent = "Live Stream • En Directo";
+    playPauseBtn.disabled = false;
+    stopBtn.disabled = false;
+
+    try {
+      await radioStreamAudio.play();
+      isPlaying = true;
+      setPlayStateUI(true);
+      visualizerPlaceholder.classList.add('hidden');
+      drawVisualizer();
+    } catch (err) {
+      console.error('Error al reproducir stream en SonicRip:', err);
+    }
+  }
+
+  loadRadioBtn?.addEventListener('click', () => loadRadioStream());
+
   function setPlayStateUI(playing: boolean) {
     if (playing) {
       playIcon?.classList.add('hidden');
@@ -902,6 +957,19 @@ MGMT - Kids</textarea>
   }
 
   function playAudio() {
+    if (isRadioStream && radioStreamAudio && audioCtx) {
+      initAudioNodes();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      radioStreamAudio.play();
+      isPlaying = true;
+      setPlayStateUI(true);
+      visualizerPlaceholder.classList.add('hidden');
+      drawVisualizer();
+      return;
+    }
+
     if (!audioBuffer || !audioCtx) return;
     initAudioNodes();
 
@@ -930,6 +998,13 @@ MGMT - Kids</textarea>
   }
 
   function pauseAudio() {
+    if (isRadioStream && radioStreamAudio) {
+      radioStreamAudio.pause();
+      isPlaying = false;
+      setPlayStateUI(false);
+      return;
+    }
+
     if (!sourceNode || !audioCtx) return;
     sourceNode.stop();
     pauseOffset = (audioCtx.currentTime - startTime) * parseFloat(speedSlider.value);
@@ -938,6 +1013,15 @@ MGMT - Kids</textarea>
   }
 
   function stopAudio() {
+    if (isRadioStream && radioStreamAudio) {
+      radioStreamAudio.pause();
+      radioStreamAudio.currentTime = 0;
+      isPlaying = false;
+      setPlayStateUI(false);
+      timeDisplay.textContent = "Live Stream • Pausado";
+      return;
+    }
+
     if (sourceNode) {
       try { sourceNode.stop(); } catch (e) {}
     }
@@ -1240,6 +1324,13 @@ MGMT - Kids</textarea>
 
   generateCommand();
   updateTrackCount();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('source') === 'radio') {
+    setTimeout(() => {
+      loadRadioStream().catch(() => {});
+    }, 350);
+  }
 </script>
 
 <style>

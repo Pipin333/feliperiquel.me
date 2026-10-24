@@ -125,6 +125,193 @@ import Icon from './Icon.astro';
     </div>
   </div>
 
+  <!-- FLOATING RADIO PLAYER CARD (ANCHORED ABOVE THE DOCK) -->
+  <div
+    id="dock-radio-panel"
+    class="hidden pointer-events-auto w-[92vw] max-w-sm mb-3 rounded-tech bg-[#0B0F19]/98 border border-canvas-border shadow-2xl backdrop-blur-xl overflow-hidden transition-all duration-140"
+    role="dialog"
+    aria-label="Controles de Radio Toodles"
+  >
+    <!-- Radio Header Bar -->
+    <div class="bg-[#07090E] border-b border-canvas-border px-3.5 py-2 flex items-center justify-between select-none">
+      <div class="flex items-center gap-2">
+        <span id="dock-radio-header-dot" class="w-2 h-2 rounded-full bg-slate-600 transition-colors"></span>
+        <span class="font-mono text-[11px] text-slate-300 font-medium tracking-tight">Toodles Radio // Live Stream</span>
+      </div>
+      <button
+        type="button"
+        id="dock-radio-close-btn"
+        class="text-slate-400 hover:text-white transition-colors p-1 rounded-tech focus-visible:ring-1 focus-visible:ring-emerald-400"
+        aria-label="Cerrar reproductor"
+        title="Cerrar panel [ESC]"
+      >
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Radio Body: Now Playing Info & Controls -->
+    <div class="p-3.5 flex flex-col gap-3 font-mono text-xs">
+      <div class="flex items-center gap-3">
+        <!-- Album Art / Placeholder -->
+        <div class="w-12 h-12 rounded-tech bg-canvas-raised border border-canvas-border overflow-hidden shrink-0 flex items-center justify-center">
+          <img
+            id="dock-radio-cover"
+            src=""
+            alt="Carátula"
+            class="w-full h-full object-cover hidden"
+            width="48"
+            height="48"
+          />
+          <div id="dock-radio-placeholder" class="text-slate-500">
+            <Icon name="music-note-beamed" class="w-5 h-5 text-slate-500" />
+          </div>
+        </div>
+
+        <!-- Track Metadata -->
+        <div class="flex-1 min-w-0">
+          <div id="dock-radio-title" class="font-bold text-slate-100 truncate text-[12px] leading-tight" title="Título de pista">
+            Toodles Radio Offline
+          </div>
+          <div id="dock-radio-artist" class="text-slate-400 truncate text-[11px] mt-0.5 leading-tight" title="Artista">
+            Presiona play para conectar
+          </div>
+          <div class="mt-1 flex items-center gap-2">
+            <span id="dock-radio-status-badge" class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-canvas-raised text-slate-400 border border-canvas-border">
+              Opus Passthrough
+            </span>
+            <span id="dock-radio-time" class="text-[10px] text-slate-400">00:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrubbing Timeline Slider -->
+      <div class="flex items-center gap-2 select-none pt-0.5">
+        <span id="dock-radio-curr-time" class="text-[10px] text-slate-400 font-mono w-9 text-right tabular-nums">00:00</span>
+        <div class="relative flex-1 flex items-center group py-0.5">
+          <input
+            type="range"
+            id="dock-radio-scrub-bar"
+            min="0"
+            max="100"
+            step="1"
+            value="0"
+            class="w-full h-1 bg-canvas-border hover:bg-canvas-subtle rounded-lg appearance-none cursor-pointer accent-emerald-400 focus:outline-none focus-visible:ring-1 focus-visible:ring-emerald-400 transition-colors"
+            aria-label="Posición de reproducción (Scrubbing)"
+            title="Arrastra para avanzar o retroceder"
+          />
+        </div>
+        <span id="dock-radio-total-time" class="text-[10px] text-slate-500 font-mono w-9 text-left tabular-nums">00:00</span>
+      </div>
+
+      <!-- Controls Row -->
+      <div class="flex items-center justify-between pt-2 border-t border-canvas-border/70 select-none">
+        <div class="flex items-center gap-1.5">
+          <!-- Shuffle Toggle Button -->
+          <button
+            type="button"
+            id="dock-radio-shuffle-btn"
+            class="flex items-center justify-center w-7 h-7 rounded-full bg-canvas-raised hover:bg-canvas-subtle border border-canvas-border text-slate-400 hover:text-white transition-all focus-visible:ring-1 focus-visible:ring-emerald-400"
+            aria-label="Modo aleatorio (Shuffle)"
+            title="Reproducción aleatoria [Desactivada]"
+            aria-pressed="false"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 3 21 3 21 8"></polyline>
+              <line x1="4" y1="20" x2="21" y2="3"></line>
+              <polyline points="21 16 21 21 16 21"></polyline>
+              <line x1="15" y1="15" x2="21" y2="21"></line>
+              <line x1="4" y1="4" x2="9" y2="9"></line>
+            </svg>
+          </button>
+
+          <!-- Previous Track Button -->
+          <button
+            type="button"
+            id="dock-radio-prev-btn"
+            class="flex items-center justify-center w-7 h-7 rounded-full bg-canvas-raised hover:bg-canvas-subtle border border-canvas-border text-slate-300 hover:text-white transition-colors focus-visible:ring-1 focus-visible:ring-emerald-400"
+            aria-label="Canción anterior"
+            title="Pista anterior"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="19 20 9 12 19 4 19 20"></polygon>
+              <line x1="5" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5"></line>
+            </svg>
+          </button>
+
+          <!-- Play / Pause Button -->
+          <button
+            type="button"
+            id="dock-radio-card-play-btn"
+            class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-glow-audio transition-all focus-visible:ring-2 focus-visible:ring-emerald-400"
+            aria-label="Reproducir o pausar emisión"
+          >
+            <svg id="dock-radio-card-play-icon" class="w-4 h-4 translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <svg id="dock-radio-card-pause-icon" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+
+          <!-- Skip Track Button -->
+          <button
+            type="button"
+            id="dock-radio-skip-btn"
+            class="flex items-center justify-center w-7 h-7 rounded-full bg-canvas-raised hover:bg-canvas-subtle border border-canvas-border text-slate-300 hover:text-white transition-colors focus-visible:ring-1 focus-visible:ring-emerald-400"
+            aria-label="Saltar a la siguiente canción"
+            title="Siguiente pista"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 4 15 12 5 20 5 4"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Volume & DSP Lab Shortcut -->
+        <div class="flex items-center gap-2">
+          <label for="dock-radio-volume" class="sr-only">Volumen de radio</label>
+          <input
+            type="range"
+            id="dock-radio-volume"
+            min="0"
+            max="1"
+            step="0.05"
+            value="0.65"
+            class="w-14 sm:w-16 h-1 bg-canvas-border rounded-lg appearance-none cursor-pointer accent-emerald-400"
+            title="Volumen"
+          />
+          <span id="dock-radio-volume-val" class="text-[10px] text-slate-400 font-mono w-7 text-right tabular-nums select-none">65%</span>
+          <a
+            href="/lab/sonicrip?source=radio"
+            id="dock-radio-dsp-link"
+            class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono pl-1 border-l border-canvas-border/60"
+            title="Transferir audio a SonicRip DSP"
+          >
+            <span>DSP</span>
+            <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSISTENT HTML5 AUDIO ELEMENT -->
+  <audio
+    id="microtoodles-stream"
+    preload="metadata"
+    crossorigin="anonymous"
+    data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || (import.meta.env.PROD ? "https://radio.feliperiquel.me" : "http://localhost:8080")}
+  ></audio>
+
   <!-- THE DOCK PILL (ISLA DINÁMICA FLOTANTE) -->
   <div class="relative pointer-events-auto group">
     <!-- Ambient glowing aura behind the dock with initial bloom and smooth decay -->
@@ -151,6 +338,46 @@ import Icon from './Icon.astro';
         <span>CLI</span>
         <span class="w-1.5 h-1.5 rounded-full bg-telemetry-dark/80 animate-pulse"></span>
       </button>
+
+      <!-- Radio Toodles Group -->
+      <div class="flex items-center gap-0.5 shrink-0 bg-canvas-raised rounded-full p-0.5 border border-canvas-border hover:border-emerald-500/50 transition-colors">
+        <!-- Play/Pause Toggle -->
+        <button
+          type="button"
+          id="dock-toggle-radio"
+          class="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full font-mono text-[11px] sm:text-xs font-semibold text-slate-300 hover:text-white transition-all group/radio focus-visible:rounded-full shrink-0"
+          title="Música de fondo: Toodles Radio [R]"
+          aria-label="Reproducir o pausar Radio Toodles"
+        >
+          <div class="relative flex items-center justify-center w-3.5 h-3.5 text-slate-400 group-hover/radio:text-emerald-400 transition-colors">
+            <span id="dock-radio-static-icon">
+              <Icon name="broadcast" class="w-3.5 h-3.5" />
+            </span>
+            <div id="dock-radio-vumeter" class="hidden items-end gap-0.5 h-3">
+              <span class="w-0.5 bg-emerald-400 rounded-full animate-vubar-1 h-2"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full animate-vubar-2 h-3"></span>
+              <span class="w-0.5 bg-emerald-400 rounded-full animate-vubar-3 h-1.5"></span>
+            </div>
+          </div>
+          <span class="dock-radio-label hidden sm:inline">Radio</span>
+          <span id="dock-radio-pill-dot" class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-colors"></span>
+        </button>
+
+        <!-- Expand Drawer Button -->
+        <button
+          type="button"
+          id="dock-expand-radio"
+          class="w-5 h-5 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-canvas-subtle transition-colors focus-visible:rounded-full"
+          aria-expanded="false"
+          aria-controls="dock-radio-panel"
+          title="Ver controles de reproducción"
+          aria-label="Ver controles de reproducción"
+        >
+          <svg id="dock-radio-chevron" class="w-3 h-3 transition-transform duration-140" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+      </div>
 
       <!-- Divider (Solo en móvil entre CLI y navegación) -->
       <span class="w-[1px] h-4 bg-canvas-border md:hidden shrink-0" aria-hidden="true"></span>
@@ -283,9 +510,19 @@ import Icon from './Icon.astro';
     filter: blur(14px);
   }
 
+  @keyframes vubar-anim-1 { 0%, 100% { height: 4px; } 50% { height: 11px; } }
+  @keyframes vubar-anim-2 { 0%, 100% { height: 7px; } 50% { height: 13px; } }
+  @keyframes vubar-anim-3 { 0%, 100% { height: 3px; } 50% { height: 9px; } }
+  .animate-vubar-1 { animation: vubar-anim-1 0.75s ease-in-out infinite; }
+  .animate-vubar-2 { animation: vubar-anim-2 0.55s ease-in-out infinite 0.15s; }
+  .animate-vubar-3 { animation: vubar-anim-3 0.85s ease-in-out infinite 0.3s; }
+
   @media (prefers-reduced-motion: reduce) {
     .dock-pill-bar,
-    .dock-ambient-glow {
+    .dock-ambient-glow,
+    .animate-vubar-1,
+    .animate-vubar-2,
+    .animate-vubar-3 {
       animation: none !important;
     }
   }
@@ -464,13 +701,485 @@ import Icon from './Icon.astro';
 
   // Global Keyboard Shortcuts (ESC to close, ~ or ` to toggle)
   window.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && cliPanel && !cliPanel.classList.contains('hidden')) {
-      toggleTerminal(false);
+    if (e.key === 'Escape') {
+      if (cliPanel && !cliPanel.classList.contains('hidden')) toggleTerminal(false);
+      if (radioPanel && !radioPanel.classList.contains('hidden')) toggleRadioPanel(false);
     } else if ((e.key === '`' || e.key === '~') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
       e.preventDefault();
       toggleTerminal();
+    } else if ((e.key === 'r' || e.key === 'R') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
+      togglePlayback();
     }
   });
+
+  // ============================================================================
+  // RADIO TOODLES CONTROLLER (MicroToodles Audio Streamer Integration)
+  // ============================================================================
+  const radioPanel = document.getElementById('dock-radio-panel');
+  const radioToggleBtn = document.getElementById('dock-toggle-radio');
+  const radioExpandBtn = document.getElementById('dock-expand-radio');
+  const radioCloseBtn = document.getElementById('dock-radio-close-btn');
+  const radioChevron = document.getElementById('dock-radio-chevron');
+  const radioAudio = document.getElementById('microtoodles-stream') as HTMLAudioElement | null;
+  const radioCardPlayBtn = document.getElementById('dock-radio-card-play-btn');
+  const radioCardPlayIcon = document.getElementById('dock-radio-card-play-icon');
+  const radioCardPauseIcon = document.getElementById('dock-radio-card-pause-icon');
+  const radioPrevBtn = document.getElementById('dock-radio-prev-btn');
+  const radioSkipBtn = document.getElementById('dock-radio-skip-btn');
+  const radioShuffleBtn = document.getElementById('dock-radio-shuffle-btn');
+  const radioScrubBar = document.getElementById('dock-radio-scrub-bar') as HTMLInputElement | null;
+  const radioCurrTime = document.getElementById('dock-radio-curr-time');
+  const radioTotalTime = document.getElementById('dock-radio-total-time');
+  const radioVolumeSlider = document.getElementById('dock-radio-volume') as HTMLInputElement | null;
+  const radioStaticIcon = document.getElementById('dock-radio-static-icon');
+  const radioVumeter = document.getElementById('dock-radio-vumeter');
+  const radioPillDot = document.getElementById('dock-radio-pill-dot');
+  const radioHeaderDot = document.getElementById('dock-radio-header-dot');
+  const radioCover = document.getElementById('dock-radio-cover') as HTMLImageElement | null;
+  const radioPlaceholder = document.getElementById('dock-radio-placeholder');
+  const radioTitle = document.getElementById('dock-radio-title');
+  const radioArtist = document.getElementById('dock-radio-artist');
+  const radioStatusBadge = document.getElementById('dock-radio-status-badge');
+  const radioTime = document.getElementById('dock-radio-time');
+  const radioDspLink = document.getElementById('dock-radio-dsp-link');
+  const radioVolumeVal = document.getElementById('dock-radio-volume-val');
+
+  let radioPollTimer: number | null = null;
+  let currentElapsed = 0;
+  let currentDuration = 0;
+  let currentTrack: any = null;
+  const historyStack: any[] = [];
+  const futureStack: any[] = [];
+  let isScrubbing = false;
+  const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
+
+  function formatTime(seconds: number): string {
+    const s = Math.max(0, Math.floor(seconds));
+    const m = Math.floor(s / 60);
+    const rem = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(rem).padStart(2, '0')}`;
+  }
+
+  function renderClock() {
+    const formattedCurr = formatTime(currentElapsed);
+    const formattedTotal = formatTime(currentDuration);
+
+    if (radioTime) {
+      radioTime.textContent = `${formattedCurr} / ${formattedTotal}`;
+    }
+    if (radioCurrTime) {
+      radioCurrTime.textContent = formattedCurr;
+    }
+    if (radioTotalTime) {
+      radioTotalTime.textContent = formattedTotal;
+    }
+
+    if (radioScrubBar && !isScrubbing) {
+      radioScrubBar.max = String(currentDuration > 0 ? currentDuration : 100);
+      radioScrubBar.value = String(currentElapsed);
+    }
+  }
+
+  function setShuffleUI(isShuffle: boolean) {
+    if (!radioShuffleBtn) return;
+    if (isShuffle) {
+      radioShuffleBtn.classList.remove('text-slate-400', 'bg-canvas-raised');
+      radioShuffleBtn.classList.add('text-emerald-400', 'bg-emerald-950/70', 'border-emerald-600/60', 'shadow-sm');
+      radioShuffleBtn.setAttribute('title', 'Reproducción aleatoria [Activada]');
+      radioShuffleBtn.setAttribute('aria-pressed', 'true');
+    } else {
+      radioShuffleBtn.classList.remove('text-emerald-400', 'bg-emerald-950/70', 'border-emerald-600/60', 'shadow-sm');
+      radioShuffleBtn.classList.add('text-slate-400', 'bg-canvas-raised');
+      radioShuffleBtn.setAttribute('title', 'Reproducción aleatoria [Desactivada]');
+      radioShuffleBtn.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  function loadTrack(track: any, startAtSeconds: number = 0, autoPlay: boolean = true) {
+    if (!radioAudio || !track || !track.id) return;
+    currentTrack = track;
+
+    if (radioTitle) radioTitle.textContent = track.title || 'En Reproducción';
+    if (radioArtist) radioArtist.textContent = track.artist || 'Desconocido';
+    if (radioStatusBadge) {
+      radioStatusBadge.textContent = '192k MP3 • Studio Master';
+      radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/40';
+    }
+    if (track.cover_url && radioCover) {
+      radioCover.src = track.cover_url;
+      radioCover.classList.remove('hidden');
+      if (radioPlaceholder) radioPlaceholder.classList.add('hidden');
+    }
+
+    currentDuration = Math.floor((track.duration_ms || 0) / 1000);
+    currentElapsed = Math.floor(startAtSeconds);
+    renderClock();
+
+    const mediaUrl = `${rawApiUrl}/api/media/${track.id}.mp3`;
+    const isSameSrc = radioAudio.src.includes(track.id);
+
+    if (!isSameSrc) {
+      radioAudio.src = mediaUrl;
+      if (startAtSeconds > 0) {
+        radioAudio.currentTime = startAtSeconds;
+      }
+    } else if (Math.abs(radioAudio.currentTime - startAtSeconds) > 3) {
+      radioAudio.currentTime = startAtSeconds;
+    }
+
+    if (autoPlay) {
+      radioAudio.play().then(() => {
+        setPlayingUI(true);
+      }).catch((err) => {
+        console.warn('[MicroToodles Playback]:', err);
+        setPlayingUI(false);
+      });
+    }
+  }
+
+  async function playNext() {
+    // 1. Si hay canciones en la cola adelantada (futureStack tras un rewind previo)
+    if (futureStack.length > 0) {
+      const nextTrack = futureStack.pop();
+      if (currentTrack) {
+        historyStack.push(currentTrack);
+        if (historyStack.length > 50) historyStack.shift();
+      }
+      loadTrack(nextTrack, 0, true);
+      return;
+    }
+
+    // 2. Obtener siguiente canción desde el backend
+    try {
+      const res = await fetch(`${rawApiUrl}/api/next-track`, { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data && data.next_track) {
+        if (currentTrack) {
+          historyStack.push(currentTrack);
+          if (historyStack.length > 50) historyStack.shift();
+        }
+        futureStack.length = 0; // Limpiar forward stack al explorar nueva canción
+        loadTrack(data.next_track, 0, true);
+      }
+    } catch (err) {
+      console.error('[MicroToodles Next Error]:', err);
+    }
+  }
+
+  async function playPrevious() {
+    // 1. Si la pista actual lleva más de 3 segundos, reiniciar al principio (estándar Spotify/Apple Music)
+    if (radioAudio && radioAudio.currentTime > 3) {
+      radioAudio.currentTime = 0;
+      currentElapsed = 0;
+      renderClock();
+      return;
+    }
+
+    // 2. Si hay historial real de canciones reproducidas, volver exactamente a la anterior
+    if (historyStack.length > 0) {
+      const prevTrack = historyStack.pop();
+      if (currentTrack) {
+        futureStack.push(currentTrack);
+      }
+      loadTrack(prevTrack, 0, true);
+      return;
+    }
+
+    // 3. Fallback: pedir al servidor la pista previa en la lista cíclica
+    try {
+      const res = await fetch(`${rawApiUrl}/api/previous-track`, { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data && data.prev_track) {
+        if (currentTrack) {
+          futureStack.push(currentTrack);
+        }
+        loadTrack(data.prev_track, 0, true);
+      }
+    } catch (err) {
+      console.error('[MicroToodles Prev Error]:', err);
+    }
+  }
+
+  function toggleRadioPanel(forceOpen?: boolean) {
+    if (!radioPanel || !radioExpandBtn) return;
+    const isCurrentlyOpen = !radioPanel.classList.contains('hidden');
+    const shouldOpen = forceOpen !== undefined ? forceOpen : !isCurrentlyOpen;
+
+    if (shouldOpen) {
+      if (cliPanel && !cliPanel.classList.contains('hidden')) {
+        toggleTerminal(false);
+      }
+      radioPanel.classList.remove('hidden');
+      radioExpandBtn.setAttribute('aria-expanded', 'true');
+      if (radioChevron) radioChevron.classList.add('rotate-180');
+      startPolling();
+    } else {
+      radioPanel.classList.add('hidden');
+      radioExpandBtn.setAttribute('aria-expanded', 'false');
+      if (radioChevron) radioChevron.classList.remove('rotate-180');
+      if (radioAudio && radioAudio.paused) {
+        stopPolling();
+        stopClock();
+      }
+    }
+  }
+
+  function setPlayingUI(playing: boolean, error: boolean = false) {
+    if (radioCardPlayIcon && radioCardPauseIcon) {
+      if (playing) {
+        radioCardPlayIcon.classList.add('hidden');
+        radioCardPauseIcon.classList.remove('hidden');
+      } else {
+        radioCardPlayIcon.classList.remove('hidden');
+        radioCardPauseIcon.classList.add('hidden');
+      }
+    }
+
+    if (radioStaticIcon && radioVumeter) {
+      if (playing) {
+        radioStaticIcon.classList.add('hidden');
+        radioVumeter.classList.remove('hidden');
+        radioVumeter.classList.add('flex');
+      } else {
+        radioStaticIcon.classList.remove('hidden');
+        radioVumeter.classList.add('hidden');
+        radioVumeter.classList.remove('flex');
+      }
+    }
+
+    const dotColor = error
+      ? 'w-1.5 h-1.5 rounded-full bg-rose-500'
+      : playing
+        ? 'w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse'
+        : 'w-1.5 h-1.5 rounded-full bg-slate-600';
+
+    if (radioPillDot) radioPillDot.className = dotColor;
+    if (radioHeaderDot) {
+      radioHeaderDot.className = error
+        ? 'w-2 h-2 rounded-full bg-rose-500'
+        : playing
+          ? 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse'
+          : 'w-2 h-2 rounded-full bg-slate-600';
+    }
+  }
+
+  async function updateNowPlaying() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(`${rawApiUrl}/api/now-playing`, {
+        signal: controller.signal,
+        headers: { 'Accept': 'application/json' }
+      });
+      clearTimeout(timeoutId);
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (data && data.track) {
+        if (data.is_shuffle !== undefined) {
+          setShuffleUI(Boolean(data.is_shuffle));
+        }
+
+        // Si la radio está pausada y no hay pista cargada, preparar metadatos
+        if (radioAudio && radioAudio.paused && !currentTrack) {
+          loadTrack(data.track, data.elapsed_seconds || 0, false);
+        }
+      }
+    } catch {
+      if (radioStatusBadge) {
+        radioStatusBadge.textContent = 'Radio Offline';
+        radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-canvas-raised text-slate-400 border border-canvas-border';
+      }
+      if (radioAudio && radioAudio.paused && !currentTrack) {
+        if (radioTitle) radioTitle.textContent = 'Radio fuera de línea';
+        if (radioArtist) radioArtist.textContent = 'Servidor en espera o no conectado';
+      }
+    }
+  }
+
+  function startPolling() {
+    if (radioPollTimer !== null) clearInterval(radioPollTimer);
+    updateNowPlaying();
+    radioPollTimer = window.setInterval(updateNowPlaying, 5000);
+  }
+
+  function stopPolling() {
+    if (radioPollTimer !== null) {
+      clearInterval(radioPollTimer);
+      radioPollTimer = null;
+    }
+  }
+
+  async function togglePlayback() {
+    if (!radioAudio) return;
+
+    if (radioAudio.paused) {
+      // Si ya hay una pista cargada, reanudar inmediatamente sin recargar
+      if (currentTrack && radioAudio.src && !radioAudio.src.endsWith('/')) {
+        try {
+          await radioAudio.play();
+          setPlayingUI(true);
+        } catch (err) {
+          console.error('[MicroToodles Play Error]:', err);
+        }
+        return;
+      }
+
+      // Si no hay pista cargada, consultar el servidor y sincronizar
+      try {
+        const res = await fetch(`${rawApiUrl}/api/now-playing`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.track) {
+            loadTrack(data.track, data.elapsed_seconds || 0, true);
+            if (data.is_shuffle !== undefined) setShuffleUI(Boolean(data.is_shuffle));
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('[MicroToodles NowPlaying Error]:', err);
+      }
+
+      // Fallback: cargar siguiente pista
+      playNext();
+    } else {
+      radioAudio.pause();
+      setPlayingUI(false);
+    }
+  }
+
+  // Configuración de volumen predeterminado (65%)
+  const defaultVol = 0.65;
+  let activeVol = defaultVol;
+  const savedVol = localStorage.getItem('microtoodles_vol');
+  if (savedVol !== null) {
+    const parsed = parseFloat(savedVol);
+    if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
+      activeVol = parsed;
+    }
+  }
+
+  if (radioAudio) {
+    radioAudio.volume = activeVol;
+  }
+  if (radioVolumeSlider) {
+    radioVolumeSlider.value = String(activeVol);
+  }
+  if (radioVolumeVal) {
+    radioVolumeVal.textContent = `${Math.round(activeVol * 100)}%`;
+  }
+
+  // HTML5 Audio Event Listeners (Scrubbing e interacción fluida en tiempo real)
+  if (radioAudio) {
+    radioAudio.addEventListener('timeupdate', () => {
+      if (!isScrubbing) {
+        currentElapsed = Math.floor(radioAudio.currentTime);
+        if (radioAudio.duration && !isNaN(radioAudio.duration) && radioAudio.duration > 0) {
+          currentDuration = Math.floor(radioAudio.duration);
+        }
+        renderClock();
+      }
+    });
+
+    radioAudio.addEventListener('ended', () => {
+      playNext();
+    });
+
+    radioAudio.addEventListener('play', () => setPlayingUI(true));
+    radioAudio.addEventListener('pause', () => setPlayingUI(false));
+    radioAudio.addEventListener('error', () => setPlayingUI(false, true));
+  }
+
+  if (radioToggleBtn) {
+    radioToggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePlayback();
+    });
+  }
+
+  if (radioExpandBtn) {
+    radioExpandBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleRadioPanel();
+    });
+  }
+
+  if (radioCloseBtn) {
+    radioCloseBtn.addEventListener('click', () => toggleRadioPanel(false));
+  }
+
+  if (radioDspLink) {
+    radioDspLink.addEventListener('click', () => {
+      if (radioAudio && !radioAudio.paused) {
+        radioAudio.pause();
+        setPlayingUI(false);
+      }
+    });
+  }
+
+  if (radioCardPlayBtn) {
+    radioCardPlayBtn.addEventListener('click', () => togglePlayback());
+  }
+
+  if (radioShuffleBtn) {
+    radioShuffleBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch(`${rawApiUrl}/api/shuffle`, { method: 'POST' });
+        const data = await res.json();
+        setShuffleUI(Boolean(data.is_shuffle));
+      } catch (err) {
+        console.error('[MicroToodles Shuffle Error]:', err);
+      }
+    });
+  }
+
+  if (radioPrevBtn) {
+    radioPrevBtn.addEventListener('click', () => {
+      playPrevious();
+    });
+  }
+
+  if (radioSkipBtn) {
+    radioSkipBtn.addEventListener('click', () => {
+      playNext();
+    });
+  }
+
+  if (radioScrubBar) {
+    radioScrubBar.addEventListener('input', () => {
+      isScrubbing = true;
+      const targetSec = parseFloat(radioScrubBar.value);
+      if (radioCurrTime) {
+        radioCurrTime.textContent = formatTime(targetSec);
+      }
+    });
+
+    radioScrubBar.addEventListener('change', () => {
+      const targetSec = parseFloat(radioScrubBar.value);
+      if (radioAudio && !isNaN(targetSec)) {
+        radioAudio.currentTime = targetSec;
+        currentElapsed = targetSec;
+        renderClock();
+      }
+      isScrubbing = false;
+      // Notificar al backend de forma asíncrona
+      fetch(`${rawApiUrl}/api/seek?seconds=${targetSec}`, { method: 'POST' }).catch(() => {});
+    });
+  }
+
+  if (radioVolumeSlider && radioAudio) {
+    radioVolumeSlider.addEventListener('input', () => {
+      const vol = parseFloat(radioVolumeSlider.value);
+      radioAudio.volume = vol;
+      if (radioVolumeVal) {
+        radioVolumeVal.textContent = `${Math.round(vol * 100)}%`;
+      }
+      localStorage.setItem('microtoodles_vol', String(vol));
+    });
+  }
 
   // Tooltip de long-press para íconos del dock (móvil)
   // Se crea dinámicamente en el body para evitar el bug de position:fixed

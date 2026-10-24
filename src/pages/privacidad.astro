@@ -26,7 +26,7 @@ import Icon from '../components/Icon.astro';
         Política de Privacidad
       </h1>
       <p class="font-mono text-xs text-slate-400">
-        Última actualización: 24 de octubre de 2026 // Versión 1.2
+        Última actualización: 24 de octubre de 2026 // Versión 1.3
       </p>
     </header>
 
@@ -57,6 +57,7 @@ import Icon from '../components/Icon.astro';
         <ul class="list-disc pl-5 space-y-2.5 text-xs sm:text-sm text-slate-300 font-mono">
           <li><strong>Audio DSP (SonicRip Studio):</strong> Los archivos de audio que cargas para ecualización o análisis FFT se procesan estrictamente en la memoria RAM de tu dispositivo mediante Web Audio API. No son subidos ni almacenados en servidores externos.</li>
           <li><strong>Party Game &amp; Salas Multijugador (Ni Idea):</strong> La sincronización en tiempo real se canaliza mediante WebSockets y memoria volátil. Las sesiones no requieren registro previo ni conservan identificadores personales persistentes tras la desconexión.</li>
+          <li><strong>Reproductor de Audio (MicroToodles):</strong> El reproductor almacena únicamente tu preferencia de volumen (`microtoodles_vol`) en el `localStorage` local del navegador. No se instalan cookies de seguimiento publicitario ni se almacenan historiales personales en el servidor. La distribución del contenido multimedia cuenta con aceleración perimetral cifrada (Cloudflare Edge CDN) garantizando la privacidad en tránsito.</li>
           <li><strong>Inferencia y Procesamiento de Texto (Retórica y Descalabro):</strong> El modo heurístico opera 100% en el cliente. En caso de activar inferencia neuronal BYOK opcional, las peticiones transitan por un proxy serverless seguro anti-SSRF sin persistencia en bases de datos ni retención de credenciales.</li>
           <li><strong>Calculadora Logística (Cuánto Rinde / calculadoracopete):</strong> Los presupuestos, estimaciones de insumos y cuotas se calculan localmente en tu navegador. El módulo se encuentra en transición hacia su propia arquitectura y dominio independiente.</li>
         </ul>

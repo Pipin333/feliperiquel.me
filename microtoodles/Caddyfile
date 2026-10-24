@@ -1,0 +1,14 @@
+{
+    # Global options
+}
+
+radio.feliperiquel.me {
+    # Compresión automática para respuestas estándar (no stream)
+    encode zstd gzip
+
+    # Proxy inverso al motor de streaming de MicroToodles
+    reverse_proxy microtoodles:8080 {
+        # Streaming en tiempo real sin almacenamiento en búfer
+        flush_interval -1
+    }
+}
