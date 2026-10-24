@@ -341,13 +341,15 @@ import Icon from './Icon.astro';
 
       <!-- Radio Toodles Group -->
       <div class="flex items-center gap-0.5 shrink-0 bg-canvas-raised rounded-full p-0.5 border border-canvas-border hover:border-emerald-500/50 transition-colors">
-        <!-- Play/Pause Toggle -->
+        <!-- Play/Pause Toggle (En móvil abre el menú flotante; en escritorio conmuta reproducción) -->
         <button
           type="button"
           id="dock-toggle-radio"
           class="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full font-mono text-[11px] sm:text-xs font-semibold text-slate-300 hover:text-white transition-all group/radio focus-visible:rounded-full shrink-0"
-          title="Música de fondo: Toodles Radio [R]"
-          aria-label="Reproducir o pausar Radio Toodles"
+          title="Toodles Radio: Reproductor y controles [R]"
+          aria-label="Controles de Radio Toodles"
+          aria-controls="dock-radio-panel"
+          aria-expanded="false"
         >
           <div class="relative flex items-center justify-center w-3.5 h-3.5 text-slate-400 group-hover/radio:text-emerald-400 transition-colors">
             <span id="dock-radio-static-icon">
@@ -363,11 +365,11 @@ import Icon from './Icon.astro';
           <span id="dock-radio-pill-dot" class="w-1.5 h-1.5 rounded-full bg-slate-600 transition-colors"></span>
         </button>
 
-        <!-- Expand Drawer Button -->
+        <!-- Expand Drawer Button (Oculto en móvil para ganar espacio horizontal y evitar botón diminuto; visible en sm:+) -->
         <button
           type="button"
           id="dock-expand-radio"
-          class="w-5 h-5 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-canvas-subtle transition-colors focus-visible:rounded-full"
+          class="hidden sm:flex w-5 h-5 items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-canvas-subtle transition-colors focus-visible:rounded-full"
           aria-expanded="false"
           aria-controls="dock-radio-panel"
           title="Ver controles de reproducción"
@@ -712,6 +714,25 @@ import Icon from './Icon.astro';
     }
   });
 
+  // Cerrar paneles flotantes al hacer click fuera
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node | null;
+    if (!target) return;
+
+    if (radioPanel && !radioPanel.classList.contains('hidden')) {
+      const radioGroup = radioToggleBtn?.parentElement;
+      if (!radioPanel.contains(target) && (!radioGroup || !radioGroup.contains(target))) {
+        toggleRadioPanel(false);
+      }
+    }
+
+    if (cliPanel && !cliPanel.classList.contains('hidden')) {
+      if (!cliPanel.contains(target) && (!cliToggleBtn || !cliToggleBtn.contains(target))) {
+        toggleTerminal(false);
+      }
+    }
+  });
+
   // ============================================================================
   // RADIO TOODLES CONTROLLER (MicroToodles Audio Streamer Integration)
   // ============================================================================
@@ -751,6 +772,7 @@ import Icon from './Icon.astro';
   const historyStack: any[] = [];
   const futureStack: any[] = [];
   let isScrubbing = false;
+  const isMobileViewport = (): boolean => window.matchMedia('(max-width: 639px)').matches;
   const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
 
   function formatTime(seconds: number): string {
@@ -903,7 +925,7 @@ import Icon from './Icon.astro';
   }
 
   function toggleRadioPanel(forceOpen?: boolean) {
-    if (!radioPanel || !radioExpandBtn) return;
+    if (!radioPanel) return;
     const isCurrentlyOpen = !radioPanel.classList.contains('hidden');
     const shouldOpen = forceOpen !== undefined ? forceOpen : !isCurrentlyOpen;
 
@@ -912,16 +934,17 @@ import Icon from './Icon.astro';
         toggleTerminal(false);
       }
       radioPanel.classList.remove('hidden');
-      radioExpandBtn.setAttribute('aria-expanded', 'true');
+      if (radioExpandBtn) radioExpandBtn.setAttribute('aria-expanded', 'true');
+      if (radioToggleBtn) radioToggleBtn.setAttribute('aria-expanded', 'true');
       if (radioChevron) radioChevron.classList.add('rotate-180');
       startPolling();
     } else {
       radioPanel.classList.add('hidden');
-      radioExpandBtn.setAttribute('aria-expanded', 'false');
+      if (radioExpandBtn) radioExpandBtn.setAttribute('aria-expanded', 'false');
+      if (radioToggleBtn) radioToggleBtn.setAttribute('aria-expanded', 'false');
       if (radioChevron) radioChevron.classList.remove('rotate-180');
       if (radioAudio && radioAudio.paused) {
         stopPolling();
-        stopClock();
       }
     }
   }
@@ -1096,7 +1119,11 @@ import Icon from './Icon.astro';
   if (radioToggleBtn) {
     radioToggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      togglePlayback();
+      if (isMobileViewport()) {
+        toggleRadioPanel();
+      } else {
+        togglePlayback();
+      }
     });
   }
 
