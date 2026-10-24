@@ -51,7 +51,7 @@ Cada tarjeta incluye el desglose de tres preguntas:
      - Epígrafe destacado debajo de la foto: "Ícaro se rió mientras caía, porque sabía que había tocado el sol."
      - Presentación sincera: Felipe Riquelme, Ingeniero Civil en Informática (Santiago, Chile).
   2. **Bloque 2: Trayectoria Real y Temple**:
-     - La escuela del trabajo real: Dunkin' (crew a subgerente 2, hasta 4 personas por turno en equipo de 10 a 12 en el local) y KFC (crew) como forja de temple bajo presión, prolijidad, transparencia y calma operativa ante el caos.
+     - La escuela del trabajo real: Dunkin' (crew a subgerente 2, hasta 4 personas por turno en equipo de 10 a 12 en el local) y KFC (crew: freidora, mesón, pivote de apoyo y cierres continuos) como forja de temple bajo presión, prolijidad, transparencia y calma operativa ante el caos.
      - Práctica en JEJ Ingeniería: Gerencia de Innovación y Transformación Digital, dinámicas corporativas y convivencia de equipo multidisciplinario.
      - La mentalidad ingenieril: buscarle la quinta pata al gato para resolver problemas no convencionales (conectado a la línea de los tres por qué de los proyectos).
   3. **Bloque 3: El Rincón de Audio y Música**:
