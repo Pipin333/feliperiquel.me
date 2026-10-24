@@ -69,14 +69,9 @@ const jsonLd = {
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Google Fonts: Space Grotesk, Inter, Fira Code (Carga convencional, compatible con CSP) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap"
-    />
+    <!-- Fuentes autohospedadas (cero llamadas de terceros, compatible con CSP estricta) -->
+    <link rel="preload" href="/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
