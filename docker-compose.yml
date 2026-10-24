@@ -13,3 +13,24 @@ services:
       - PORT=4321
     env_file:
       - .env.example
+    depends_on:
+      - microtoodles
+
+  microtoodles:
+    build:
+      context: ./microtoodles
+      dockerfile: Dockerfile
+    container_name: microtoodles-engine
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./microtoodles/.env.example
+    environment:
+      - DATABASE_PATH=/app/data/toodles_stream.db
+    volumes:
+      - microtoodles_data:/app/data
+
+volumes:
+  microtoodles_data:
+    driver: local

@@ -1,0 +1,50 @@
+services:
+  microtoodles:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: microtoodles_engine
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8085}:8080"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    env_file:
+      - .env
+    environment:
+      - DATABASE_PATH=/app/data/toodles_stream.db
+    volumes:
+      - microtoodles_data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: microtoodles_caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      microtoodles:
+        condition: service_healthy
+
+volumes:
+  microtoodles_data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local

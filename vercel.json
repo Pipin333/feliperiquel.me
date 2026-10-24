@@ -11,7 +11,7 @@
         { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://ni-idea.pipin333.workers.dev wss://ni-idea.pipin333.workers.dev https://api.mymemory.translated.net https://api.groq.com https://openrouter.ai http://localhost:11434 http://127.0.0.1:11434; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+          "value": "default-src 'self'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https://*.scdn.co https://mosaic.scdn.co https://i.scdn.co; media-src 'self' blob: https://radio.feliperiquel.me http://localhost:8080 http://127.0.0.1:8080; connect-src 'self' https://radio.feliperiquel.me http://localhost:8080 http://127.0.0.1:8080 https://ni-idea.pipin333.workers.dev wss://ni-idea.pipin333.workers.dev https://api.mymemory.translated.net https://api.groq.com https://openrouter.ai http://localhost:11434 http://127.0.0.1:11434 https://vercel.live; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
         }
       ]
     }
