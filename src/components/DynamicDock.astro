@@ -273,7 +273,7 @@ import Icon from './Icon.astro';
         </div>
 
         <!-- Volume & DSP Lab Shortcut -->
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2">
           <label for="dock-radio-volume" class="sr-only">Volumen de radio</label>
           <input
             type="range"
@@ -281,14 +281,15 @@ import Icon from './Icon.astro';
             min="0"
             max="1"
             step="0.05"
-            value="0.8"
-            class="w-16 h-1 bg-canvas-border rounded-lg appearance-none cursor-pointer accent-emerald-400"
+            value="0.65"
+            class="w-14 sm:w-16 h-1 bg-canvas-border rounded-lg appearance-none cursor-pointer accent-emerald-400"
             title="Volumen"
           />
+          <span id="dock-radio-volume-val" class="text-[10px] text-slate-400 font-mono w-7 text-right tabular-nums select-none">65%</span>
           <a
             href="/lab/sonicrip?source=radio"
             id="dock-radio-dsp-link"
-            class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono"
+            class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono pl-1 border-l border-canvas-border/60"
             title="Transferir audio a SonicRip DSP"
           >
             <span>DSP</span>
@@ -741,11 +742,14 @@ import Icon from './Icon.astro';
   const radioStatusBadge = document.getElementById('dock-radio-status-badge');
   const radioTime = document.getElementById('dock-radio-time');
   const radioDspLink = document.getElementById('dock-radio-dsp-link');
+  const radioVolumeVal = document.getElementById('dock-radio-volume-val');
 
   let radioPollTimer: number | null = null;
   let currentElapsed = 0;
   let currentDuration = 0;
-  let currentTrackId: string | null = null;
+  let currentTrack: any = null;
+  const historyStack: any[] = [];
+  const futureStack: any[] = [];
   let isScrubbing = false;
   const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
 
@@ -793,7 +797,7 @@ import Icon from './Icon.astro';
 
   function loadTrack(track: any, startAtSeconds: number = 0, autoPlay: boolean = true) {
     if (!radioAudio || !track || !track.id) return;
-    currentTrackId = track.id;
+    currentTrack = track;
 
     if (radioTitle) radioTitle.textContent = track.title || 'En Reproducción';
     if (radioArtist) radioArtist.textContent = track.artist || 'Desconocido';
@@ -834,11 +838,28 @@ import Icon from './Icon.astro';
   }
 
   async function playNext() {
+    // 1. Si hay canciones en la cola adelantada (futureStack tras un rewind previo)
+    if (futureStack.length > 0) {
+      const nextTrack = futureStack.pop();
+      if (currentTrack) {
+        historyStack.push(currentTrack);
+        if (historyStack.length > 50) historyStack.shift();
+      }
+      loadTrack(nextTrack, 0, true);
+      return;
+    }
+
+    // 2. Obtener siguiente canción desde el backend
     try {
       const res = await fetch(`${rawApiUrl}/api/next-track`, { method: 'POST' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data && data.next_track) {
+        if (currentTrack) {
+          historyStack.push(currentTrack);
+          if (historyStack.length > 50) historyStack.shift();
+        }
+        futureStack.length = 0; // Limpiar forward stack al explorar nueva canción
         loadTrack(data.next_track, 0, true);
       }
     } catch (err) {
@@ -847,17 +868,33 @@ import Icon from './Icon.astro';
   }
 
   async function playPrevious() {
-    try {
-      if (radioAudio && radioAudio.currentTime > 3) {
-        radioAudio.currentTime = 0;
-        currentElapsed = 0;
-        renderClock();
-        return;
+    // 1. Si la pista actual lleva más de 3 segundos, reiniciar al principio (estándar Spotify/Apple Music)
+    if (radioAudio && radioAudio.currentTime > 3) {
+      radioAudio.currentTime = 0;
+      currentElapsed = 0;
+      renderClock();
+      return;
+    }
+
+    // 2. Si hay historial real de canciones reproducidas, volver exactamente a la anterior
+    if (historyStack.length > 0) {
+      const prevTrack = historyStack.pop();
+      if (currentTrack) {
+        futureStack.push(currentTrack);
       }
+      loadTrack(prevTrack, 0, true);
+      return;
+    }
+
+    // 3. Fallback: pedir al servidor la pista previa en la lista cíclica
+    try {
       const res = await fetch(`${rawApiUrl}/api/previous-track`, { method: 'POST' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data && data.prev_track) {
+        if (currentTrack) {
+          futureStack.push(currentTrack);
+        }
         loadTrack(data.prev_track, 0, true);
       }
     } catch (err) {
@@ -947,7 +984,7 @@ import Icon from './Icon.astro';
         }
 
         // Si la radio está pausada y no hay pista cargada, preparar metadatos
-        if (radioAudio && radioAudio.paused && !currentTrackId) {
+        if (radioAudio && radioAudio.paused && !currentTrack) {
           loadTrack(data.track, data.elapsed_seconds || 0, false);
         }
       }
@@ -956,7 +993,7 @@ import Icon from './Icon.astro';
         radioStatusBadge.textContent = 'Radio Offline';
         radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-canvas-raised text-slate-400 border border-canvas-border';
       }
-      if (radioAudio && radioAudio.paused && !currentTrackId) {
+      if (radioAudio && radioAudio.paused && !currentTrack) {
         if (radioTitle) radioTitle.textContent = 'Radio fuera de línea';
         if (radioArtist) radioArtist.textContent = 'Servidor en espera o no conectado';
       }
@@ -981,7 +1018,7 @@ import Icon from './Icon.astro';
 
     if (radioAudio.paused) {
       // Si ya hay una pista cargada, reanudar inmediatamente sin recargar
-      if (currentTrackId && radioAudio.src && !radioAudio.src.endsWith('/')) {
+      if (currentTrack && radioAudio.src && !radioAudio.src.endsWith('/')) {
         try {
           await radioAudio.play();
           setPlayingUI(true);
@@ -1014,14 +1051,25 @@ import Icon from './Icon.astro';
     }
   }
 
-  // Restore saved volume
+  // Configuración de volumen predeterminado (65%)
+  const defaultVol = 0.65;
+  let activeVol = defaultVol;
   const savedVol = localStorage.getItem('microtoodles_vol');
-  if (radioAudio && savedVol !== null) {
+  if (savedVol !== null) {
     const parsed = parseFloat(savedVol);
     if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
-      radioAudio.volume = parsed;
-      if (radioVolumeSlider) radioVolumeSlider.value = String(parsed);
+      activeVol = parsed;
     }
+  }
+
+  if (radioAudio) {
+    radioAudio.volume = activeVol;
+  }
+  if (radioVolumeSlider) {
+    radioVolumeSlider.value = String(activeVol);
+  }
+  if (radioVolumeVal) {
+    radioVolumeVal.textContent = `${Math.round(activeVol * 100)}%`;
   }
 
   // HTML5 Audio Event Listeners (Scrubbing e interacción fluida en tiempo real)
@@ -1126,6 +1174,9 @@ import Icon from './Icon.astro';
     radioVolumeSlider.addEventListener('input', () => {
       const vol = parseFloat(radioVolumeSlider.value);
       radioAudio.volume = vol;
+      if (radioVolumeVal) {
+        radioVolumeVal.textContent = `${Math.round(vol * 100)}%`;
+      }
       localStorage.setItem('microtoodles_vol', String(vol));
     });
   }
