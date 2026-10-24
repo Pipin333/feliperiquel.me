@@ -29,10 +29,15 @@ class AudioResolver:
 
         Args:
             db: Instancia de la base de datos para consulta y almacenamiento en caché.
-            settings: Configuración opcional con lista de proxies de rescate.
+            settings: Configuración opcional con lista de proxies y directorios de medios.
         """
         self.db = db
         self.settings = settings
+        self.media_dir = getattr(settings, "MEDIA_DIR", "/app/data/media") if settings else "/app/data/media"
+        try:
+            os.makedirs(self.media_dir, exist_ok=True)
+        except Exception:
+            pass
 
     def _score_candidate(self, candidate: dict, target_track: Track) -> float:
         """Calcula una puntuación de precisión para un resultado de búsqueda de audio.
@@ -93,14 +98,24 @@ class AudioResolver:
         return score
 
     async def resolve_audio_url(self, track: Track) -> str | None:
-        """Obtiene la URL directa de streaming para una pista, consultando caché o yt-dlp.
+        """Obtiene la URL directa de streaming para una pista, consultando disco, caché o yt-dlp.
 
         Args:
             track: Pista con título y artista a resolver.
 
         Returns:
-            str | None: URL directa de streaming o None si la resolución falló.
+            str | None: Ruta local del archivo o URL de streaming, o None si falló.
         """
+        # 1. Comprobar si existe la pista descargada localmente en disco
+        for ext in (".mp3", ".opus", ".m4a", ".webm", ".ogg"):
+            local_file = os.path.join(self.media_dir, f"{track.id}{ext}")
+            if os.path.exists(local_file) and os.path.getsize(local_file) > 50_000:
+                logger.info(
+                    f"Reproduciendo desde archivo local: '{track.artist} - {track.title}' ({local_file})"
+                )
+                return local_file
+
+        # 2. Consultar URL en caché en memoria/SQLite
         cached_url = await self.db.get_cached_url(track.id)
         if cached_url:
             return cached_url

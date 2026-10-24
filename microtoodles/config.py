@@ -44,6 +44,10 @@ class Settings(BaseSettings):
         default="toodles_stream.db",
         description="Ruta del archivo SQLite local para almacenamiento en modo WAL.",
     )
+    MEDIA_DIR: str = Field(
+        default="/app/data/media",
+        description="Directorio donde se almacenan las pistas locales de audio MP3.",
+    )
     ADMIN_TOKEN: str = Field(
         default="microtoodles_secret_token",
         description="Token de autenticación Bearer para endpoints protegidos.",

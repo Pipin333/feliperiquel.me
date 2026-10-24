@@ -34,3 +34,13 @@ venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+microtoodles/media/
+*.mp3
+*.opus
+*.m4a
+*.tar.gz
+all_*_spotify_tracks.json
+dom_tracks.json
+network_playlist.json
+spotify_captured.json
+target_graphql_req.json

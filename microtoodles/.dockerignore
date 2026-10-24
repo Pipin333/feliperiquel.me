@@ -18,5 +18,10 @@ htmlcov
 *.db-shm
 *.db-wal
 data/
+media/
+*.mp3
+*.opus
+*.m4a
+*.tar.gz
 *.tmp
 *.webm
