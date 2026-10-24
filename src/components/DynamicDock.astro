@@ -306,7 +306,8 @@ import Icon from './Icon.astro';
   <!-- PERSISTENT HTML5 AUDIO ELEMENT -->
   <audio
     id="microtoodles-stream"
-    preload="none"
+    preload="metadata"
+    crossorigin="anonymous"
     data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || (import.meta.env.PROD ? "https://radio.feliperiquel.me" : "http://localhost:8080")}
   ></audio>
 
@@ -742,9 +743,9 @@ import Icon from './Icon.astro';
   const radioDspLink = document.getElementById('dock-radio-dsp-link');
 
   let radioPollTimer: number | null = null;
-  let clockTicker: number | null = null;
   let currentElapsed = 0;
   let currentDuration = 0;
+  let currentTrackId: string | null = null;
   let isScrubbing = false;
   const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
 
@@ -790,24 +791,77 @@ import Icon from './Icon.astro';
     }
   }
 
-  function startClock() {
-    if (clockTicker !== null) clearInterval(clockTicker);
-    clockTicker = window.setInterval(() => {
-      if (radioAudio && !radioAudio.paused) {
-        if (currentDuration > 0 && currentElapsed < currentDuration) {
-          currentElapsed += 1;
-        } else if (currentDuration > 0 && currentElapsed >= currentDuration) {
-          updateNowPlaying();
-        }
-        renderClock();
+  function loadTrack(track: any, startAtSeconds: number = 0, autoPlay: boolean = true) {
+    if (!radioAudio || !track || !track.id) return;
+    currentTrackId = track.id;
+
+    if (radioTitle) radioTitle.textContent = track.title || 'En Reproducción';
+    if (radioArtist) radioArtist.textContent = track.artist || 'Desconocido';
+    if (radioStatusBadge) {
+      radioStatusBadge.textContent = '192k MP3 • Studio Master';
+      radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/40';
+    }
+    if (track.cover_url && radioCover) {
+      radioCover.src = track.cover_url;
+      radioCover.classList.remove('hidden');
+      if (radioPlaceholder) radioPlaceholder.classList.add('hidden');
+    }
+
+    currentDuration = Math.floor((track.duration_ms || 0) / 1000);
+    currentElapsed = Math.floor(startAtSeconds);
+    renderClock();
+
+    const mediaUrl = `${rawApiUrl}/api/media/${track.id}.mp3`;
+    const isSameSrc = radioAudio.src.includes(track.id);
+
+    if (!isSameSrc) {
+      radioAudio.src = mediaUrl;
+      if (startAtSeconds > 0) {
+        radioAudio.currentTime = startAtSeconds;
       }
-    }, 1000);
+    } else if (Math.abs(radioAudio.currentTime - startAtSeconds) > 3) {
+      radioAudio.currentTime = startAtSeconds;
+    }
+
+    if (autoPlay) {
+      radioAudio.play().then(() => {
+        setPlayingUI(true);
+      }).catch((err) => {
+        console.warn('[MicroToodles Playback]:', err);
+        setPlayingUI(false);
+      });
+    }
   }
 
-  function stopClock() {
-    if (clockTicker !== null) {
-      clearInterval(clockTicker);
-      clockTicker = null;
+  async function playNext() {
+    try {
+      const res = await fetch(`${rawApiUrl}/api/next-track`, { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data && data.next_track) {
+        loadTrack(data.next_track, 0, true);
+      }
+    } catch (err) {
+      console.error('[MicroToodles Next Error]:', err);
+    }
+  }
+
+  async function playPrevious() {
+    try {
+      if (radioAudio && radioAudio.currentTime > 3) {
+        radioAudio.currentTime = 0;
+        currentElapsed = 0;
+        renderClock();
+        return;
+      }
+      const res = await fetch(`${rawApiUrl}/api/previous-track`, { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data && data.prev_track) {
+        loadTrack(data.prev_track, 0, true);
+      }
+    } catch (err) {
+      console.error('[MicroToodles Prev Error]:', err);
     }
   }
 
@@ -888,26 +942,13 @@ import Icon from './Icon.astro';
       const data = await res.json();
 
       if (data && data.track) {
-        if (radioTitle) radioTitle.textContent = data.track.title || 'En Vivo';
-        if (radioArtist) radioArtist.textContent = data.track.artist || 'Desconocido';
-        if (radioStatusBadge) {
-          radioStatusBadge.textContent = '128k MP3 • En Vivo';
-          radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-800/40';
-        }
-        if (data.track.cover_url && radioCover) {
-          radioCover.src = data.track.cover_url;
-          radioCover.classList.remove('hidden');
-          if (radioPlaceholder) radioPlaceholder.classList.add('hidden');
-        }
-
         if (data.is_shuffle !== undefined) {
           setShuffleUI(Boolean(data.is_shuffle));
         }
 
-        if (data.elapsed_seconds !== undefined) {
-          currentElapsed = Math.floor(data.elapsed_seconds);
-          currentDuration = Math.floor(data.duration_seconds || 0);
-          renderClock();
+        // Si la radio está pausada y no hay pista cargada, preparar metadatos
+        if (radioAudio && radioAudio.paused && !currentTrackId) {
+          loadTrack(data.track, data.elapsed_seconds || 0, false);
         }
       }
     } catch {
@@ -915,7 +956,7 @@ import Icon from './Icon.astro';
         radioStatusBadge.textContent = 'Radio Offline';
         radioStatusBadge.className = 'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-tech-sm text-[10px] bg-canvas-raised text-slate-400 border border-canvas-border';
       }
-      if (radioAudio && radioAudio.paused) {
+      if (radioAudio && radioAudio.paused && !currentTrackId) {
         if (radioTitle) radioTitle.textContent = 'Radio fuera de línea';
         if (radioArtist) radioArtist.textContent = 'Servidor en espera o no conectado';
       }
@@ -925,7 +966,7 @@ import Icon from './Icon.astro';
   function startPolling() {
     if (radioPollTimer !== null) clearInterval(radioPollTimer);
     updateNowPlaying();
-    radioPollTimer = window.setInterval(updateNowPlaying, 3500);
+    radioPollTimer = window.setInterval(updateNowPlaying, 5000);
   }
 
   function stopPolling() {
@@ -939,27 +980,37 @@ import Icon from './Icon.astro';
     if (!radioAudio) return;
 
     if (radioAudio.paused) {
-      try {
-        radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
-        await radioAudio.play();
-        setPlayingUI(true);
-        startPolling();
-        startClock();
-      } catch (err) {
-        console.error('[MicroToodles Playback Error]:', err);
-        setPlayingUI(false, true);
-        if (radioTitle) radioTitle.textContent = 'Error al reproducir';
-        if (radioArtist) radioArtist.textContent = 'Reintenta en unos segundos';
+      // Si ya hay una pista cargada, reanudar inmediatamente sin recargar
+      if (currentTrackId && radioAudio.src && !radioAudio.src.endsWith('/')) {
+        try {
+          await radioAudio.play();
+          setPlayingUI(true);
+        } catch (err) {
+          console.error('[MicroToodles Play Error]:', err);
+        }
+        return;
       }
+
+      // Si no hay pista cargada, consultar el servidor y sincronizar
+      try {
+        const res = await fetch(`${rawApiUrl}/api/now-playing`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.track) {
+            loadTrack(data.track, data.elapsed_seconds || 0, true);
+            if (data.is_shuffle !== undefined) setShuffleUI(Boolean(data.is_shuffle));
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('[MicroToodles NowPlaying Error]:', err);
+      }
+
+      // Fallback: cargar siguiente pista
+      playNext();
     } else {
       radioAudio.pause();
-      radioAudio.removeAttribute('src');
-      radioAudio.load();
       setPlayingUI(false);
-      stopClock();
-      if (!radioPanel || radioPanel.classList.contains('hidden')) {
-        stopPolling();
-      }
     }
   }
 
@@ -971,6 +1022,27 @@ import Icon from './Icon.astro';
       radioAudio.volume = parsed;
       if (radioVolumeSlider) radioVolumeSlider.value = String(parsed);
     }
+  }
+
+  // HTML5 Audio Event Listeners (Scrubbing e interacción fluida en tiempo real)
+  if (radioAudio) {
+    radioAudio.addEventListener('timeupdate', () => {
+      if (!isScrubbing) {
+        currentElapsed = Math.floor(radioAudio.currentTime);
+        if (radioAudio.duration && !isNaN(radioAudio.duration) && radioAudio.duration > 0) {
+          currentDuration = Math.floor(radioAudio.duration);
+        }
+        renderClock();
+      }
+    });
+
+    radioAudio.addEventListener('ended', () => {
+      playNext();
+    });
+
+    radioAudio.addEventListener('play', () => setPlayingUI(true));
+    radioAudio.addEventListener('pause', () => setPlayingUI(false));
+    radioAudio.addEventListener('error', () => setPlayingUI(false, true));
   }
 
   if (radioToggleBtn) {
@@ -995,10 +1067,7 @@ import Icon from './Icon.astro';
     radioDspLink.addEventListener('click', () => {
       if (radioAudio && !radioAudio.paused) {
         radioAudio.pause();
-        radioAudio.removeAttribute('src');
-        radioAudio.load();
         setPlayingUI(false);
-        stopClock();
       }
     });
   }
@@ -1020,19 +1089,14 @@ import Icon from './Icon.astro';
   }
 
   if (radioPrevBtn) {
-    radioPrevBtn.addEventListener('click', async () => {
-      try {
-        await fetch(`${rawApiUrl}/api/previous-track`, { method: 'POST' });
-        setTimeout(() => {
-          if (radioAudio && !radioAudio.paused) {
-            radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
-            radioAudio.play().catch(() => {});
-          }
-          updateNowPlaying();
-        }, 400);
-      } catch (err) {
-        console.error('[MicroToodles Prev Error]:', err);
-      }
+    radioPrevBtn.addEventListener('click', () => {
+      playPrevious();
+    });
+  }
+
+  if (radioSkipBtn) {
+    radioSkipBtn.addEventListener('click', () => {
+      playNext();
     });
   }
 
@@ -1045,40 +1109,16 @@ import Icon from './Icon.astro';
       }
     });
 
-    radioScrubBar.addEventListener('change', async () => {
+    radioScrubBar.addEventListener('change', () => {
       const targetSec = parseFloat(radioScrubBar.value);
-      currentElapsed = targetSec;
-      renderClock();
-      try {
-        await fetch(`${rawApiUrl}/api/seek?seconds=${targetSec}`, { method: 'POST' });
-        if (radioAudio && !radioAudio.paused) {
-          radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
-          await radioAudio.play().catch(() => {});
-        }
-      } catch (err) {
-        console.error('[MicroToodles Seek Error]:', err);
-      } finally {
-        setTimeout(() => {
-          isScrubbing = false;
-        }, 600);
+      if (radioAudio && !isNaN(targetSec)) {
+        radioAudio.currentTime = targetSec;
+        currentElapsed = targetSec;
+        renderClock();
       }
-    });
-  }
-
-  if (radioSkipBtn) {
-    radioSkipBtn.addEventListener('click', async () => {
-      try {
-        await fetch(`${rawApiUrl}/api/next-track`, { method: 'POST' });
-        setTimeout(() => {
-          if (radioAudio && !radioAudio.paused) {
-            radioAudio.src = `${rawApiUrl}/api/stream?_t=${Date.now()}`;
-            radioAudio.play().catch(() => {});
-          }
-          updateNowPlaying();
-        }, 500);
-      } catch {
-        // Fallback silencioso
-      }
+      isScrubbing = false;
+      // Notificar al backend de forma asíncrona
+      fetch(`${rawApiUrl}/api/seek?seconds=${targetSec}`, { method: 'POST' }).catch(() => {});
     });
   }
 

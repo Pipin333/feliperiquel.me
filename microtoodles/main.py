@@ -9,7 +9,7 @@ import logging
 from typing import AsyncGenerator
 from fastapi import FastAPI, Header, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import get_settings
@@ -142,6 +142,25 @@ async def stream_audio() -> StreamingResponse:
             "X-Content-Type-Options": "nosniff",
         },
     )
+
+
+@app.get("/api/media/{track_id}", summary="Reproducción directa con soporte de Range Requests")
+async def get_media_track(track_id: str) -> FileResponse:
+    """Sirve la pista de audio MP3 desde almacenamiento local con soporte HTTP Range (206) para scrubbing instantáneo."""
+    import os
+    clean_id = track_id.replace(".mp3", "")
+    for ext in (".mp3", ".opus", ".m4a", ".webm"):
+        file_path = os.path.join(settings.MEDIA_DIR, f"{clean_id}{ext}")
+        if os.path.exists(file_path):
+            return FileResponse(
+                file_path,
+                media_type="audio/mpeg",
+                headers={
+                    "Accept-Ranges": "bytes",
+                    "Cache-Control": "public, max-age=86400",
+                },
+            )
+    raise HTTPException(status_code=404, detail=f"Pista '{track_id}' no encontrada en almacenamiento local")
 
 
 @app.get("/api/queue", summary="Lista de próximas canciones encoladas")
