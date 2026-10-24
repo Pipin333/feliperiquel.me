@@ -77,9 +77,10 @@ async def test_skip_track_endpoint():
 
 @pytest.mark.asyncio
 async def test_cors_headers():
-    """Valida que las cabeceras CORS estén presentes para feliperiquel.me."""
+    """Valida que las cabeceras CORS estén presentes para feliperiquel.me y previews de Vercel."""
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
+        # 1. Origen de producción
         response = await client.options(
             "/api/now-playing",
             headers={
@@ -88,4 +89,16 @@ async def test_cors_headers():
             },
         )
         assert response.status_code == 200
-        assert "access-control-allow-origin" in response.headers
+        assert response.headers.get("access-control-allow-origin") == "https://feliperiquel.me"
+
+        # 2. Origen de preview en Vercel
+        preview_origin = "https://feliperiquel-me-git-feat-microtoodles-audio-streamer.vercel.app"
+        response_preview = await client.options(
+            "/api/now-playing",
+            headers={
+                "Origin": preview_origin,
+                "Access-Control-Request-Method": "GET",
+            },
+        )
+        assert response_preview.status_code == 200
+        assert response_preview.headers.get("access-control-allow-origin") == preview_origin
