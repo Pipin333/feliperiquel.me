@@ -1,0 +1,322 @@
+"""Motor de resolución de audio y streaming continuo para MicroToodles.
+
+Gestiona la extracción de audio mediante yt-dlp, el buffer atómico de reproducción,
+la tubería de streaming con FFmpeg y la distribución en tiempo real a clientes web.
+"""
+
+import asyncio
+import logging
+import shutil
+import time
+from typing import AsyncGenerator
+from yt_dlp import YoutubeDL
+
+from config import Settings
+from database import Database
+from spotify import Track
+
+logger = logging.getLogger("microtoodles.engine")
+
+
+class AudioResolver:
+    """Resuelve URLs directas de streaming de audio a partir de metadatos de canciones."""
+
+    def __init__(self, db: Database) -> None:
+        """Inicializa el resolvedor de audio.
+
+        Args:
+            db: Instancia de la base de datos para consulta y almacenamiento en caché.
+        """
+        self.db = db
+
+    async def resolve_audio_url(self, track: Track) -> str | None:
+        """Obtiene la URL directa de streaming para una pista, consultando caché o yt-dlp.
+
+        Args:
+            track: Pista con título y artista a resolver.
+
+        Returns:
+            str | None: URL directa de streaming o None si la resolución falló.
+        """
+        cached_url = await self.db.get_cached_url(track.id)
+        if cached_url:
+            return cached_url
+
+        query = f"ytsearch1:{track.artist} - {track.title} audio"
+        logger.info(f"Resolviendo audio para '{track.artist} - {track.title}' vía yt-dlp...")
+
+        def _extract() -> dict | None:
+            ydl_opts = {
+                "format": "bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio",
+                "extract_flat": False,
+                "skip_download": True,
+                "quiet": True,
+                "no_warnings": True,
+                "nocheckcertificate": True,
+                "noplaylist": True,
+                "default_search": "ytsearch1",
+            }
+            try:
+                with YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(query, download=False)
+                    if not info:
+                        return None
+                    if "entries" in info and info["entries"]:
+                        return info["entries"][0]
+                    return info
+            except Exception as exc:
+                logger.error(f"Fallo en extracción con yt-dlp para '{query}': {exc}")
+                return None
+
+        entry = await asyncio.to_thread(_extract)
+        if not entry or not entry.get("url"):
+            logger.warning(f"No se encontró flujo de audio para '{track.title}'")
+            return None
+
+        stream_url = str(entry["url"])
+        format_id = str(entry.get("format_id", ""))
+
+        # Guardar en caché con TTL de 4 horas
+        await self.db.set_cached_url(
+            track_id=track.id,
+            resolved_url=stream_url,
+            format_id=format_id,
+            ttl_seconds=14400,
+        )
+
+        return stream_url
+
+
+class RadioEngine:
+    """Motor central de transmisión de radio continua en tiempo real."""
+
+    def __init__(self, settings: Settings, db: Database, resolver: AudioResolver) -> None:
+        """Inicializa el motor de radio y estructuras de suscripción.
+
+        Args:
+            settings: Configuración general de la aplicación.
+            db: Capa de persistencia.
+            resolver: Resolvedor de enlaces directos de audio.
+        """
+        self.settings = settings
+        self.db = db
+        self.resolver = resolver
+        self.current_track: Track | None = None
+        self.started_at: float = 0.0
+        self.is_running: bool = False
+        self._listeners: set[asyncio.Queue[bytes]] = set()
+        self._skip_event: asyncio.Event = asyncio.Event()
+        self._worker_task: asyncio.Task | None = None
+
+    def subscribe(self) -> asyncio.Queue[bytes]:
+        """Registra un nuevo oyente HTTP y le asigna una cola de chunks de audio.
+
+        Returns:
+            asyncio.Queue[bytes]: Cola asíncrona donde se depositan los bloques de audio.
+        """
+        queue: asyncio.Queue[bytes] = asyncio.Queue(maxsize=100)
+        self._listeners.add(queue)
+        logger.info(f"Nuevo oyente conectado. Total oyentes: {len(self._listeners)}")
+        return queue
+
+    def unsubscribe(self, queue: asyncio.Queue[bytes]) -> None:
+        """Elimina un oyente al cerrar la conexión HTTP.
+
+        Args:
+            queue: Cola del oyente a desvincular.
+        """
+        self._listeners.discard(queue)
+        logger.info(f"Oyente desconectado. Total oyentes: {len(self._listeners)}")
+
+    def broadcast(self, chunk: bytes) -> None:
+        """Distribuye un fragmento de audio a todos los oyentes activos.
+
+        Args:
+            chunk: Bloque binario de datos de audio Ogg/Opus.
+        """
+        dead_queues: list[asyncio.Queue[bytes]] = []
+        for queue in list(self._listeners):
+            try:
+                queue.put_nowait(chunk)
+            except asyncio.QueueFull:
+                # Si el oyente tiene saturada la cola, descartamos paquetes viejos para evitar lag
+                try:
+                    queue.get_nowait()
+                    queue.put_nowait(chunk)
+                except Exception:
+                    dead_queues.append(queue)
+            except Exception:
+                dead_queues.append(queue)
+
+        for queue in dead_queues:
+            self._listeners.discard(queue)
+
+    async def skip_track(self) -> Track | None:
+        """Fuerza el salto inmediato de la canción en curso hacia la siguiente.
+
+        Returns:
+            Track | None: Nueva canción en reproducción o None si no hay tracks.
+        """
+        logger.info("Comando de salto de pista recibido (Skip).")
+        next_track = await self.db.get_next_track(
+            self.current_track.id if self.current_track else None
+        )
+        self._skip_event.set()
+        return next_track
+
+    def get_now_playing(self) -> dict:
+        """Calcula el estado y posición temporal actual de la canción en emisión.
+
+        Returns:
+            dict: Metadatos completos de la pista y estado del reproductor.
+        """
+        if not self.current_track:
+            return {
+                "is_playing": False,
+                "track": None,
+                "elapsed_seconds": 0,
+                "duration_seconds": 0,
+                "listeners_count": len(self._listeners),
+            }
+
+        elapsed = max(0.0, time.time() - self.started_at)
+        duration_sec = self.current_track.duration_ms / 1000.0
+
+        return {
+            "is_playing": self.is_running,
+            "track": {
+                "id": self.current_track.id,
+                "title": self.current_track.title,
+                "artist": self.current_track.artist,
+                "album": self.current_track.album,
+                "cover_url": self.current_track.cover_url,
+                "duration_ms": self.current_track.duration_ms,
+            },
+            "elapsed_seconds": round(elapsed, 1),
+            "duration_seconds": round(duration_sec, 1),
+            "listeners_count": len(self._listeners),
+        }
+
+    async def stream_audio_generator(self) -> AsyncGenerator[bytes, None]:
+        """Generador asíncrono que alimenta el StreamingResponse de FastAPI.
+
+        Yields:
+            bytes: Bloques binarios continuos del stream de audio.
+        """
+        queue = self.subscribe()
+        try:
+            while self.is_running:
+                chunk = await queue.get()
+                yield chunk
+        finally:
+            self.unsubscribe(queue)
+
+    async def start(self) -> None:
+        """Inicia el ciclo principal de la radio en segundo plano."""
+        if self.is_running:
+            return
+        self.is_running = True
+        self._worker_task = asyncio.create_task(self._radio_loop())
+        logger.info("Motor de Radio MicroToodles iniciado.")
+
+    async def stop(self) -> None:
+        """Detiene la reproducción y cancela las tareas activas."""
+        self.is_running = False
+        self._skip_event.set()
+        if self._worker_task and not self._worker_task.done():
+            self._worker_task.cancel()
+            try:
+                await self._worker_task
+            except asyncio.CancelledError:
+                pass
+        logger.info("Motor de Radio MicroToodles detenido.")
+
+    async def _radio_loop(self) -> None:
+        """Ciclo continuo que reproduce canciones en secuencia."""
+        ffmpeg_bin = shutil.which(self.settings.FFMPEG_BIN) or self.settings.FFMPEG_BIN
+
+        while self.is_running:
+            try:
+                # Obtener la siguiente canción
+                current_id = self.current_track.id if self.current_track else None
+                track = await self.db.get_next_track(current_id)
+
+                if not track:
+                    logger.warning("No hay pistas disponibles en la base de datos. Esperando 10s...")
+                    await asyncio.sleep(10)
+                    continue
+
+                self.current_track = track
+                self.started_at = time.time()
+                self._skip_event.clear()
+                await self.db.set_playback_state(track.id, self.started_at, is_playing=True)
+
+                logger.info(f"Iniciando reproducción: '{track.artist} - {track.title}'")
+
+                # Resolver enlace directo de audio
+                audio_url = await self.resolver.resolve_audio_url(track)
+                if not audio_url:
+                    logger.warning(f"Omitiendo '{track.title}' por fallo de resolución.")
+                    await asyncio.sleep(1)
+                    continue
+
+                # Validar existencia de FFmpeg
+                if not shutil.which(ffmpeg_bin):
+                    logger.warning(f"Binario FFmpeg '{ffmpeg_bin}' no disponible en el sistema.")
+                    # Si no hay FFmpeg en el host local, esperar la duración o el evento de skip
+                    try:
+                        duration_s = max(5.0, track.duration_ms / 1000.0)
+                        await asyncio.wait_for(self._skip_event.wait(), timeout=duration_s)
+                    except asyncio.TimeoutError:
+                        pass
+                    continue
+
+                # Comando FFmpeg: Lectura a velocidad nativa (-re) y copia directa Opus en contenedor Ogg
+                ffmpeg_cmd = [
+                    ffmpeg_bin,
+                    "-re",
+                    "-i",
+                    audio_url,
+                    "-vn",
+                    "-c:a",
+                    "copy",
+                    "-f",
+                    "ogg",
+                    "-",
+                ]
+
+                proc = await asyncio.create_subprocess_exec(
+                    *ffmpeg_cmd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.DEVNULL,
+                )
+
+                try:
+                    while self.is_running and proc.returncode is None:
+                        if self._skip_event.is_set():
+                            break
+
+                        if proc.stdout is None:
+                            break
+
+                        chunk = await proc.stdout.read(8192)
+                        if not chunk:
+                            break
+
+                        self.broadcast(chunk)
+                finally:
+                    if proc.returncode is None:
+                        try:
+                            proc.terminate()
+                            await proc.wait()
+                        except Exception:
+                            pass
+
+                logger.info(f"Pista finalizada o saltada: '{track.title}'")
+                await asyncio.sleep(0.5)
+
+            except asyncio.CancelledError:
+                break
+            except Exception as err:
+                logger.error(f"Error inesperado en ciclo de radio: {err}", exc_info=True)
+                await asyncio.sleep(3)

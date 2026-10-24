@@ -24,3 +24,13 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Python & SQLite
+*.db
+*.db-wal
+*.db-shm
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
