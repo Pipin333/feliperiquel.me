@@ -256,7 +256,7 @@ import Icon from './Icon.astro';
     id="microtoodles-stream"
     preload="none"
     crossorigin="anonymous"
-    data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || "http://localhost:8080"}
+    data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || (import.meta.env.PROD ? "https://radio.feliperiquel.me" : "http://localhost:8080")}
   ></audio>
 
   <!-- THE DOCK PILL (ISLA DINÁMICA FLOTANTE) -->
@@ -685,7 +685,7 @@ import Icon from './Icon.astro';
   const radioTime = document.getElementById('dock-radio-time');
 
   let radioPollTimer: number | null = null;
-  const rawApiUrl = (radioAudio?.dataset.apiUrl || 'http://localhost:8080').replace(/\/$/, '');
+  const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
 
   function toggleRadioPanel(forceOpen?: boolean) {
     if (!radioPanel || !radioExpandBtn) return;
