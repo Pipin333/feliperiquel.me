@@ -47,6 +47,7 @@ const albumes = [
     artista: "Michael Jackson",
     anio: "1982",
     portada: "/images/albums/thriller.jpg",
+    spotify: "https://open.spotify.com/album/2ANVost0y2y52ema1E9xAZ",
     nota: "Producción en capas, cada elemento con su sitio."
   },
   {
@@ -54,6 +55,7 @@ const albumes = [
     artista: "Luis Miguel",
     anio: "1990",
     portada: "/images/albums/20-anos.jpg",
+    spotify: "https://open.spotify.com/album/3D9NENGfg4DFmYJrEaxRHd",
     nota: "Dinámica, fraseo y control vocal."
   },
   {
@@ -61,6 +63,7 @@ const albumes = [
     artista: "Guns N' Roses",
     anio: "2008",
     portada: "/images/albums/chinese-democracy.jpg",
+    spotify: "https://open.spotify.com/album/0suNLpB9xraAv1FcdlITjQ",
     nota: "Guitarras superpuestas y un estudio que se extendió por años."
   },
   {
@@ -68,6 +71,7 @@ const albumes = [
     artista: "Dillom",
     anio: "2021",
     portada: "/images/albums/post-mortem.jpg",
+    spotify: "https://open.spotify.com/album/39g3CsFBc9YK9Z6AbvvkgF",
     nota: "Sampleo y ruido tratados como material de mezcla."
   },
   {
@@ -75,6 +79,7 @@ const albumes = [
     artista: "Bad Bunny",
     anio: "2025",
     portada: "/images/albums/debi-tirar-mas-fotos.png",
+    spotify: "https://open.spotify.com/album/5K79FLRUCSysQnVESLcTdb",
     nota: "Plena, protesta y producción contemporánea."
   }
 ];
@@ -305,7 +310,13 @@ const albumes = [
 
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {albumes.map((album, index) => (
-              <div class="group flex flex-col rounded-tech-sm border border-canvas-border bg-canvas p-3.5 transition-all duration-140 hover:border-telemetry/40">
+              <a
+                href={album.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex flex-col rounded-tech-sm border border-canvas-border bg-canvas p-3.5 transition-all duration-140 hover:border-telemetry/60 hover:-translate-y-0.5 focus-visible:rounded-tech-sm"
+                title={`Escuchar ${album.titulo} de ${album.artista} en Spotify`}
+              >
                 <div class="relative aspect-square w-full overflow-hidden rounded-tech-sm bg-canvas-surface border border-canvas-border">
                   <img
                     src={album.portada}
@@ -326,9 +337,16 @@ const albumes = [
 
                 <div class="mt-3 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 class="font-display text-sm font-bold text-white tracking-tight group-hover:text-telemetry transition-colors line-clamp-1" title={album.titulo}>
-                      {album.titulo}
-                    </h4>
+                    <div class="flex items-start justify-between gap-1.5">
+                      <h4 class="font-display text-sm font-bold text-white tracking-tight group-hover:text-telemetry transition-colors line-clamp-1" title={album.titulo}>
+                        {album.titulo}
+                      </h4>
+                      <svg class="w-3.5 h-3.5 text-slate-500 group-hover:text-telemetry transition-colors shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </div>
                     <p class="mt-0.5 font-mono text-xs text-slate-400 truncate">
                       {album.artista}
                     </p>
@@ -336,8 +354,12 @@ const albumes = [
                   <p class="mt-2.5 text-xs leading-relaxed text-slate-300">
                     {album.nota}
                   </p>
+                  <div class="mt-3 pt-2.5 border-t border-canvas-border/60 flex items-center justify-between text-[11px] font-mono text-slate-400 group-hover:text-telemetry transition-colors">
+                    <span>Spotify</span>
+                    <span aria-hidden="true">-&gt;</span>
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </article>
