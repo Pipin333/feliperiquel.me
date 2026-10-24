@@ -235,9 +235,10 @@ import Icon from './Icon.astro';
             title="Volumen"
           />
           <a
-            href="/lab/sonicrip"
+            href="/lab/sonicrip?source=radio"
+            id="dock-radio-dsp-link"
             class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono"
-            title="Conectar con analizador DSP"
+            title="Transferir audio a SonicRip DSP"
           >
             <span>DSP</span>
             <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -682,9 +683,43 @@ import Icon from './Icon.astro';
   const radioArtist = document.getElementById('dock-radio-artist');
   const radioStatusBadge = document.getElementById('dock-radio-status-badge');
   const radioTime = document.getElementById('dock-radio-time');
+  const radioDspLink = document.getElementById('dock-radio-dsp-link');
 
   let radioPollTimer: number | null = null;
+  let clockTicker: number | null = null;
+  let currentElapsed = 0;
+  let currentDuration = 0;
   const rawApiUrl = (radioAudio?.dataset.apiUrl || (window.location.hostname === 'localhost' ? 'http://localhost:8080' : 'https://radio.feliperiquel.me')).replace(/\/$/, '');
+
+  function renderClock() {
+    if (!radioTime) return;
+    const elM = Math.floor(currentElapsed / 60);
+    const elS = Math.floor(currentElapsed % 60);
+    const durM = Math.floor(currentDuration / 60);
+    const durS = Math.floor(currentDuration % 60);
+    radioTime.textContent = `${String(elM).padStart(2, '0')}:${String(elS).padStart(2, '0')} / ${String(durM).padStart(2, '0')}:${String(durS).padStart(2, '0')}`;
+  }
+
+  function startClock() {
+    if (clockTicker !== null) clearInterval(clockTicker);
+    clockTicker = window.setInterval(() => {
+      if (radioAudio && !radioAudio.paused) {
+        if (currentDuration > 0 && currentElapsed < currentDuration) {
+          currentElapsed += 1;
+        } else if (currentDuration > 0 && currentElapsed >= currentDuration) {
+          updateNowPlaying();
+        }
+        renderClock();
+      }
+    }, 1000);
+  }
+
+  function stopClock() {
+    if (clockTicker !== null) {
+      clearInterval(clockTicker);
+      clockTicker = null;
+    }
+  }
 
   function toggleRadioPanel(forceOpen?: boolean) {
     if (!radioPanel || !radioExpandBtn) return;
@@ -698,11 +733,15 @@ import Icon from './Icon.astro';
       radioPanel.classList.remove('hidden');
       radioExpandBtn.setAttribute('aria-expanded', 'true');
       if (radioChevron) radioChevron.classList.add('rotate-180');
-      updateNowPlaying();
+      startPolling();
     } else {
       radioPanel.classList.add('hidden');
       radioExpandBtn.setAttribute('aria-expanded', 'false');
       if (radioChevron) radioChevron.classList.remove('rotate-180');
+      if (radioAudio && radioAudio.paused) {
+        stopPolling();
+        stopClock();
+      }
     }
   }
 
@@ -771,12 +810,10 @@ import Icon from './Icon.astro';
           if (radioPlaceholder) radioPlaceholder.classList.add('hidden');
         }
 
-        if (radioTime && data.elapsed_seconds !== undefined) {
-          const elM = Math.floor(data.elapsed_seconds / 60);
-          const elS = Math.floor(data.elapsed_seconds % 60);
-          const durM = Math.floor((data.duration_seconds || 0) / 60);
-          const durS = Math.floor((data.duration_seconds || 0) % 60);
-          radioTime.textContent = `${String(elM).padStart(2, '0')}:${String(elS).padStart(2, '0')} / ${String(durM).padStart(2, '0')}:${String(durS).padStart(2, '0')}`;
+        if (data.elapsed_seconds !== undefined) {
+          currentElapsed = Math.floor(data.elapsed_seconds);
+          currentDuration = Math.floor(data.duration_seconds || 0);
+          renderClock();
         }
       }
     } catch {
@@ -794,7 +831,7 @@ import Icon from './Icon.astro';
   function startPolling() {
     if (radioPollTimer !== null) clearInterval(radioPollTimer);
     updateNowPlaying();
-    radioPollTimer = window.setInterval(updateNowPlaying, 6000);
+    radioPollTimer = window.setInterval(updateNowPlaying, 3500);
   }
 
   function stopPolling() {
@@ -813,6 +850,7 @@ import Icon from './Icon.astro';
         await radioAudio.play();
         setPlayingUI(true);
         startPolling();
+        startClock();
       } catch (err) {
         console.error('[MicroToodles Playback Error]:', err);
         setPlayingUI(false, true);
@@ -824,7 +862,10 @@ import Icon from './Icon.astro';
       radioAudio.removeAttribute('src');
       radioAudio.load();
       setPlayingUI(false);
-      stopPolling();
+      stopClock();
+      if (!radioPanel || radioPanel.classList.contains('hidden')) {
+        stopPolling();
+      }
     }
   }
 
@@ -854,6 +895,18 @@ import Icon from './Icon.astro';
 
   if (radioCloseBtn) {
     radioCloseBtn.addEventListener('click', () => toggleRadioPanel(false));
+  }
+
+  if (radioDspLink) {
+    radioDspLink.addEventListener('click', () => {
+      if (radioAudio && !radioAudio.paused) {
+        radioAudio.pause();
+        radioAudio.removeAttribute('src');
+        radioAudio.load();
+        setPlayingUI(false);
+        stopClock();
+      }
+    });
   }
 
   if (radioCardPlayBtn) {

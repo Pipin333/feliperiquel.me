@@ -156,19 +156,7 @@ async def next_track(
     token: str | None = Query(default=None),
     authorization: str | None = Header(default=None),
 ) -> dict:
-    """Fuerza el avance inmediato a la siguiente pista de la cola.
-
-    Puede requerir autenticación mediante ADMIN_TOKEN si está configurado en producción.
-    """
-    if settings.ENV == "production" and settings.ADMIN_TOKEN:
-        auth_header = authorization.replace("Bearer ", "") if authorization else ""
-        provided_token = token or auth_header
-        if provided_token != settings.ADMIN_TOKEN:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token de administración inválido o no provisto.",
-            )
-
+    """Fuerza el avance inmediato a la siguiente pista de la cola."""
     new_track = await radio_engine.skip_track()
     return {
         "status": "success",

@@ -204,8 +204,8 @@ class RadioEngine:
                 "listeners_count": len(self._listeners),
             }
 
-        elapsed = max(0.0, time.time() - self.started_at)
         duration_sec = self.current_track.duration_ms / 1000.0
+        elapsed = min(duration_sec, max(0.0, time.time() - self.started_at))
 
         return {
             "is_playing": self.is_running,
@@ -300,6 +300,9 @@ class RadioEngine:
                 ffmpeg_cmd = [
                     ffmpeg_bin,
                     "-re",
+                    "-nostats",
+                    "-loglevel",
+                    "warning",
                     "-i",
                     audio_url,
                     "-vn",
@@ -315,12 +318,19 @@ class RadioEngine:
                 proc = await asyncio.create_subprocess_exec(
                     *ffmpeg_cmd,
                     stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.DEVNULL,
                 )
+
+                max_track_duration = (track.duration_ms / 1000.0) + 4.0
 
                 try:
                     while self.is_running and proc.returncode is None:
                         if self._skip_event.is_set():
+                            break
+
+                        # Watchdog de duración: prevenir bloqueos si la fuente no cierra el socket
+                        if time.time() - self.started_at > max_track_duration:
+                            logger.info(f"Duración límite alcanzada para '{track.title}'. Pasando a siguiente pista...")
                             break
 
                         if proc.stdout is None:
