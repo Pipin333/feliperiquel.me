@@ -1,7 +1,6 @@
 ---
 // src/components/DynamicDock.astro
 import Icon from './Icon.astro';
-import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
 ---
 
 <!-- FLOATING DYNAMIC ISLAND & DOCK -->
@@ -140,19 +139,17 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
         <span class="font-mono text-[11px] text-slate-300 font-medium tracking-tight truncate">Toodles Radio // Live</span>
       </div>
       <div class="flex items-center gap-1.5 shrink-0">
-        <button
-          type="button"
-          id="dock-radio-arch-btn"
-          class="flex items-center gap-1 px-2 py-0.5 rounded-tech-sm text-[10px] font-mono font-medium text-cyan-400 bg-cyan-950/70 border border-cyan-800/60 hover:bg-cyan-900/80 hover:border-cyan-400 transition-all focus-visible:ring-1 focus-visible:ring-cyan-400 cursor-pointer"
-          title="Ver arquitectura interactiva y flujo de paquetes (¿Cómo funciona?)"
-          aria-haspopup="dialog"
-          aria-expanded="false"
+        <a
+          href="/microtoodles"
+          id="dock-radio-arch-link"
+          class="flex items-center gap-1 px-2 py-0.5 rounded-tech-sm text-[10px] font-mono font-medium text-cyan-400 bg-cyan-950/70 border border-cyan-800/60 hover:bg-cyan-900/80 hover:border-cyan-400 transition-all focus-visible:ring-1 focus-visible:ring-cyan-400"
+          title="Ver página de arquitectura interactiva y flujo de paquetes (¿Cómo funciona?)"
         >
           <svg class="w-2.5 h-2.5 text-cyan-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           <span>¿Cómo funciona?</span>
-        </button>
+        </a>
         <button
           type="button"
           id="dock-radio-close-btn"
@@ -327,9 +324,6 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
     crossorigin="anonymous"
     data-api-url={import.meta.env.PUBLIC_RADIO_API_URL || (import.meta.env.PROD ? "https://radio.feliperiquel.me" : "http://localhost:8080")}
   ></audio>
-
-  <!-- MICROTOODLES ARCHITECTURE & REAL PACKETS VISUALIZER MODAL -->
-  <MicroToodlesVisualizer />
 
   <!-- THE DOCK PILL (ISLA DINÁMICA FLOTANTE) -->
   <div class="relative pointer-events-auto group">
@@ -662,10 +656,8 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
     outputEl.appendChild(cmdRow);
     outputEl.appendChild(respRow);
 
-    if (cleanCmd === 'arch' || cleanCmd === 'radio arch' || cleanCmd === 'microtoodles arch') {
-      if (typeof (window as any).openMicroToodlesVisualizer === 'function') {
-        (window as any).openMicroToodlesVisualizer();
-      }
+    if (cleanCmd === 'arch' || cleanCmd === 'radio arch' || cleanCmd === 'microtoodles' || cleanCmd === 'microtoodles arch') {
+      window.location.href = '/microtoodles';
     }
 
     outputEl.scrollTop = outputEl.scrollHeight;
@@ -746,9 +738,6 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
     const target = e.target as Node | null;
     if (!target) return;
 
-    const archModal = document.getElementById('microtoodles-arch-modal');
-    if (archModal && archModal.contains(target)) return;
-
     if (radioPanel && !radioPanel.classList.contains('hidden')) {
       const radioGroup = radioToggleBtn?.parentElement;
       if (!radioPanel.contains(target) && (!radioGroup || !radioGroup.contains(target))) {
@@ -770,7 +759,6 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
   const radioToggleBtn = document.getElementById('dock-toggle-radio');
   const radioExpandBtn = document.getElementById('dock-expand-radio');
   const radioCloseBtn = document.getElementById('dock-radio-close-btn');
-  const radioArchBtn = document.getElementById('dock-radio-arch-btn');
   const radioChevron = document.getElementById('dock-radio-chevron');
   const radioAudio = document.getElementById('microtoodles-stream') as HTMLAudioElement | null;
   const radioCardPlayBtn = document.getElementById('dock-radio-card-play-btn');
@@ -1167,15 +1155,6 @@ import MicroToodlesVisualizer from './MicroToodlesVisualizer.astro';
 
   if (radioCloseBtn) {
     radioCloseBtn.addEventListener('click', () => toggleRadioPanel(false));
-  }
-
-  if (radioArchBtn) {
-    radioArchBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (typeof (window as any).openMicroToodlesVisualizer === 'function') {
-        (window as any).openMicroToodlesVisualizer();
-      }
-    });
   }
 
   if (radioDspLink) {
