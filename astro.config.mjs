@@ -24,7 +24,8 @@ export default defineConfig({
     })
   ],
   redirects: {
-    '/mantenimiento': '/mantencion'
+    '/mantenimiento': '/mantencion',
+    '/construccion': '/mantencion'
   },
   security: {
     checkOrigin: true
