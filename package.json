@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview --host",
     "test": "node scripts/qa-validate.mjs",
+    "generate:og": "node scripts/generate-og-images.mjs",
     "setup:hooks": "node scripts/install-hooks.mjs"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {
-    "bootstrap-icons": "^1.13.2"
+    "bootstrap-icons": "^1.13.2",
+    "sharp": "^0.33.5"
   }
 }
