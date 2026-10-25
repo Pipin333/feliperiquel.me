@@ -25,7 +25,7 @@ El sitio integra un playground de micro-aplicaciones y experimentos que se ejecu
 
 El portafolio expone herramientas reales y proyectos de código abierto:
 
-- **Toodles:** Bot de Discord para streaming de audio desde YouTube y sistema de recomendación musical inteligente con ML (similitud del coseno sobre features de audio).
+- **Toodles / MicroToodles:** Bot de Discord y microservicio de streaming de audio en segundo plano (FastAPI + OCI NVMe + Cloudflare CDN + Byte-Range HTTP 206) con página dedicada de arquitectura y telemetría de paquetes en tiempo real en [`/microtoodles`](/microtoodles), conectada a la isla dinámica.
 - **Whatsarr:** Interfaz conversacional en WhatsApp para solicitudes y monitoreo multimedia integrado a la suite Sonarr, Radarr y qBittorrent.
 - **UniCalendar AI:** Aplicación web integral para ingesta curricular multiformato (PDF, Word, Canvas LMS), protección de recesos institucionales y sincronización con Google Calendar.
 - **JD Watch Controller:** Captura de telemetría inercial (acelerómetro y giroscopio a 50Hz) y hápticos en Wear OS para emulación de controles de videojuegos.
