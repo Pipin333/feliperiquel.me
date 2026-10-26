@@ -1,0 +1,39 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # Se ejecuta cada 3 días a las 04:00 UTC para evitar la pausa por inactividad (límite de 7 días)
+    - cron: '0 4 */3 * *'
+  workflow_dispatch: # Permite ejecución manual desde la pestaña Actions de GitHub
+
+jobs:
+  keep-alive:
+    name: Ping Supabase REST API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send keep-alive request
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::Faltan los secretos SUPABASE_URL o SUPABASE_KEY en GitHub Secrets."
+            exit 1
+          fi
+
+          echo "Enviando ping de actividad a Supabase..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: $SUPABASE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_KEY" \
+            "$SUPABASE_URL/rest/v1/")
+
+          echo "Código HTTP recibido: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
+            echo "✅ Supabase está activo y respondió correctamente. Ping registrado."
+          elif [ "$HTTP_STATUS" -eq 521 ]; then
+            echo "::warning::El proyecto está pausado (HTTP 521). Debes reactivarlo manualmente desde supabase.com/dashboard."
+            exit 1
+          else
+            echo "::warning::Respuesta inesperada ($HTTP_STATUS), pero la solicitud fue procesada por el gateway."
+          fi

@@ -189,3 +189,16 @@ Copia el archivo `.env.example` a `.env` para desarrollo local o configúralas e
 | `RESEND_FROM_EMAIL` | Remitente verificado en Resend | Opcional (default provisto) |
 | `CONTACT_NOTIFICATION_EMAIL` | Correo donde recibirás alertas de nuevos mensajes | Opcional (default institucional) |
 | `PUBLIC_WHATSAPP_NUMBER` | Número para el enlace directo de chat en WhatsApp | Opcional |
+
+---
+
+## 🤖 Keep-Alive de Supabase (GitHub Actions)
+
+Para evitar que Supabase pause el proyecto gratuito tras 7 días de inactividad, se incluye el workflow [`.github/workflows/supabase-keep-alive.yml`](.github/workflows/supabase-keep-alive.yml) programado para ejecutarse automáticamente cada 3 días.
+
+### Configuración de Secretos en GitHub:
+1. Ve a tu repositorio en GitHub: **Settings** -> **Secrets and variables** -> **Actions**.
+2. Añade los siguientes secretos de repositorio (*Repository secrets*):
+   - `SUPABASE_URL`: Tu URL del proyecto (ej. `https://gpbevkdqwaascudzrard.supabase.co`).
+   - `SUPABASE_KEY`: Tu clave anónima (`anon key`) o clave de servicio (`service role key`).
+3. El workflow se activará cada 3 días o manualmente desde la pestaña **Actions** -> **Supabase Keep Alive** -> **Run workflow**.
