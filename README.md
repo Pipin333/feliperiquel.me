@@ -141,10 +141,15 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   ├── terminos.astro        # Términos y condiciones de uso del software
 │   │   ├── api/
 │   │   │   ├── contact.ts        # Endpoint serverless: rate limiting, Supabase, Resend y tickets VIP
+│   │   │   ├── easytaciones/     # Endpoints serverless privados (auth, match y detail)
+│   │   │   │   ├── auth.ts       # Sesión por cookie HttpOnly y validación de token
+│   │   │   │   ├── match.ts      # Búsqueda y ranking semántico de licitaciones
+│   │   │   │   └── detail.ts     # Ficha técnica oficial e ítems sin exponer ticket
 │   │   │   └── lab/
 │   │   │       └── retorica.ts   # Proxy serverless anti-SSRF para inferencia BYOK LLM
 │   │   └── lab/
 │   │       ├── index.astro       # Hub central del Laboratorio & Playground
+│   │       ├── easytaciones.astro# Consola privada unlisted (no-index) con autenticación por token
 │   │       ├── retorica.astro    # Transmutador ontológico de prosa técnica (Heurístico + BYOK)
 │   │       ├── copete.astro      # Cuánto Rinde (optimizador de insumos, repo: calculadoracopete)
 │   │       ├── quiz.astro        # Ni Idea Party Game (Teaser interactivo, blueprint y lista de espera VIP)

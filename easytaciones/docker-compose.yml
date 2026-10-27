@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: licitaciones_matcher_api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MP_TICKET=${MP_TICKET:-}
+      - MP_USE_MOCK=${MP_USE_MOCK:-false}
+      - TRANSFORMER_MODEL_NAME=sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      - DEVICE=cpu
+      - DEFAULT_MIN_SCORE=50.0
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  hf_cache:
+    driver: local
