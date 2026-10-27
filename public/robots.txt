@@ -2,6 +2,8 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /lab/easytaciones
+Disallow: /easytaciones
 
 Sitemap: https://feliperiquel.me/sitemap-index.xml
 

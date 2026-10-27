@@ -11,10 +11,12 @@ services:
       - NODE_ENV=production
       - HOST=0.0.0.0
       - PORT=4321
+      - EASYTACIONES_API_URL=http://easytaciones:8000
     env_file:
       - .env.example
     depends_on:
       - microtoodles
+      - easytaciones
 
   microtoodles:
     build:
@@ -31,6 +33,25 @@ services:
     volumes:
       - microtoodles_data:/app/data
 
+  easytaciones:
+    build:
+      context: ./easytaciones
+      dockerfile: Dockerfile
+    container_name: easytaciones-matcher
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./easytaciones/.env.example
+    environment:
+      - PORT=8000
+      - DEVICE=cpu
+      - TRANSFORMER_MODEL_NAME=sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+    volumes:
+      - easytaciones_hf_cache:/root/.cache/huggingface
+
 volumes:
   microtoodles_data:
+    driver: local
+  easytaciones_hf_cache:
     driver: local

@@ -29,7 +29,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/mantencion') && !page.includes('/ni-idea'),
+      filter: (page) => !page.includes('/mantencion') && !page.includes('/ni-idea') && !page.includes('/easytaciones'),
       customPages: ['https://feliperiquel.me/lab/finflow/']
     })
   ],

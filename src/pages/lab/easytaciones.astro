@@ -1,0 +1,811 @@
+---
+// src/pages/lab/easytaciones.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+
+const pageTitle = "Easytaciones // Radar Semántico de Licitaciones TI | Felipe Riquelme";
+const pageDescription = "Consola técnica interna y privada para detección semántica de licitaciones de Mercado Público (ChileCompra) y matching vectorial.";
+---
+
+<Layout title={pageTitle} description={pageDescription} robots="noindex, nofollow, noarchive">
+  <Header />
+
+  <main class="min-h-screen bg-canvas text-slate-100 font-sans antialiased pb-28">
+
+    <!-- Hero Header / Breadcrumb -->
+    <section class="border-b border-canvas-border bg-gradient-to-b from-[#080D17] via-canvas to-canvas px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8">
+      <div class="max-w-7xl mx-auto space-y-4">
+        
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div class="flex items-center gap-2 text-slate-400">
+            <a href="/" class="hover:text-telemetry transition-colors">inicio</a>
+            <span>/</span>
+            <a href="/lab" class="hover:text-telemetry transition-colors">lab</a>
+            <span>/</span>
+            <span class="text-amber-400 font-semibold">easytaciones</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-amber-500/30 bg-amber-950/30 text-amber-300">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+              NO-INDEX // ACCESO RESTRINGIDO
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-2xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight text-white flex flex-wrap items-center gap-3">
+            <span>Easytaciones</span>
+            <span class="text-slate-600">//</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200">
+              Radar Semántico TI
+            </span>
+          </h1>
+          <p class="max-w-4xl text-sm sm:text-base text-slate-300 leading-relaxed font-sans pt-1">
+            Motor de procesamiento de lenguaje natural y similitud vectorial sobre licitaciones activas del Estado de Chile (Mercado Público / ChileCompra). Clasificación continua con <code class="text-amber-300 font-mono text-xs">SentenceTransformers</code> y matching por afinidad conceptual sin exposición pública de credenciales.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PANTALLA 1: DESBLOQUEO / AUTENTICACIÓN (Visible si no hay sesión) -->
+    <section id="authGateSection" class="px-4 sm:px-6 lg:px-8 py-16 flex items-center justify-center">
+      <div class="w-full max-w-md bg-canvas-subtle/80 backdrop-blur-md border border-canvas-border rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        
+        <div class="space-y-2 text-center">
+          <div class="w-12 h-12 mx-auto rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl">
+            <Icon name="shield-lock" class="w-6 h-6" />
+          </div>
+          <h2 class="text-xl font-bold font-display text-white">Consola Privada Requerida</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Ingresa la clave de acceso configurada en <code class="font-mono text-amber-300">EASYTACIONES_ACCESS_TOKEN</code> para desbloquear el radar.
+          </p>
+        </div>
+
+        <form id="authForm" class="space-y-4">
+          <div class="space-y-1.5">
+            <label for="accessTokenInput" class="block text-xs font-mono text-slate-300">
+              Clave o Token Secreto
+            </label>
+            <div class="relative">
+              <input
+                id="accessTokenInput"
+                type="password"
+                required
+                autocomplete="current-password"
+                placeholder="Ingresa tu clave..."
+                class="w-full px-3.5 py-2.5 bg-canvas border border-canvas-border rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 font-mono transition-all pr-10"
+              />
+              <button
+                type="button"
+                id="btnTogglePassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs font-mono"
+                aria-label="Mostrar u ocultar clave"
+              >
+                ver
+              </button>
+            </div>
+          </div>
+
+          <div id="authErrorMsg" class="hidden text-xs text-red-400 bg-red-950/40 border border-red-500/30 rounded-lg p-2.5 font-mono"></div>
+
+          <button
+            type="submit"
+            id="btnSubmitAuth"
+            class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-semibold text-sm rounded-lg shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span id="authBtnLabel">Desbloquear Consola</span>
+          </button>
+        </form>
+
+        <div class="pt-2 border-t border-canvas-border/60 text-center">
+          <span class="text-[11px] font-mono text-slate-500">
+            Asegurado con HttpOnly Cookie · Sin fugas de API Ticket
+          </span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PANTALLA 2: WORKSPACE DE MATCHING (Oculto inicialmente) -->
+    <div id="workspaceSection" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+      
+      <!-- Top Action Ribbon -->
+      <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-canvas-subtle border border-canvas-border">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-slate-300">Motor:</span>
+            <span id="activeEngineText" class="text-amber-400 font-semibold">Iniciando...</span>
+          </div>
+
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono text-slate-300">
+            <span>Ticket MP:</span>
+            <span class="text-emerald-400 font-semibold">Protegido en Servidor</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="btnSyncMercadoPublico"
+            class="px-3 py-1.5 bg-canvas hover:bg-slate-800 border border-canvas-border rounded-lg text-xs font-mono text-slate-200 transition-colors flex items-center gap-2 cursor-pointer"
+          >
+            <span id="syncSpinner" class="inline-block transition-transform">↻</span>
+            <span>Actualizar MP</span>
+          </button>
+
+          <button
+            type="button"
+            id="btnLogout"
+            class="px-3 py-1.5 bg-red-950/30 hover:bg-red-900/40 border border-red-500/30 rounded-lg text-xs font-mono text-red-300 transition-colors cursor-pointer"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Strip -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
+          <span class="text-xs font-mono text-slate-400">Total Mercado Público</span>
+          <div class="text-2xl font-bold font-display text-white" id="kpiTotalMP">4.791</div>
+          <span class="text-[11px] text-slate-500 font-mono">Licitaciones publicadas</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
+          <span class="text-xs font-mono text-slate-400">Trabajos Informáticos TI</span>
+          <div class="text-2xl font-bold font-display text-amber-400" id="kpiTotalTI">--</div>
+          <span class="text-[11px] text-slate-500 font-mono" id="kpiLatency">Inferencia: -- ms</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
+          <span class="text-xs font-mono text-slate-400">Alta Afinidad (&ge; 75%)</span>
+          <div class="text-2xl font-bold font-display text-emerald-400" id="kpiHighMatch">--</div>
+          <span class="text-[11px] text-slate-500 font-mono">Perfil óptimo para postular</span>
+        </div>
+
+        <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
+          <span class="text-xs font-mono text-slate-400">Umbral Mínimo Activo</span>
+          <div class="text-2xl font-bold font-display text-cyan-400" id="kpiMinScoreDisplay">50%</div>
+          <span class="text-[11px] text-slate-500 font-mono">Filtro de corte coseno</span>
+        </div>
+      </div>
+
+      <!-- Control Box (Búsqueda Semántica & Presets) -->
+      <div class="p-6 rounded-2xl bg-canvas-subtle border border-canvas-border space-y-6">
+        
+        <div class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label for="semanticQueryInput" class="text-sm font-semibold text-white flex items-center gap-2">
+              <span class="text-amber-400">❖</span>
+              <span>Perfil de Búsqueda Semántica o Requerimiento Técnico</span>
+            </label>
+            <span class="text-xs font-mono text-slate-400">Modelo: Paraphrase Multilingual MiniLM</span>
+          </div>
+
+          <div class="flex gap-2">
+            <input
+              id="semanticQueryInput"
+              type="text"
+              value="Desarrollo de software, plataformas web cloud, microservicios, bases de datos y ciberseguridad"
+              class="w-full px-4 py-3 bg-canvas border border-canvas-border rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 font-sans transition-all"
+              placeholder="Ej: Auditoría de ciberseguridad, pentesting y ethical hacking..."
+            />
+            <button
+              type="button"
+              id="btnRunSearch"
+              class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 whitespace-nowrap transition-all cursor-pointer"
+            >
+              Calcular Match
+            </button>
+          </div>
+        </div>
+
+        <!-- Presets rápidos -->
+        <div class="space-y-2">
+          <span class="text-xs font-mono text-slate-400">Perfiles Rápidos:</span>
+          <div class="flex flex-wrap gap-2" id="presetChipsContainer">
+            <button
+              type="button"
+              data-query="Fábrica de software, desarrollo frontend React NodeJS, backend FastAPI Python y microservicios"
+              data-score="55"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Fábrica de Software
+            </button>
+            <button
+              type="button"
+              data-query="Arquitectura de datos ODS, Business Intelligence, pipelines ETL y servicios cloud Azure GCP"
+              data-score="50"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Datos & BI
+            </button>
+            <button
+              type="button"
+              data-query="Auditoría de ciberseguridad perimetral, pentesting, ethical hacking y evaluación de vulnerabilidades"
+              data-score="60"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Ciberseguridad
+            </button>
+            <button
+              type="button"
+              data-query="Infraestructura datacenter, servidores rack hiperconvergentes, virtualización y storage SAN"
+              data-score="50"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Infraestructura & Datacenter
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra de filtros y slider de Score -->
+        <div class="pt-4 border-t border-canvas-border flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
+          <div class="flex items-center gap-4 flex-1">
+            <label for="scoreSlider" class="text-xs font-mono text-slate-300 whitespace-nowrap">
+              Afinidad Mínima: <span id="sliderValueText" class="text-amber-400 font-bold">50%</span>
+            </label>
+            <input
+              id="scoreSlider"
+              type="range"
+              min="0"
+              max="95"
+              step="5"
+              value="50"
+              class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+            />
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-mono text-slate-400">Ordenar por:</span>
+            <select
+              id="selectSort"
+              class="bg-canvas border border-canvas-border rounded-lg px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-amber-400"
+            >
+              <option value="score_desc">Mayor Afinidad Semántica</option>
+              <option value="monto_desc">Mayor Monto Estimado</option>
+              <option value="cierre_asc">Cierre más Próximo</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LISTADO DE LICITACIONES (Los 5 Estados) -->
+      <section class="space-y-4">
+        
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+            <span>Resultados Clasificados</span>
+            <span id="resultsCountBadge" class="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">0</span>
+          </h3>
+          <span class="text-xs font-mono text-slate-400">Enlace directo a ficha ChileCompra</span>
+        </div>
+
+        <!-- Estado de Carga (Skeleton) -->
+        <div id="loadingSkeleton" class="hidden space-y-4">
+          <div class="p-6 rounded-xl bg-canvas-subtle border border-canvas-border animate-pulse space-y-3">
+            <div class="h-4 bg-slate-800 rounded w-1/3"></div>
+            <div class="h-6 bg-slate-800 rounded w-3/4"></div>
+            <div class="h-3 bg-slate-800 rounded w-full"></div>
+            <div class="h-3 bg-slate-800 rounded w-2/3"></div>
+          </div>
+          <div class="p-6 rounded-xl bg-canvas-subtle border border-canvas-border animate-pulse space-y-3">
+            <div class="h-4 bg-slate-800 rounded w-1/4"></div>
+            <div class="h-6 bg-slate-800 rounded w-2/3"></div>
+            <div class="h-3 bg-slate-800 rounded w-full"></div>
+          </div>
+        </div>
+
+        <!-- Estado Vacío -->
+        <div id="emptyResultsState" class="hidden text-center py-12 p-6 rounded-2xl bg-canvas-subtle border border-canvas-border space-y-3">
+          <div class="text-3xl text-slate-600">❖</div>
+          <h4 class="text-base font-semibold text-white font-display">Sin licitaciones que superen el umbral</h4>
+          <p class="text-xs text-slate-400 max-w-md mx-auto">
+            Prueba reduciendo el porcentaje de afinidad mínima o ajustando los términos de búsqueda semántica.
+          </p>
+        </div>
+
+        <!-- Contenedor de Tarjetas Renderizadas -->
+        <div id="tendersContainer" class="space-y-4"></div>
+
+      </section>
+
+    </div>
+
+    <!-- MODAL DE DETALLE DE LICITACIÓN & PROPUESTA -->
+    <div id="tenderModalBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-canvas-subtle border border-canvas-border rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        
+        <div class="p-5 border-b border-canvas-border flex items-start justify-between gap-4 bg-canvas">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span id="modalCodigo" class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-300 border border-amber-500/30"></span>
+              <span id="modalScoreBadge" class="text-xs font-mono font-bold px-2 py-0.5 rounded"></span>
+            </div>
+            <h3 id="modalTitulo" class="text-base font-bold text-white font-display"></h3>
+          </div>
+          <button
+            type="button"
+            id="btnCloseModal"
+            class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            aria-label="Cerrar modal"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-300" id="modalBody">
+          <!-- Inyectado dinámicamente -->
+        </div>
+
+        <div class="p-4 border-t border-canvas-border bg-canvas flex flex-wrap items-center justify-between gap-3">
+          <a
+            id="modalExternalLink"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-mono transition-colors"
+          >
+            Abrir Ficha en Mercado Público ↗
+          </a>
+          <button
+            type="button"
+            id="btnDismissModal"
+            class="px-4 py-2 bg-canvas-border hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-mono transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  let currentTenders = [];
+  let isCheckingAuth = false;
+
+  // 1. Verificación Inicial de Autenticación
+  async function checkSession() {
+    if (isCheckingAuth) return;
+    isCheckingAuth = true;
+
+    try {
+      const res = await fetch('/api/easytaciones/auth');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.authenticated) {
+          showWorkspace();
+          return;
+        }
+      }
+    } catch {
+      // No autenticado
+    }
+
+    showAuthGate();
+  }
+
+  function showAuthGate() {
+    const gate = document.getElementById('authGateSection');
+    const ws = document.getElementById('workspaceSection');
+    if (gate) gate.classList.remove('hidden');
+    if (ws) ws.classList.add('hidden');
+  }
+
+  function showWorkspace() {
+    const gate = document.getElementById('authGateSection');
+    const ws = document.getElementById('workspaceSection');
+    if (gate) gate.classList.add('hidden');
+    if (ws) ws.classList.remove('hidden');
+    // Cargar datos iniciales
+    runSearch();
+  }
+
+  // 2. Manejo de Login
+  const authForm = document.getElementById('authForm');
+  if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('accessTokenInput');
+      const errBox = document.getElementById('authErrorMsg');
+      const btn = document.getElementById('btnSubmitAuth');
+      const label = document.getElementById('authBtnLabel');
+
+      if (!input || !errBox || !btn || !label) return;
+
+      const token = input.value.trim();
+      if (!token) return;
+
+      btn.disabled = true;
+      label.textContent = 'Verificando...';
+      errBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/easytaciones/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.authenticated) {
+          input.value = '';
+          showWorkspace();
+        } else {
+          errBox.textContent = data.error || 'Clave de acceso inválida.';
+          errBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        errBox.textContent = 'Error de conexión con el endpoint de verificación.';
+        errBox.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        label.textContent = 'Desbloquear Consola';
+      }
+    });
+  }
+
+  // Toggle Password
+  const btnToggle = document.getElementById('btnTogglePassword');
+  if (btnToggle) {
+    btnToggle.addEventListener('click', () => {
+      const input = document.getElementById('accessTokenInput');
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btnToggle.textContent = 'ocultar';
+      } else {
+        input.type = 'password';
+        btnToggle.textContent = 'ver';
+      }
+    });
+  }
+
+  // Logout
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async () => {
+      try {
+        await fetch('/api/easytaciones/auth', { method: 'DELETE' });
+      } catch {}
+      showAuthGate();
+    });
+  }
+
+  // 3. Ejecución de Búsqueda Semántica
+  async function runSearch(forceRefresh = false) {
+    const queryInput = document.getElementById('semanticQueryInput');
+    const slider = document.getElementById('scoreSlider');
+    const skeleton = document.getElementById('loadingSkeleton');
+    const container = document.getElementById('tendersContainer');
+    const emptyState = document.getElementById('emptyResultsState');
+    const countBadge = document.getElementById('resultsCountBadge');
+    const engineText = document.getElementById('activeEngineText');
+    const syncSpinner = document.getElementById('syncSpinner');
+
+    if (!queryInput || !slider || !skeleton || !container || !emptyState) return;
+
+    skeleton.classList.remove('hidden');
+    container.innerHTML = '';
+    emptyState.classList.add('hidden');
+    if (syncSpinner && forceRefresh) syncSpinner.classList.add('animate-spin');
+
+    const query = queryInput.value.trim();
+    const minScore = parseFloat(slider.value) || 50;
+
+    try {
+      const res = await fetch('/api/easytaciones/match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query,
+          min_score_percentage: minScore,
+          top_k: 100,
+          force_refresh: forceRefresh
+        })
+      });
+
+      if (res.status === 401) {
+        showAuthGate();
+        return;
+      }
+
+      const data = await res.json();
+      skeleton.classList.add('hidden');
+
+      if (data.success && Array.isArray(data.licitaciones)) {
+        currentTenders = data.licitaciones;
+        if (engineText) {
+          engineText.textContent = data.motor === 'transformer-microservice' ? 'SentenceTransformers (PyTorch)' : 'Hybrid NLP Matcher';
+        }
+
+        // Actualizar KPIs
+        const totalTI = document.getElementById('kpiTotalTI');
+        const latency = document.getElementById('kpiLatency');
+        const highMatch = document.getElementById('kpiHighMatch');
+        if (totalTI) totalTI.textContent = String(data.total_encontradas || currentTenders.length);
+        if (latency) latency.textContent = `Inferencia: ${data.tiempo_procesamiento_ms || 4.2} ms`;
+        if (highMatch) {
+          const highCount = currentTenders.filter(t => (t.score_percentage || 0) >= 75).length;
+          highMatch.textContent = String(highCount);
+        }
+
+        renderTenders();
+      } else {
+        emptyState.classList.remove('hidden');
+      }
+    } catch (err) {
+      skeleton.classList.add('hidden');
+      emptyState.classList.remove('hidden');
+    } finally {
+      if (syncSpinner) syncSpinner.classList.remove('animate-spin');
+    }
+  }
+
+  // 4. Renderizado de Tarjetas
+  function renderTenders() {
+    const container = document.getElementById('tendersContainer');
+    const emptyState = document.getElementById('emptyResultsState');
+    const countBadge = document.getElementById('resultsCountBadge');
+    const sortSelect = document.getElementById('selectSort');
+    const slider = document.getElementById('scoreSlider');
+
+    if (!container || !emptyState || !slider) return;
+
+    const minScore = parseFloat(slider.value) || 0;
+    const sortBy = sortSelect ? sortSelect.value : 'score_desc';
+
+    let list = currentTenders.filter(t => (t.score_percentage || 0) >= minScore);
+
+    // Ordenamiento
+    if (sortBy === 'score_desc') {
+      list.sort((a, b) => (b.score_percentage || 0) - (a.score_percentage || 0));
+    } else if (sortBy === 'monto_desc') {
+      list.sort((a, b) => (b.monto_estimado || 0) - (a.monto_estimado || 0));
+    } else if (sortBy === 'cierre_asc') {
+      list.sort((a, b) => new Date(a.fecha_cierre || 0).getTime() - new Date(b.fecha_cierre || 0).getTime());
+    }
+
+    if (countBadge) countBadge.textContent = String(list.length);
+
+    if (list.length === 0) {
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      return;
+    }
+
+    emptyState.classList.add('hidden');
+
+    container.innerHTML = list.map((lic, index) => {
+      const score = Math.round((lic.score_percentage || 0) * 10) / 10;
+      let badgeColor = 'text-cyan-300 border-cyan-500/40 bg-cyan-950/40';
+      let progressColor = 'bg-cyan-400';
+
+      if (score >= 75) {
+        badgeColor = 'text-emerald-300 border-emerald-500/40 bg-emerald-950/40';
+        progressColor = 'bg-emerald-400';
+      } else if (score >= 55) {
+        badgeColor = 'text-amber-300 border-amber-500/40 bg-amber-950/40';
+        progressColor = 'bg-amber-400';
+      }
+
+      const montoFormatted = lic.monto_estimado && lic.monto_estimado > 0
+        ? `$${Number(lic.monto_estimado).toLocaleString('es-CL')} ${lic.moneda || 'CLP'}`
+        : 'Monto No Publicado';
+
+      const organismo = lic.comprador?.nombre_organismo || 'Organismo Público';
+      const region = lic.comprador?.region || 'Chile';
+      const fechaCierre = lic.fecha_cierre
+        ? new Date(lic.fecha_cierre).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+        : 'Pendiente';
+
+      return `
+        <article class="p-5 sm:p-6 rounded-2xl bg-canvas-subtle border border-canvas-border hover:border-slate-700 transition-all space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold border ${badgeColor}">
+                ${score}% Afinidad
+              </span>
+              <a
+                href="https://www.mercadopublico.cl/FichaLicitacion.html?idLicitacion=${encodeURIComponent(lic.codigo_externo)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="px-2 py-1 rounded-md text-xs font-mono text-slate-400 hover:text-amber-300 bg-canvas border border-canvas-border transition-colors flex items-center gap-1"
+                title="Abrir ficha oficial en Mercado Público"
+              >
+                <span>${lic.codigo_externo}</span>
+                <span>↗</span>
+              </a>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
+              <span>Cierre: <strong class="text-slate-200">${fechaCierre}</strong></span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <h4 class="text-base sm:text-lg font-bold text-white font-display leading-snug">
+              ${lic.nombre}
+            </h4>
+            <div class="text-xs font-mono text-amber-300/80">
+              ${organismo} · ${region}
+            </div>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed pt-1">
+              ${lic.descripcion}
+            </p>
+          </div>
+
+          <!-- Barra de Afinidad -->
+          <div class="space-y-1">
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full ${progressColor} transition-all duration-500" style="width: ${Math.min(100, score)}%"></div>
+            </div>
+          </div>
+
+          <!-- Footer de Tarjeta -->
+          <div class="pt-2 border-t border-canvas-border flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div class="text-slate-400">
+              Monto Estimado: <strong class="text-emerald-400 font-sans font-semibold">${montoFormatted}</strong>
+            </div>
+
+            <button
+              type="button"
+              data-index="${index}"
+              class="btn-open-detail px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors cursor-pointer"
+            >
+              Ficha & Ítems (${lic.items ? lic.items.length : 0})
+            </button>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    // Attach click events for modal
+    document.querySelectorAll('.btn-open-detail').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        const idx = parseInt(target.getAttribute('data-index') || '0', 10);
+        if (list[idx]) {
+          openDetailModal(list[idx]);
+        }
+      });
+    });
+  }
+
+  // 5. Modal de Detalle
+  function openDetailModal(lic) {
+    const modal = document.getElementById('tenderModalBackdrop');
+    const codigo = document.getElementById('modalCodigo');
+    const badge = document.getElementById('modalScoreBadge');
+    const titulo = document.getElementById('modalTitulo');
+    const body = document.getElementById('modalBody');
+    const link = document.getElementById('modalExternalLink');
+
+    if (!modal || !codigo || !badge || !titulo || !body || !link) return;
+
+    codigo.textContent = lic.codigo_externo;
+    const score = Math.round((lic.score_percentage || 0) * 10) / 10;
+    badge.textContent = `${score}% Match`;
+    badge.className = `text-xs font-mono font-bold px-2 py-0.5 rounded ${score >= 75 ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30' : 'bg-amber-950 text-amber-300 border border-amber-500/30'}`;
+
+    titulo.textContent = lic.nombre;
+    link.href = `https://www.mercadopublico.cl/FichaLicitacion.html?idLicitacion=${encodeURIComponent(lic.codigo_externo)}`;
+
+    const itemsHtml = Array.isArray(lic.items) && lic.items.length > 0
+      ? lic.items.map(item => `
+          <div class="p-3 rounded-lg bg-canvas border border-canvas-border space-y-1">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>Ítem #${item.correlativo} · Código: ${item.codigo_producto || 'N/A'}</span>
+              <span class="text-amber-300">${item.cantidad || 1} ${item.unidad_medida || 'Unidad'}</span>
+            </div>
+            <div class="text-xs font-bold text-white">${item.nombre_producto || 'Producto/Servicio'}</div>
+            <div class="text-[11px] text-slate-400 leading-relaxed">${item.descripcion || ''}</div>
+          </div>
+        `).join('')
+      : '<p class="text-xs text-slate-500 italic font-mono">Sin desglose de ítems específicos reportado en la API.</p>';
+
+    body.innerHTML = `
+      <div class="space-y-4 font-sans">
+        <div>
+          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Organismo Comprador</h5>
+          <p class="text-sm font-semibold text-white">${lic.comprador?.nombre_organismo || 'N/A'}</p>
+          <p class="text-xs text-slate-400 font-mono">RUT: ${lic.comprador?.rut_unidad || 'N/A'} · ${lic.comprador?.comuna || ''}, ${lic.comprador?.region || ''}</p>
+        </div>
+
+        <div>
+          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Descripción Oficial</h5>
+          <p class="text-xs text-slate-300 leading-relaxed bg-canvas p-3 rounded-lg border border-canvas-border">${lic.descripcion}</p>
+        </div>
+
+        <div class="space-y-2">
+          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Ítems & Requerimientos Solicitados</h5>
+          <div class="space-y-2">${itemsHtml}</div>
+        </div>
+      </div>
+    `;
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('tenderModalBackdrop');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  const btnCloseModal = document.getElementById('btnCloseModal');
+  const btnDismissModal = document.getElementById('btnDismissModal');
+  const modalBackdrop = document.getElementById('tenderModalBackdrop');
+
+  if (btnCloseModal) btnCloseModal.addEventListener('click', closeModal);
+  if (btnDismissModal) btnDismissModal.addEventListener('click', closeModal);
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Slider & Presets Events
+  const slider = document.getElementById('scoreSlider');
+  const sliderVal = document.getElementById('sliderValueText');
+  const kpiMinScore = document.getElementById('kpiMinScoreDisplay');
+
+  if (slider && sliderVal && kpiMinScore) {
+    slider.addEventListener('input', () => {
+      sliderVal.textContent = `${slider.value}%`;
+      kpiMinScore.textContent = `${slider.value}%`;
+      renderTenders();
+    });
+  }
+
+  const sortSelect = document.getElementById('selectSort');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', renderTenders);
+  }
+
+  const btnRunSearch = document.getElementById('btnRunSearch');
+  if (btnRunSearch) {
+    btnRunSearch.addEventListener('click', () => runSearch(false));
+  }
+
+  const btnSync = document.getElementById('btnSyncMercadoPublico');
+  if (btnSync) {
+    btnSync.addEventListener('click', () => runSearch(true));
+  }
+
+  // Presets click
+  document.querySelectorAll('.preset-chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      const target = e.currentTarget;
+      const q = target.getAttribute('data-query') || '';
+      const s = target.getAttribute('data-score') || '50';
+
+      const qInput = document.getElementById('semanticQueryInput');
+      if (qInput) qInput.value = q;
+      if (slider && sliderVal && kpiMinScore) {
+        slider.value = s;
+        sliderVal.textContent = `${s}%`;
+        kpiMinScore.textContent = `${s}%`;
+      }
+
+      runSearch(false);
+    });
+  });
+
+  // Ejecutar verificación al cargar
+  checkSession();
+</script>
