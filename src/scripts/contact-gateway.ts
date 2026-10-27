@@ -72,7 +72,7 @@ if (form && statusDiv && submitBtn) {
     } catch (err: any) {
       statusDiv.classList.remove('text-slate-300');
       statusDiv.classList.add('text-rose-400');
-      statusDiv.textContent = err.message || 'No se pudo enviar automaticamente. Por favor escribeme directamente a f.riquelmesalvo@uandresbello.edu o por WhatsApp.';
+      statusDiv.textContent = err.message || 'No se pudo enviar automaticamente. Por favor escribeme directamente a f.riquelmesalvo@uandresbello.edu.';
     } finally {
       submitBtn.removeAttribute('disabled');
     }

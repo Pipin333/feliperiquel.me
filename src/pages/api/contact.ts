@@ -134,7 +134,7 @@ export const POST: APIRoute = async ({ request }) => {
           return new Response(
             JSON.stringify({
               success: false,
-              error: `Has alcanzado el limite de mensajes (maximo ${MAX_REQUESTS_PER_WINDOW} cada 10 minutos). Por favor espera ${Math.ceil(secondsRemaining / 60)} minutos o contactame via WhatsApp.`
+              error: `Has alcanzado el limite de mensajes (maximo ${MAX_REQUESTS_PER_WINDOW} cada 10 minutos). Por favor espera ${Math.ceil(secondsRemaining / 60)} minutos o escribeme a f.riquelmesalvo@uandresbello.edu.`
             }),
             {
               status: 429,
@@ -234,7 +234,7 @@ export const POST: APIRoute = async ({ request }) => {
           return new Response(
             JSON.stringify({
               success: false,
-              error: `Has alcanzado el limite de mensajes recientes (${MAX_REQUESTS_PER_WINDOW} mensajes por ventana). Por favor espera unos minutos o escribeme directamente por WhatsApp.`
+              error: `Has alcanzado el limite de mensajes recientes (${MAX_REQUESTS_PER_WINDOW} mensajes por ventana). Por favor espera unos minutos o escribeme a f.riquelmesalvo@uandresbello.edu.`
             }),
             {
               status: 429,
