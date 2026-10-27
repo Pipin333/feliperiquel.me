@@ -687,7 +687,13 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
   }
 </style>
 
-<script data-astro-rerun>
+<script>
+  function initCvCustomizer() {
+    const toggleFilterDrawer = document.getElementById('toggle-filter-drawer');
+    if (!toggleFilterDrawer) return;
+    if (toggleFilterDrawer.dataset.initialized === 'true') return;
+    toggleFilterDrawer.dataset.initialized = 'true';
+
   // Presets definition
   const presets: Record<string, string[]> = {
     'one-page': [
@@ -743,7 +749,6 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
   const pageEstimateBadge = document.getElementById('page-estimate-badge');
   const pageEstimateText = document.getElementById('page-estimate-text');
   const selectedProjectsCount = document.getElementById('selected-projects-count');
-  const toggleFilterDrawer = document.getElementById('toggle-filter-drawer');
   const filterDrawerContent = document.getElementById('filter-drawer-content');
   const toggleFilterChevron = document.getElementById('toggle-filter-chevron');
 
@@ -930,4 +935,8 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
 
   // Apply default 1-page selection on page load
   applyPreset('one-page');
+  }
+
+  initCvCustomizer();
+  document.addEventListener('astro:page-load', initCvCustomizer);
 </script>
