@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import realTendersData from './tenders.json';
 import type { LicitacionData } from './match';
 
 export const prerender = false;
@@ -8,6 +9,8 @@ const NO_INDEX_HEADERS = {
   'X-Robots-Tag': 'noindex, nofollow, noarchive',
   'Cache-Control': 'no-store, private'
 };
+
+const REAL_LICITACIONES: LicitacionData[] = realTendersData as LicitacionData[];
 
 function isAuthorized(request: Request): boolean {
   const secret = process.env.EASYTACIONES_ACCESS_TOKEN || 'felipe_easytaciones_2026_key';
@@ -50,9 +53,20 @@ export const GET: APIRoute = async ({ request, url }) => {
     );
   }
 
-  const easytacionesUrl = process.env.EASYTACIONES_API_URL || 'http://localhost:8000';
+  // 1. Buscar en el catálogo de 152 licitaciones reales
+  const found = REAL_LICITACIONES.find(
+    lic => lic.codigo_externo.toLowerCase() === codigo.toLowerCase()
+  );
 
-  // 1. Intentar con microservicio Python
+  if (found) {
+    return new Response(
+      JSON.stringify({ success: true, licitacion: found }),
+      { status: 200, headers: NO_INDEX_HEADERS }
+    );
+  }
+
+  // 2. Intentar consultar microservicio Python
+  const easytacionesUrl = process.env.EASYTACIONES_API_URL || 'http://localhost:8000';
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 4000);
@@ -68,60 +82,9 @@ export const GET: APIRoute = async ({ request, url }) => {
         { status: 200, headers: NO_INDEX_HEADERS }
       );
     }
-  } catch {
-    // Fallback directo
-  }
+  } catch {}
 
-  // 2. Consulta directa a Mercado Público si hay ticket configurado
-  const ticket = process.env.MP_TICKET || '';
-  if (ticket && ticket.length > 10) {
-    try {
-      const mpUrl = `https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?codigo=${encodeURIComponent(codigo)}&ticket=${ticket}`;
-      const mpRes = await fetch(mpUrl);
-      if (mpRes.ok) {
-        const data = await mpRes.json();
-        const rawList = Array.isArray(data?.Listado) ? data.Listado : [];
-        if (rawList.length > 0) {
-          const item = rawList[0];
-          const licitacion: LicitacionData = {
-            codigo_externo: item.CodigoExterno,
-            nombre: item.Nombre,
-            codigo_estado: item.CodigoEstado,
-            descripcion: item.Descripcion,
-            fecha_cierre: item.FechaCierre,
-            monto_estimado: item.MontoEstimado,
-            moneda: item.Moneda,
-            comprador: {
-              codigo_organismo: item.Comprador?.CodigoOrganismo,
-              nombre_organismo: item.Comprador?.NombreOrganismo,
-              rut_unidad: item.Comprador?.RutUnidad,
-              comuna: item.Comprador?.ComunaUnidad,
-              region: item.Comprador?.RegionUnidad
-            },
-            items: Array.isArray(item.Items?.Listado)
-              ? item.Items.Listado.map((it: any, idx: number) => ({
-                  correlativo: idx + 1,
-                  codigo_producto: it.CodigoProducto,
-                  nombre_producto: it.NombreProducto,
-                  categoria: it.Categoria,
-                  descripcion: it.Descripcion,
-                  cantidad: it.Cantidad,
-                  unidad_medida: it.UnidadMedida
-                }))
-              : []
-          };
-          return new Response(
-            JSON.stringify({ success: true, licitacion }),
-            { status: 200, headers: NO_INDEX_HEADERS }
-          );
-        }
-      }
-    } catch {
-      // Ignorar y continuar a mock
-    }
-  }
-
-  // 3. Respuesta no encontrada o fallback
+  // 3. Fallback no encontrada
   return new Response(
     JSON.stringify({
       success: false,

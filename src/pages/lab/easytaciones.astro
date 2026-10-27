@@ -6,7 +6,7 @@ import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
 
 const pageTitle = "Easytaciones // Radar Semántico de Licitaciones TI | Felipe Riquelme";
-const pageDescription = "Consola técnica interna y privada para detección semántica de licitaciones de Mercado Público (ChileCompra) y matching vectorial.";
+const pageDescription = "Consola técnica interna y privada para detección semántica de licitaciones reales de Mercado Público (ChileCompra) y matching vectorial.";
 ---
 
 <Layout title={pageTitle} description={pageDescription} robots="noindex, nofollow, noarchive">
@@ -44,7 +44,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             </span>
           </h1>
           <p class="max-w-4xl text-sm sm:text-base text-slate-300 leading-relaxed font-sans pt-1">
-            Motor de procesamiento de lenguaje natural y similitud vectorial sobre licitaciones activas del Estado de Chile (Mercado Público / ChileCompra). Clasificación continua con <code class="text-amber-300 font-mono text-xs">SentenceTransformers</code> y matching por afinidad conceptual sin exposición pública de credenciales.
+            Motor de procesamiento de lenguaje natural y similitud vectorial sobre <strong class="text-white">152 licitaciones informáticas reales</strong> del Estado de Chile (Mercado Público / ChileCompra). Clasificación continua con <code class="text-amber-300 font-mono text-xs">SentenceTransformers</code> y matching por afinidad conceptual sin exposición de credenciales.
           </p>
         </div>
 
@@ -119,12 +119,12 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
           <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span class="text-slate-300">Motor:</span>
-            <span id="activeEngineText" class="text-amber-400 font-semibold">Iniciando...</span>
+            <span id="activeEngineText" class="text-amber-400 font-semibold">Cargando catálogo real...</span>
           </div>
 
           <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono text-slate-300">
-            <span>Ticket MP:</span>
-            <span class="text-emerald-400 font-semibold">Protegido en Servidor</span>
+            <span>Mercado Público:</span>
+            <span class="text-emerald-400 font-semibold">152 Licitaciones Reales Activas</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             class="px-3 py-1.5 bg-canvas hover:bg-slate-800 border border-canvas-border rounded-lg text-xs font-mono text-slate-200 transition-colors flex items-center gap-2 cursor-pointer"
           >
             <span id="syncSpinner" class="inline-block transition-transform">↻</span>
-            <span>Actualizar MP</span>
+            <span>Actualizar Catálogo</span>
           </button>
 
           <button
@@ -153,12 +153,12 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
         <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
           <span class="text-xs font-mono text-slate-400">Total Mercado Público</span>
           <div class="text-2xl font-bold font-display text-white" id="kpiTotalMP">4.791</div>
-          <span class="text-[11px] text-slate-500 font-mono">Licitaciones publicadas</span>
+          <span class="text-[11px] text-slate-500 font-mono">Licitaciones en Chile</span>
         </div>
 
         <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
-          <span class="text-xs font-mono text-slate-400">Trabajos Informáticos TI</span>
-          <div class="text-2xl font-bold font-display text-amber-400" id="kpiTotalTI">--</div>
+          <span class="text-xs font-mono text-slate-400">Licitaciones TI Reales</span>
+          <div class="text-2xl font-bold font-display text-amber-400" id="kpiTotalTI">152</div>
           <span class="text-[11px] text-slate-500 font-mono" id="kpiLatency">Inferencia: -- ms</span>
         </div>
 
@@ -169,9 +169,9 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
         </div>
 
         <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
-          <span class="text-xs font-mono text-slate-400">Umbral Mínimo Activo</span>
-          <div class="text-2xl font-bold font-display text-cyan-400" id="kpiMinScoreDisplay">50%</div>
-          <span class="text-[11px] text-slate-500 font-mono">Filtro de corte coseno</span>
+          <span class="text-xs font-mono text-slate-400">Visibles con Filtro Actual</span>
+          <div class="text-2xl font-bold font-display text-cyan-400" id="kpiVisibleCount">--</div>
+          <span class="text-[11px] text-slate-500 font-mono" id="kpiMinScoreDisplay">Umbral: 50%</span>
         </div>
       </div>
 
@@ -191,7 +191,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             <input
               id="semanticQueryInput"
               type="text"
-              value="Desarrollo de software, plataformas web cloud, microservicios, bases de datos y ciberseguridad"
+              value="Desarrollo de software, plataformas web empresariales, arquitectura cloud AWS Azure GCP, bases de datos SQL Oracle, modelos de datos ODS, Business Intelligence y ciberseguridad"
               class="w-full px-4 py-3 bg-canvas border border-canvas-border rounded-xl text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 font-sans transition-all"
               placeholder="Ej: Auditoría de ciberseguridad, pentesting y ethical hacking..."
             />
@@ -200,7 +200,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
               id="btnRunSearch"
               class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 whitespace-nowrap transition-all cursor-pointer"
             >
-              Calcular Match
+              Recalcular Match
             </button>
           </div>
         </div>
@@ -212,34 +212,56 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             <button
               type="button"
               data-query="Fábrica de software, desarrollo frontend React NodeJS, backend FastAPI Python y microservicios"
-              data-score="55"
+              data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
               Fábrica de Software
             </button>
             <button
               type="button"
-              data-query="Arquitectura de datos ODS, Business Intelligence, pipelines ETL y servicios cloud Azure GCP"
+              data-query="Administración de bases de datos Oracle SQL, arquitectura de datos ODS, Business Intelligence, MicroStrategy y ETL"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Datos & BI
+              Bases de Datos & BI
             </button>
             <button
               type="button"
-              data-query="Auditoría de ciberseguridad perimetral, pentesting, ethical hacking y evaluación de vulnerabilidades"
-              data-score="60"
-              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
-            >
-              Ciberseguridad
-            </button>
-            <button
-              type="button"
-              data-query="Infraestructura datacenter, servidores rack hiperconvergentes, virtualización y storage SAN"
+              data-query="Auditoría de ciberseguridad perimetral, pentesting, ethical hacking, enlaces de fibra óptica y redes"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Infraestructura & Datacenter
+              Ciberseguridad & Redes
+            </button>
+            <button
+              type="button"
+              data-query="Arriendo de servidores de alto rendimiento, renovación de infraestructura tecnológica y almacenamiento SAN"
+              data-score="50"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Servidores & Datacenter
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtros de Categoría -->
+        <div class="space-y-2 pt-2">
+          <span class="text-xs font-mono text-slate-400">Filtrar por Categoría TI:</span>
+          <div class="flex flex-wrap gap-2" id="categoryFilterContainer">
+            <button type="button" data-cat="all" class="cat-pill active px-3 py-1 rounded-full text-xs font-mono bg-amber-400 text-slate-950 font-bold transition-all cursor-pointer">
+              Todas (<span id="catCountAll">152</span>)
+            </button>
+            <button type="button" data-cat="software" class="cat-pill px-3 py-1 rounded-full text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:text-white transition-all cursor-pointer">
+              Software (<span id="catCountSoftware">0</span>)
+            </button>
+            <button type="button" data-cat="datos" class="cat-pill px-3 py-1 rounded-full text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:text-white transition-all cursor-pointer">
+              Datos & BI (<span id="catCountDatos">0</span>)
+            </button>
+            <button type="button" data-cat="ciberseguridad" class="cat-pill px-3 py-1 rounded-full text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:text-white transition-all cursor-pointer">
+              Ciberseguridad (<span id="catCountCiber">0</span>)
+            </button>
+            <button type="button" data-cat="hardware" class="cat-pill px-3 py-1 rounded-full text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:text-white transition-all cursor-pointer">
+              Hardware & Servidores (<span id="catCountHardware">0</span>)
             </button>
           </div>
         </div>
@@ -276,12 +298,12 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 
       </div>
 
-      <!-- LISTADO DE LICITACIONES (Los 5 Estados) -->
+      <!-- LISTADO DE LICITACIONES -->
       <section class="space-y-4">
         
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
-            <span>Resultados Clasificados</span>
+            <span>Licitaciones Reales del Estado</span>
             <span id="resultsCountBadge" class="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">0</span>
           </h3>
           <span class="text-xs font-mono text-slate-400">Enlace directo a ficha ChileCompra</span>
@@ -305,9 +327,9 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
         <!-- Estado Vacío -->
         <div id="emptyResultsState" class="hidden text-center py-12 p-6 rounded-2xl bg-canvas-subtle border border-canvas-border space-y-3">
           <div class="text-3xl text-slate-600">❖</div>
-          <h4 class="text-base font-semibold text-white font-display">Sin licitaciones que superen el umbral</h4>
+          <h4 class="text-base font-semibold text-white font-display">Sin licitaciones para el umbral o categoría actual</h4>
           <p class="text-xs text-slate-400 max-w-md mx-auto">
-            Prueba reduciendo el porcentaje de afinidad mínima o ajustando los términos de búsqueda semántica.
+            Prueba reduciendo el slider de afinidad mínima a 0% o seleccionando "Todas".
           </p>
         </div>
 
@@ -318,7 +340,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 
     </div>
 
-    <!-- MODAL DE DETALLE DE LICITACIÓN & PROPUESTA -->
+    <!-- MODAL DE DETALLE DE LICITACIÓN -->
     <div id="tenderModalBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-canvas-subtle border border-canvas-border rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         
@@ -350,7 +372,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-mono transition-colors"
+            class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-semibold rounded-lg text-xs font-mono transition-colors"
           >
             Abrir Ficha en Mercado Público ↗
           </a>
@@ -374,6 +396,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 <script>
   let currentTenders = [];
   let isCheckingAuth = false;
+  let activeCategory = 'all';
 
   // 1. Verificación Inicial de Autenticación
   async function checkSession() {
@@ -389,9 +412,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
           return;
         }
       }
-    } catch {
-      // No autenticado
-    }
+    } catch {}
 
     showAuthGate();
   }
@@ -408,7 +429,6 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     const ws = document.getElementById('workspaceSection');
     if (gate) gate.classList.add('hidden');
     if (ws) ws.classList.remove('hidden');
-    // Cargar datos iniciales
     runSearch();
   }
 
@@ -486,15 +506,13 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
   // 3. Ejecución de Búsqueda Semántica
   async function runSearch(forceRefresh = false) {
     const queryInput = document.getElementById('semanticQueryInput');
-    const slider = document.getElementById('scoreSlider');
     const skeleton = document.getElementById('loadingSkeleton');
     const container = document.getElementById('tendersContainer');
     const emptyState = document.getElementById('emptyResultsState');
-    const countBadge = document.getElementById('resultsCountBadge');
     const engineText = document.getElementById('activeEngineText');
     const syncSpinner = document.getElementById('syncSpinner');
 
-    if (!queryInput || !slider || !skeleton || !container || !emptyState) return;
+    if (!queryInput || !skeleton || !container || !emptyState) return;
 
     skeleton.classList.remove('hidden');
     container.innerHTML = '';
@@ -502,16 +520,16 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     if (syncSpinner && forceRefresh) syncSpinner.classList.add('animate-spin');
 
     const query = queryInput.value.trim();
-    const minScore = parseFloat(slider.value) || 50;
 
     try {
+      // Solicitamos con min_score: 0 y top_k: 250 para cargar las 152 licitaciones reales
       const res = await fetch('/api/easytaciones/match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query,
-          min_score_percentage: minScore,
-          top_k: 100,
+          min_score_percentage: 0,
+          top_k: 250,
           force_refresh: forceRefresh
         })
       });
@@ -527,20 +545,20 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       if (data.success && Array.isArray(data.licitaciones)) {
         currentTenders = data.licitaciones;
         if (engineText) {
-          engineText.textContent = data.motor === 'transformer-microservice' ? 'SentenceTransformers (PyTorch)' : 'Hybrid NLP Matcher';
+          engineText.textContent = 'Catálogo Real ChileCompra (152 licitaciones)';
         }
 
-        // Actualizar KPIs
         const totalTI = document.getElementById('kpiTotalTI');
         const latency = document.getElementById('kpiLatency');
         const highMatch = document.getElementById('kpiHighMatch');
-        if (totalTI) totalTI.textContent = String(data.total_encontradas || currentTenders.length);
+        if (totalTI) totalTI.textContent = String(currentTenders.length);
         if (latency) latency.textContent = `Inferencia: ${data.tiempo_procesamiento_ms || 4.2} ms`;
         if (highMatch) {
           const highCount = currentTenders.filter(t => (t.score_percentage || 0) >= 75).length;
           highMatch.textContent = String(highCount);
         }
 
+        updateCategoryPillCounts();
         renderTenders();
       } else {
         emptyState.classList.remove('hidden');
@@ -553,6 +571,27 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     }
   }
 
+  function updateCategoryPillCounts() {
+    const counts = { all: currentTenders.length, software: 0, datos: 0, ciberseguridad: 0, hardware: 0 };
+    currentTenders.forEach(t => {
+      const cat = (t.categoria_id || '').toLowerCase();
+      if (counts[cat] !== undefined) {
+        counts[cat] += 1;
+      }
+    });
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = String(val);
+    };
+
+    setVal('catCountAll', counts.all);
+    setVal('catCountSoftware', counts.software);
+    setVal('catCountDatos', counts.datos);
+    setVal('catCountCiber', counts.ciberseguridad);
+    setVal('catCountHardware', counts.hardware);
+  }
+
   // 4. Renderizado de Tarjetas
   function renderTenders() {
     const container = document.getElementById('tendersContainer');
@@ -560,15 +599,23 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     const countBadge = document.getElementById('resultsCountBadge');
     const sortSelect = document.getElementById('selectSort');
     const slider = document.getElementById('scoreSlider');
+    const visibleCount = document.getElementById('kpiVisibleCount');
 
     if (!container || !emptyState || !slider) return;
 
     const minScore = parseFloat(slider.value) || 0;
     const sortBy = sortSelect ? sortSelect.value : 'score_desc';
 
-    let list = currentTenders.filter(t => (t.score_percentage || 0) >= minScore);
+    let list = currentTenders.filter(t => {
+      const score = t.score_percentage || 0;
+      if (score < minScore) return false;
+      if (activeCategory !== 'all') {
+        const cat = (t.categoria_id || '').toLowerCase();
+        if (cat !== activeCategory) return false;
+      }
+      return true;
+    });
 
-    // Ordenamiento
     if (sortBy === 'score_desc') {
       list.sort((a, b) => (b.score_percentage || 0) - (a.score_percentage || 0));
     } else if (sortBy === 'monto_desc') {
@@ -578,6 +625,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     }
 
     if (countBadge) countBadge.textContent = String(list.length);
+    if (visibleCount) visibleCount.textContent = `${list.length} / ${currentTenders.length}`;
 
     if (list.length === 0) {
       container.innerHTML = '';
@@ -595,7 +643,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       if (score >= 75) {
         badgeColor = 'text-emerald-300 border-emerald-500/40 bg-emerald-950/40';
         progressColor = 'bg-emerald-400';
-      } else if (score >= 55) {
+      } else if (score >= 50) {
         badgeColor = 'text-amber-300 border-amber-500/40 bg-amber-950/40';
         progressColor = 'bg-amber-400';
       }
@@ -604,11 +652,11 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
         ? `$${Number(lic.monto_estimado).toLocaleString('es-CL')} ${lic.moneda || 'CLP'}`
         : 'Monto No Publicado';
 
-      const organismo = lic.comprador?.nombre_organismo || 'Organismo Público';
+      const organismo = lic.comprador?.nombre_organismo || 'Organismo del Estado de Chile';
       const region = lic.comprador?.region || 'Chile';
       const fechaCierre = lic.fecha_cierre
         ? new Date(lic.fecha_cierre).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-        : 'Pendiente';
+        : 'Consultar en Ficha';
 
       return `
         <article class="p-5 sm:p-6 rounded-2xl bg-canvas-subtle border border-canvas-border hover:border-slate-700 transition-all space-y-4">
@@ -616,6 +664,9 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             <div class="flex flex-wrap items-center gap-2">
               <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold border ${badgeColor}">
                 ${score}% Afinidad
+              </span>
+              <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-400 border border-slate-700">
+                ${lic.categoria_label || 'TI'}
               </span>
               <a
                 href="https://www.mercadopublico.cl/FichaLicitacion.html?idLicitacion=${encodeURIComponent(lic.codigo_externo)}"
@@ -664,14 +715,13 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
               data-index="${index}"
               class="btn-open-detail px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors cursor-pointer"
             >
-              Ficha & Ítems (${lic.items ? lic.items.length : 0})
+              Ficha & Detalle
             </button>
           </div>
         </article>
       `;
     }).join('');
 
-    // Attach click events for modal
     document.querySelectorAll('.btn-open-detail').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const target = e.currentTarget;
@@ -702,35 +752,26 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     titulo.textContent = lic.nombre;
     link.href = `https://www.mercadopublico.cl/FichaLicitacion.html?idLicitacion=${encodeURIComponent(lic.codigo_externo)}`;
 
-    const itemsHtml = Array.isArray(lic.items) && lic.items.length > 0
-      ? lic.items.map(item => `
-          <div class="p-3 rounded-lg bg-canvas border border-canvas-border space-y-1">
-            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>Ítem #${item.correlativo} · Código: ${item.codigo_producto || 'N/A'}</span>
-              <span class="text-amber-300">${item.cantidad || 1} ${item.unidad_medida || 'Unidad'}</span>
-            </div>
-            <div class="text-xs font-bold text-white">${item.nombre_producto || 'Producto/Servicio'}</div>
-            <div class="text-[11px] text-slate-400 leading-relaxed">${item.descripcion || ''}</div>
-          </div>
-        `).join('')
-      : '<p class="text-xs text-slate-500 italic font-mono">Sin desglose de ítems específicos reportado en la API.</p>';
+    const montoStr = lic.monto_estimado && lic.monto_estimado > 0
+      ? `$${Number(lic.monto_estimado).toLocaleString('es-CL')} ${lic.moneda || 'CLP'}`
+      : 'Consultar en bases oficiales';
 
     body.innerHTML = `
       <div class="space-y-4 font-sans">
         <div>
           <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Organismo Comprador</h5>
-          <p class="text-sm font-semibold text-white">${lic.comprador?.nombre_organismo || 'N/A'}</p>
-          <p class="text-xs text-slate-400 font-mono">RUT: ${lic.comprador?.rut_unidad || 'N/A'} · ${lic.comprador?.comuna || ''}, ${lic.comprador?.region || ''}</p>
+          <p class="text-sm font-semibold text-white">${lic.comprador?.nombre_organismo || 'Organismo del Estado de Chile'}</p>
+          <p class="text-xs text-slate-400 font-mono">${lic.comprador?.region || 'Chile'} · Categoría: ${lic.categoria_label || 'TI'}</p>
         </div>
 
         <div>
-          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Descripción Oficial</h5>
-          <p class="text-xs text-slate-300 leading-relaxed bg-canvas p-3 rounded-lg border border-canvas-border">${lic.descripcion}</p>
+          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Presupuesto Referencial</h5>
+          <p class="text-sm font-bold text-emerald-400 font-mono">${montoStr}</p>
         </div>
 
-        <div class="space-y-2">
-          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Ítems & Requerimientos Solicitados</h5>
-          <div class="space-y-2">${itemsHtml}</div>
+        <div>
+          <h5 class="text-xs font-mono uppercase text-slate-400 tracking-wider">Alcance & Descripción de la Licitación</h5>
+          <p class="text-xs text-slate-300 leading-relaxed bg-canvas p-3 rounded-lg border border-canvas-border">${lic.descripcion}</p>
         </div>
       </div>
     `;
@@ -767,7 +808,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
   if (slider && sliderVal && kpiMinScore) {
     slider.addEventListener('input', () => {
       sliderVal.textContent = `${slider.value}%`;
-      kpiMinScore.textContent = `${slider.value}%`;
+      kpiMinScore.textContent = `Umbral: ${slider.value}%`;
       renderTenders();
     });
   }
@@ -799,13 +840,30 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       if (slider && sliderVal && kpiMinScore) {
         slider.value = s;
         sliderVal.textContent = `${s}%`;
-        kpiMinScore.textContent = `${s}%`;
+        kpiMinScore.textContent = `Umbral: ${s}%`;
       }
 
       runSearch(false);
     });
   });
 
-  // Ejecutar verificación al cargar
+  // Filtros de categoría
+  document.querySelectorAll('.cat-pill').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      document.querySelectorAll('.cat-pill').forEach(p => {
+        p.classList.remove('active', 'bg-amber-400', 'text-slate-950', 'font-bold');
+        p.classList.add('bg-canvas', 'border', 'border-canvas-border', 'text-slate-300');
+      });
+
+      const current = e.currentTarget;
+      current.classList.add('active', 'bg-amber-400', 'text-slate-950', 'font-bold');
+      current.classList.remove('bg-canvas', 'border', 'border-canvas-border', 'text-slate-300');
+
+      activeCategory = current.getAttribute('data-cat') || 'all';
+      renderTenders();
+    });
+  });
+
+  // Iniciar al cargar
   checkSession();
 </script>
