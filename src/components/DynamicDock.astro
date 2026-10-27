@@ -23,6 +23,7 @@ import Icon from './Icon.astro';
         <a
           href="/microtoodles"
           id="dock-radio-arch-link"
+          aria-label="Ver arquitectura y funcionamiento de MicroToodles"
           class="flex items-center gap-1 px-2 py-0.5 rounded-tech-sm text-[10px] font-mono font-medium text-cyan-400 bg-cyan-950/70 border border-cyan-800/60 hover:bg-cyan-900/80 hover:border-cyan-400 transition-all focus-visible:ring-1 focus-visible:ring-cyan-400"
           title="Ver página de arquitectura interactiva y flujo de paquetes (¿Cómo funciona?)"
         >
@@ -183,6 +184,7 @@ import Icon from './Icon.astro';
           <a
             href="/lab/sonicrip?source=radio"
             id="dock-radio-dsp-link"
+            aria-label="Transferir audio a SonicRip Studio DSP"
             class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono pl-1 border-l border-canvas-border/60"
             title="Transferir audio a SonicRip DSP"
           >
@@ -258,50 +260,54 @@ import Icon from './Icon.astro';
         </button>
       </div>
 
-      <!-- Divider (Solo en móvil entre CLI y navegación) -->
-      <span class="w-[1px] h-4 bg-canvas-border md:hidden shrink-0" aria-hidden="true"></span>
+      <!-- Divider entre Radio y navegación -->
+      <span class="w-[1px] h-4 bg-canvas-border shrink-0" aria-hidden="true"></span>
 
-      <!-- Lab Shortcut (Solo móvil - Solo Icono) -->
+      <!-- Lab Shortcut -->
       <a
         href="/lab"
-        class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
+        class="flex items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Laboratorio de micro-aplicaciones"
-        aria-label="Ir al Laboratorio"
+        aria-label="Ver laboratorio"
         data-tooltip="Laboratorio"
       >
+        <span class="sr-only">Ver laboratorio</span>
         <Icon name="flask" class="w-4 h-4 text-telemetry" />
       </a>
 
-      <!-- Projects Shortcut (Solo móvil - Solo Icono) -->
+      <!-- Projects Shortcut -->
       <a
         href="/proyectos"
-        class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
+        class="flex items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Catálogo de Proyectos"
-        aria-label="Ir a Proyectos"
+        aria-label="Ver proyectos"
         data-tooltip="Proyectos"
       >
+        <span class="sr-only">Ver proyectos</span>
         <Icon name="gear" class="w-4 h-4 text-slate-400" />
       </a>
 
-      <!-- CV Shortcut (Solo móvil - Solo Icono) -->
+      <!-- CV Shortcut -->
       <a
         href="/cv"
-        class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
+        class="flex items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Ver y descargar CV"
-        aria-label="Ver y descargar CV"
+        aria-label="Descargar currículum"
         data-tooltip="CV"
       >
+        <span class="sr-only">Descargar currículum</span>
         <Icon name="file-earmark-text" class="w-4 h-4 text-slate-400" />
       </a>
 
-      <!-- About Me Shortcut (Solo móvil - Solo Icono) -->
+      <!-- About Me Shortcut -->
       <a
         href="/sobre-mi"
-        class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
+        class="flex items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Sobre mí"
         aria-label="Ir a Sobre mí"
         data-tooltip="Sobre mí"
       >
+        <span class="sr-only">Ir a Sobre mí</span>
         <Icon name="person" class="w-4 h-4 text-slate-400" />
       </a>
 

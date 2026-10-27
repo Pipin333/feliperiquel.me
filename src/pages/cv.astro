@@ -59,7 +59,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
           href="/cv-felipe-riquelme.pdf"
           download="CV-Felipe-Riquelme-Salvo.pdf"
           class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5"
-          title="Descargar PDF oficial completo de 2 páginas (8.7 KB)"
+          title="Usa 'Imprimir / PDF' para guardar tu vista filtrada personalizada, o descarga el PDF oficial consolidado aquí"
         >
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -140,6 +140,16 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             </svg>
           </button>
         </div>
+
+      <!-- Clarification note for filtered vs master PDF -->
+      <div class="flex items-center gap-2 pt-1 font-mono text-[11px] text-slate-400">
+        <svg class="w-3.5 h-3.5 text-telemetry shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>
+          Usa <strong class="text-slate-200">"Imprimir / PDF"</strong> para guardar tu vista filtrada personalizada, o descarga el <strong class="text-slate-200">PDF oficial consolidado</strong> aquí.
+        </span>
+      </div>
       </div>
 
       <!-- Expandable Checklist Drawer -->
@@ -550,7 +560,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             ¿Deseas guardar o compartir este currículum?
           </h3>
           <p class="text-xs text-slate-400 font-sans">
-            El archivo PDF pesa 8.7 KB, está construido con fuentes vectoriales y libre de tablas complejas para máxima legibilidad y portabilidad.
+            El archivo PDF oficial consolidado pesa 8.7 KB y está optimizado para compatibilidad ATS. Para guardar tu selección filtrada actual, utiliza el botón "Imprimir / PDF" superior.
           </p>
         </div>
         <div class="flex items-center gap-3 flex-shrink-0 w-full sm:w-auto">
@@ -558,6 +568,7 @@ const pageDescription = "Currículum Vitae oficial de Felipe Riquelme Salvo. Ing
             href="/cv-felipe-riquelme.pdf"
             download="CV-Felipe-Riquelme-Salvo.pdf"
             class="w-full sm:w-auto text-center px-4 py-2 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all"
+            title="Usa 'Imprimir / PDF' para guardar tu vista filtrada personalizada, o descarga el PDF oficial consolidado aquí"
           >
             Descargar PDF Oficial (8.7 KB)
           </a>
