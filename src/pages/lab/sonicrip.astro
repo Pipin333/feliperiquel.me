@@ -682,9 +682,14 @@ MGMT - Kids</textarea>
   <Footer />
 </Layout>
 
-<script data-astro-rerun>
+<script>
+  function initSonicripStudio() {
+    const tabDspBtn = document.getElementById('tab-dsp-btn') as HTMLButtonElement;
+    if (!tabDspBtn) return;
+    if (tabDspBtn.dataset.initialized === 'true') return;
+    tabDspBtn.dataset.initialized = 'true';
+
   // TAB SWITCHING LOGIC
-  const tabDspBtn = document.getElementById('tab-dsp-btn') as HTMLButtonElement;
   const tabBatchBtn = document.getElementById('tab-batch-btn') as HTMLButtonElement;
   const viewDsp = document.getElementById('view-dsp') as HTMLElement;
   const viewBatch = document.getElementById('view-batch') as HTMLElement;
@@ -1328,11 +1333,15 @@ MGMT - Kids</textarea>
   updateTrackCount();
 
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('source') === 'radio') {
-    setTimeout(() => {
-      loadRadioStream().catch(() => {});
-    }, 350);
+    if (urlParams.get('source') === 'radio') {
+      setTimeout(() => {
+        loadRadioStream().catch(() => {});
+      }, 350);
+    }
   }
+
+  initSonicripStudio();
+  document.addEventListener('astro:page-load', initSonicripStudio);
 </script>
 
 <style>

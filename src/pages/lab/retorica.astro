@@ -645,7 +645,7 @@ import Icon from '../../components/Icon.astro';
   <Footer />
 </Layout>
 
-<script data-astro-rerun>
+<script>
   // Lexicographical dictionaries & transposition heuristics
   const DICTIONARY_CHILEAN: Record<string, string> = {
     "me dio la pálida": "experimenté una súbita y dramática lipotimia vasovagal de etiología somatomorfa",
@@ -754,8 +754,11 @@ import Icon from '../../components/Icon.astro';
     return `"${current}"`;
   }
 
-  // DOM bindings
-  const sourceText = document.getElementById('source-text') as HTMLTextAreaElement;
+  function initRetoricaStudio() {
+    const sourceText = document.getElementById('source-text') as HTMLTextAreaElement;
+    if (!sourceText) return;
+    if (sourceText.dataset.initialized === 'true') return;
+    sourceText.dataset.initialized = 'true';
   const outputContainer = document.getElementById('output-container') as HTMLDivElement;
   const transmuteBtn = document.getElementById('transmute-btn') as HTMLButtonElement;
   const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement;
@@ -1154,7 +1157,11 @@ import Icon from '../../components/Icon.astro';
   });
 
   // Initialize
-  loadLlmConfig();
-  const initialStyle = (document.querySelector('input[name="style-mode"]:checked') as HTMLInputElement)?.value || 'ontologico';
-  syncStyleWithEngine(initialStyle);
+    loadLlmConfig();
+    const initialStyle = (document.querySelector('input[name="style-mode"]:checked') as HTMLInputElement)?.value || 'ontologico';
+    syncStyleWithEngine(initialStyle);
+  }
+
+  initRetoricaStudio();
+  document.addEventListener('astro:page-load', initRetoricaStudio);
 </script>

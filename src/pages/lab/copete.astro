@@ -252,7 +252,7 @@ import Icon from '../../components/Icon.astro';
   <Footer />
 </Layout>
 
-<script data-astro-rerun>
+<script>
   // Pricing baseline reference in Chile (CLP)
   const PRICES = {
     pisco_750: 7990,      // Pisco Mistral / Alto del Carmen 35°
@@ -265,8 +265,11 @@ import Icon from '../../components/Icon.astro';
     jugo_agua_2000: 1490   // Botella jugo / agua 2L
   };
 
-  // State elements
-  const peopleSlider = document.getElementById('people-count') as HTMLInputElement;
+  function initCopeteCalculator() {
+    const peopleSlider = document.getElementById('people-count') as HTMLInputElement;
+    if (!peopleSlider) return;
+    if (peopleSlider.dataset.initialized === 'true') return;
+    peopleSlider.dataset.initialized = 'true';
   const peopleBadge = document.getElementById('people-badge') as HTMLSpanElement;
   const hoursSelect = document.getElementById('hours-select') as HTMLSelectElement;
   const itemsList = document.getElementById('items-list') as HTMLUListElement;
@@ -509,5 +512,9 @@ import Icon from '../../components/Icon.astro';
   });
 
   // Initial calculation on load
-  calculate();
+    calculate();
+  }
+
+  initCopeteCalculator();
+  document.addEventListener('astro:page-load', initCopeteCalculator);
 </script>

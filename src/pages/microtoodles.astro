@@ -649,7 +649,19 @@ async def get_media_track(track_id: str) -&gt; FileResponse:
   }
 </style>
 
-<script data-astro-rerun>
+<script>
+  let microtoodlesSyncInterval: number | null = null;
+
+  function initMicrotoodlesPage() {
+    const pageRadioIndicator = document.getElementById('page-radio-indicator');
+    if (!pageRadioIndicator) return;
+    if (pageRadioIndicator.dataset.initialized === 'true') return;
+    pageRadioIndicator.dataset.initialized = 'true';
+
+    if (microtoodlesSyncInterval) {
+      clearInterval(microtoodlesSyncInterval);
+      microtoodlesSyncInterval = null;
+    }
   // ============================================================================
   // MICROTOODLES DEDICATED PAGE CONTROLLER (Synced with Dynamic Dock)
   // ============================================================================
@@ -659,7 +671,6 @@ async def get_media_track(track_id: str) -&gt; FileResponse:
   }
 
   // Hero Status Elements
-  const pageRadioIndicator = document.getElementById('page-radio-indicator');
   const pageRadioStateText = document.getElementById('page-radio-state-text');
   const pageRadioTrackText = document.getElementById('page-radio-track-text');
   const pageRadioTimeText = document.getElementById('page-radio-time-text');
@@ -1042,6 +1053,14 @@ audio.currentTime = targetSeconds;`,
   // ============================================================================
 
   function syncWithDockRadio() {
+    const indicator = document.getElementById('page-radio-indicator');
+    if (!indicator) {
+      if (microtoodlesSyncInterval) {
+        clearInterval(microtoodlesSyncInterval);
+        microtoodlesSyncInterval = null;
+      }
+      return;
+    }
     const audio = getDockAudio();
     if (!audio) return;
 
@@ -1083,8 +1102,8 @@ audio.currentTime = targetSeconds;`,
     // Metadata from Dock
     const dockTitle = document.getElementById('dock-radio-title');
     const dockArtist = document.getElementById('dock-radio-artist');
-    const titleVal = dockTitle?.textContent || 'Toodles Radio Offline';
-    const artistVal = dockArtist?.textContent || '';
+    const titleVal = dockTitle?.textContent?.trim() || 'Toodles Radio Offline';
+    const artistVal = dockArtist?.textContent?.trim() || '';
 
     if (pageRadioTrackText) {
       pageRadioTrackText.textContent = `${titleVal} ${artistVal ? '• ' + artistVal : ''}`;
@@ -1175,12 +1194,29 @@ audio.currentTime = targetSeconds;`,
     });
   }
 
-  // Initial sync & interval
-  syncWithDockRadio();
-  const syncInterval = window.setInterval(syncWithDockRadio, 1000);
+    const audio = getDockAudio();
+    if (audio) {
+      audio.removeEventListener('timeupdate', syncWithDockRadio);
+      audio.removeEventListener('play', syncWithDockRadio);
+      audio.removeEventListener('pause', syncWithDockRadio);
+      audio.addEventListener('timeupdate', syncWithDockRadio);
+      audio.addEventListener('play', syncWithDockRadio);
+      audio.addEventListener('pause', syncWithDockRadio);
+    }
 
-  // Clean on unload
-  window.addEventListener('beforeunload', () => {
-    clearInterval(syncInterval);
+    // Initial sync immediately upon page mount
+    syncWithDockRadio();
+    microtoodlesSyncInterval = window.setInterval(syncWithDockRadio, 1000);
+  }
+
+  // Clean sync loop on Astro client page transitions
+  document.addEventListener('astro:before-swap', () => {
+    if (microtoodlesSyncInterval) {
+      clearInterval(microtoodlesSyncInterval);
+      microtoodlesSyncInterval = null;
+    }
   });
+
+  initMicrotoodlesPage();
+  document.addEventListener('astro:page-load', initMicrotoodlesPage);
 </script>

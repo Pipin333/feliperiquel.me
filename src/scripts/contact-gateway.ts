@@ -4,7 +4,8 @@ const copyBtn = document.getElementById('copy-email-btn');
 const copyText = document.getElementById('copy-email-text');
 const emailToCopy = 'f.riquelmesalvo@uandresbello.edu';
 
-if (copyBtn && copyText) {
+if (copyBtn && copyText && copyBtn.dataset.initialized !== 'true') {
+  copyBtn.dataset.initialized = 'true';
   copyBtn.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(emailToCopy);
@@ -26,7 +27,8 @@ const form = document.getElementById('contact-form') as HTMLFormElement | null;
 const statusDiv = document.getElementById('form-status');
 const submitBtn = document.getElementById('submit-btn');
 
-if (form && statusDiv && submitBtn) {
+if (form && statusDiv && submitBtn && form.dataset.initialized !== 'true') {
+  form.dataset.initialized = 'true';
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusDiv.classList.remove('hidden', 'text-domain-audio', 'text-rose-400');

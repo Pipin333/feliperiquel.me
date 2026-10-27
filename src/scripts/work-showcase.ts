@@ -3,6 +3,8 @@ function initWorkShowcase() {
 const toggleButtons = document.querySelectorAll<HTMLButtonElement>('button[data-toggle-why]');
 
 toggleButtons.forEach((btn) => {
+  if (btn.dataset.initialized === 'true') return;
+  btn.dataset.initialized = 'true';
   btn.addEventListener('click', () => {
     const id = btn.getAttribute('data-toggle-why');
     if (!id) return;
