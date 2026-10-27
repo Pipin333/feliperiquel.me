@@ -42,3 +42,4 @@ function initSpotlight() {
 }
 
 initSpotlight();
+document.addEventListener('astro:page-load', initSpotlight);

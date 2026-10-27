@@ -107,7 +107,6 @@
   .no-print,
   .print\:hidden,
   #dynamic-dock-root,
-  #dock-cli-panel,
   .dock-ambient-glow,
   #dynamic-dock-bar {
     display: none !important;

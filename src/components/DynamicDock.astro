@@ -4,127 +4,8 @@ import Icon from './Icon.astro';
 ---
 
 <!-- FLOATING DYNAMIC ISLAND & DOCK -->
-<div id="dynamic-dock-root" class="no-print print:hidden fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 md:bottom-6 z-50 flex flex-col items-center md:items-end pointer-events-none">
+<div id="dynamic-dock-root" transition:persist class="no-print print:hidden fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 md:bottom-6 z-50 flex flex-col items-center md:items-end pointer-events-none">
   
-  <!-- FLOATING CLI MODAL / PANEL (ANCHORED ABOVE THE DOCK) -->
-  <div
-    id="dock-cli-panel"
-    class="hidden pointer-events-auto w-[92vw] max-w-2xl mb-3 rounded-tech bg-[#0B0F19]/98 border border-canvas-border shadow-2xl backdrop-blur-xl overflow-hidden transition-all duration-140"
-    role="dialog"
-    aria-label="Consola de comandos flotante"
-    aria-modal="true"
-  >
-    <!-- Terminal Header Bar (Native macOS Style) -->
-    <div class="bg-[#07090E] border-b border-canvas-border px-3.5 py-2 flex items-center justify-between select-none">
-      <!-- Left: Interactive macOS Traffic Light Buttons -->
-      <div class="group/traffic flex items-center gap-2" role="toolbar" aria-label="Controles de ventana">
-        <!-- Red: Close -->
-        <button
-          type="button"
-          id="dock-cli-close-btn"
-          class="w-3 h-3 rounded-full bg-rose-500 hover:bg-rose-600 flex items-center justify-center transition-all focus-visible:ring-1 focus-visible:ring-white"
-          aria-label="Cerrar consola"
-          title="Cerrar consola [ESC]"
-        >
-          <svg class="w-1.5 h-1.5 opacity-0 group-hover/traffic:opacity-100 transition-opacity stroke-rose-950 stroke-[1.75]" viewBox="0 0 6 6" fill="none" aria-hidden="true">
-            <path d="M1 1l4 4M5 1L1 5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
-        <!-- Yellow: Clear output -->
-        <button
-          type="button"
-          id="dock-cli-minimize-btn"
-          class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 flex items-center justify-center transition-all focus-visible:ring-1 focus-visible:ring-white"
-          aria-label="Limpiar pantalla"
-          title="Limpiar pantalla [clear]"
-        >
-          <svg class="w-1.5 h-1.5 opacity-0 group-hover/traffic:opacity-100 transition-opacity stroke-amber-950 stroke-[1.75]" viewBox="0 0 6 6" fill="none" aria-hidden="true">
-            <path d="M1 3h4" stroke-linecap="round" />
-          </svg>
-        </button>
-        <!-- Green: Expand / Toggle Size -->
-        <button
-          type="button"
-          id="dock-cli-expand-btn"
-          class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 flex items-center justify-center transition-all focus-visible:ring-1 focus-visible:ring-white"
-          aria-label="Maximizar consola"
-          title="Expandir o reducir consola"
-        >
-          <svg class="w-1.5 h-1.5 opacity-0 group-hover/traffic:opacity-100 transition-opacity stroke-emerald-950 stroke-[1.75]" viewBox="0 0 6 6" fill="none" aria-hidden="true">
-            <path d="M3 1v4M1 3h4" stroke-linecap="round" />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Center: Clean Session Title -->
-      <div class="font-mono text-[11px] text-slate-400 font-medium tracking-tight">
-        lab-terminal-session (v2.2)
-      </div>
-
-      <!-- Right: Minimal status indicator -->
-      <div class="flex items-center gap-1.5 font-mono text-[10px] text-slate-400">
-        <span class="hidden sm:inline">ESC para cerrar</span>
-      </div>
-    </div>
-
-    <!-- Terminal Body -->
-    <div class="p-4 sm:p-5 font-mono text-xs text-slate-300 bg-[#0B0F19]/98">
-      <div class="text-slate-400 mb-3 flex items-center justify-between">
-        <span>Escribe un comando o pulsa un atajo:</span>
-        <span class="text-[10px] text-slate-500">felipe@lab:~$</span>
-      </div>
-
-      <!-- Quick Command Shortcut Chips -->
-      <div class="flex flex-wrap gap-1.5 mb-4" id="floating-terminal-chips">
-        <button type="button" data-cmd="whoami" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
-          whoami
-        </button>
-        <button type="button" data-cmd="cv" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-telemetry/60 hover:border-telemetry text-telemetry text-[11px] font-semibold transition-colors">
-          cv
-        </button>
-        <button type="button" data-cmd="lab" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
-          lab
-        </button>
-        <button type="button" data-cmd="repos" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
-          repos
-        </button>
-        <button type="button" data-cmd="contact" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-telemetry text-telemetry text-[11px] transition-colors">
-          contact
-        </button>
-        <button type="button" data-cmd="clear" class="px-2.5 py-1 rounded-tech-sm bg-canvas border border-canvas-border hover:border-slate-500 text-slate-400 text-[11px] transition-colors">
-          clear
-        </button>
-      </div>
-
-      <!-- Output Log Area -->
-      <div id="floating-terminal-output" class="space-y-2 mb-3 max-h-48 overflow-y-auto min-h-[64px] text-[12px] leading-relaxed pr-1">
-        <div class="text-slate-400">
-          <span class="text-telemetry font-bold">felipe@lab:~$</span> whoami
-        </div>
-        <div class="text-slate-200 pl-4 border-l-2 border-telemetry/40">
-          Felipe Riquelme. Ingeniero Civil en Informática con foco en audio DSP, herramientas de homelab y aplicaciones web de alto rendimiento.
-        </div>
-      </div>
-
-      <!-- Live Command Prompt Input Form -->
-      <form id="floating-terminal-form" class="flex items-center gap-2 pt-2 border-t border-canvas-border/80">
-        <span class="text-telemetry font-bold">felipe@lab:~$</span>
-        <input
-          type="text"
-          id="floating-terminal-input"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="escribe 'help' o un comando..."
-          class="flex-1 bg-transparent border-none text-white font-mono text-xs focus:outline-none placeholder-slate-600"
-          aria-label="Línea de comando interactiva flotante"
-        />
-        <button type="submit" class="text-slate-400 hover:text-telemetry text-[11px] font-semibold px-2 py-0.5">
-          Ejecutar
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- FLOATING RADIO PLAYER CARD (ANCHORED ABOVE THE DOCK) -->
   <div
     id="dock-radio-panel"
@@ -142,6 +23,7 @@ import Icon from './Icon.astro';
         <a
           href="/microtoodles"
           id="dock-radio-arch-link"
+          aria-label="Ver arquitectura y funcionamiento de MicroToodles"
           class="flex items-center gap-1 px-2 py-0.5 rounded-tech-sm text-[10px] font-mono font-medium text-cyan-400 bg-cyan-950/70 border border-cyan-800/60 hover:bg-cyan-900/80 hover:border-cyan-400 transition-all focus-visible:ring-1 focus-visible:ring-cyan-400"
           title="Ver página de arquitectura interactiva y flujo de paquetes (¿Cómo funciona?)"
         >
@@ -302,6 +184,7 @@ import Icon from './Icon.astro';
           <a
             href="/lab/sonicrip?source=radio"
             id="dock-radio-dsp-link"
+            aria-label="Transferir audio a SonicRip Studio DSP"
             class="text-[10px] text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1 font-mono pl-1 border-l border-canvas-border/60"
             title="Transferir audio a SonicRip DSP"
           >
@@ -335,23 +218,6 @@ import Icon from './Icon.astro';
       class="dock-pill-bar relative flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-[#090D17]/95 border border-telemetry/40 shadow-2xl backdrop-blur-xl text-slate-200 max-w-[calc(100vw-0.75rem)]"
       aria-label="Barra de herramientas flotante"
     >
-      <!-- CLI Toggle Button -->
-      <button
-        type="button"
-        id="dock-toggle-cli"
-        class="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-full font-mono text-[11px] sm:text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 group/cli focus-visible:rounded-full shrink-0"
-        aria-expanded="false"
-        aria-controls="dock-cli-panel"
-        title="Abrir consola interactiva [~]"
-      >
-        <svg class="w-3.5 h-3.5 text-telemetry-dark group-hover/cli:scale-105 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="4 7 10 12 4 17"></polyline>
-          <line x1="12" y1="17" x2="20" y2="17"></line>
-        </svg>
-        <span>CLI</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-telemetry-dark/80 animate-pulse"></span>
-      </button>
-
       <!-- Radio Toodles Group -->
       <div class="flex items-center gap-0.5 shrink-0 bg-canvas-raised rounded-full p-0.5 border border-canvas-border hover:border-emerald-500/50 transition-colors">
         <!-- Play/Pause Toggle (En móvil abre el menú flotante; en escritorio conmuta reproducción) -->
@@ -394,43 +260,46 @@ import Icon from './Icon.astro';
         </button>
       </div>
 
-      <!-- Divider (Solo en móvil entre CLI y navegación) -->
+      <!-- Divider entre Radio y navegación (Solo móvil) -->
       <span class="w-[1px] h-4 bg-canvas-border md:hidden shrink-0" aria-hidden="true"></span>
 
-      <!-- Lab Shortcut (Solo móvil - Solo Icono) -->
+      <!-- Lab Shortcut -->
       <a
         href="/lab"
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Laboratorio de micro-aplicaciones"
-        aria-label="Ir al Laboratorio"
+        aria-label="Ver laboratorio"
         data-tooltip="Laboratorio"
       >
+        <span class="sr-only">Ver laboratorio</span>
         <Icon name="flask" class="w-4 h-4 text-telemetry" />
       </a>
 
-      <!-- Projects Shortcut (Solo móvil - Solo Icono) -->
+      <!-- Projects Shortcut -->
       <a
         href="/proyectos"
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Catálogo de Proyectos"
-        aria-label="Ir a Proyectos"
+        aria-label="Ver proyectos"
         data-tooltip="Proyectos"
       >
+        <span class="sr-only">Ver proyectos</span>
         <Icon name="gear" class="w-4 h-4 text-slate-400" />
       </a>
 
-      <!-- CV Shortcut (Solo móvil - Solo Icono) -->
+      <!-- CV Shortcut -->
       <a
         href="/cv"
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
         title="Ver y descargar CV"
-        aria-label="Ver y descargar CV"
+        aria-label="Descargar currículum"
         data-tooltip="CV"
       >
+        <span class="sr-only">Descargar currículum</span>
         <Icon name="file-earmark-text" class="w-4 h-4 text-slate-400" />
       </a>
 
-      <!-- About Me Shortcut (Solo móvil - Solo Icono) -->
+      <!-- About Me Shortcut -->
       <a
         href="/sobre-mi"
         class="flex md:hidden items-center justify-center w-8 h-8 rounded-full font-mono text-slate-300 hover:text-white hover:bg-canvas-raised transition-colors shrink-0"
@@ -438,6 +307,7 @@ import Icon from './Icon.astro';
         aria-label="Ir a Sobre mí"
         data-tooltip="Sobre mí"
       >
+        <span class="sr-only">Ir a Sobre mí</span>
         <Icon name="person" class="w-4 h-4 text-slate-400" />
       </a>
 
@@ -551,167 +421,9 @@ import Icon from './Icon.astro';
   }
 </style>
 
-<!-- SCRIPT: FLOATING DOCK & TERMINAL CONTROLLER -->
+<!-- SCRIPT: FLOATING DOCK & RADIO CONTROLLER -->
 <script>
-  const cliPanel = document.getElementById('dock-cli-panel');
-  const cliToggleBtn = document.getElementById('dock-toggle-cli');
-  const cliCloseBtn = document.getElementById('dock-cli-close-btn');
-  const cliMinBtn = document.getElementById('dock-cli-minimize-btn');
-  const cliExpandBtn = document.getElementById('dock-cli-expand-btn');
-  const outputEl = document.getElementById('floating-terminal-output');
-  const inputEl = document.getElementById('floating-terminal-input') as HTMLInputElement | null;
-  const formEl = document.getElementById('floating-terminal-form');
-  const chipsContainer = document.getElementById('floating-terminal-chips');
   const scrollTopBtn = document.getElementById('dock-scroll-top-btn');
-
-  const commandResponses: Record<string, string> = {
-    whoami: 'Felipe Riquelme. Ingeniero Civil en Informática especializado en desarrollo web de alto rendimiento, DSP de audio y homelab.',
-    cv: 'Currículum Vitae: Descarga directa en PDF (8.7 KB): /cv-felipe-riquelme.pdf | Versión web: /cv | Perfil: Ingeniero Civil en Informática (UNAB), AD-BSA (Optimización & Auditoría), J.E.J. Ingeniería (Innovación & TI), Dunkin\' (Subgerencia).',
-    help: 'Comandos disponibles: whoami, cv, lab, repos, contact, clear. También puedes pulsar los botones de atajo.',
-    lab: 'El Laboratorio contiene 5 herramientas en vivo: SonicRip Studio (DSP), FinFlow (PWA Finanzas), Retórica y Descalabro (NLP), Cuánto Rinde (Logística) y Ni Idea (Party Game). Navega a /lab para probarlas.',
-    repos: 'Proyectos clave: Toodles (Discord Audio + RecSys ML), Whatsarr (WhatsApp + *Arr Stack + Plex), UniCalendar AI (Next.js + LLMs + Google Calendar), JD Watch Controller (Wear OS 6-Axis), AD-BSA (Optimización Metaheurística & HPC).',
-    arch: 'Abriendo visualizador interactivo de arquitectura MicroToodles y telemetría de streaming...',
-    microtoodles: 'MicroToodles: Motor de streaming de audio con solicitudes parciales HTTP 206, volumen NVMe en OCI y aceleración Cloudflare Edge CDN. Escribe "arch" para desplegar la arquitectura completa.',
-    contact: 'Canales directos: Correo: f.riquelmesalvo@uandresbello.edu | WhatsApp: ver seccion #contacto | GitHub: @Pipin333',
-    clear: ''
-  };
-
-  function toggleTerminal(forceOpen?: boolean) {
-    if (!cliPanel || !cliToggleBtn) return;
-    const isCurrentlyOpen = !cliPanel.classList.contains('hidden');
-    const shouldOpen = forceOpen !== undefined ? forceOpen : !isCurrentlyOpen;
-
-    if (shouldOpen) {
-      cliPanel.classList.remove('hidden');
-      cliToggleBtn.setAttribute('aria-expanded', 'true');
-      cliToggleBtn.classList.add('ring-2', 'ring-white/90');
-      if (inputEl) setTimeout(() => inputEl.focus(), 50);
-    } else {
-      cliPanel.classList.add('hidden');
-      cliToggleBtn.setAttribute('aria-expanded', 'false');
-      cliToggleBtn.classList.remove('ring-2', 'ring-white/90');
-    }
-  }
-
-  function executeCommand(cmd: string) {
-    if (!outputEl) return;
-    const cleanCmd = cmd.trim().toLowerCase();
-
-    if (cleanCmd === 'clear') {
-      outputEl.innerHTML = '';
-      return;
-    }
-
-    if (cleanCmd === '418' || cleanCmd === 'cafe' || cleanCmd === 'coffee') {
-      const cmdRow = document.createElement('div');
-      cmdRow.className = 'text-slate-400 mt-2 font-mono';
-      const promptSpan = document.createElement('span');
-      promptSpan.className = 'text-amber-400 font-bold';
-      promptSpan.textContent = 'felipe@lab:~$';
-      cmdRow.appendChild(promptSpan);
-      cmdRow.appendChild(document.createTextNode(` ${cleanCmd}`));
-
-      const respRow = document.createElement('div');
-      respRow.className = 'text-amber-200 pl-4 border-l-2 border-amber-500/60 font-mono text-[11px] leading-relaxed my-1.5 space-y-1.5';
-      respRow.innerHTML = `
-        <div class="text-amber-400 font-bold tracking-wider">
-          HTTP 418 // I'M A TEAPOT (RFC 2324 / HTCPCP)
-        </div>
-        <pre class="text-amber-300 font-mono text-[10px] leading-none my-1 select-none">
-     ( (
-      ) )
-   .-------.
-   |  418  |]
-   \\_______/
-    \`=====\`
-        </pre>
-        <div class="text-slate-200">
-          <strong class="text-white">Error de protocolo:</strong> Este servidor es una tetera y se niega a preparar café... en teoría.
-        </div>
-        <div class="text-slate-400 text-[10px] leading-normal pt-1 border-t border-amber-500/20">
-          <span class="text-amber-300">Nota de origen:</span> De preparar litros de café en Dunkin a emprender con café de especialidad familiar y programar sistemas distribuidos. El café de verdad no se automatiza con HTTP, se extrae con paciencia.
-        </div>
-      `;
-
-      outputEl.appendChild(cmdRow);
-      outputEl.appendChild(respRow);
-      outputEl.scrollTop = outputEl.scrollHeight;
-      return;
-    }
-
-    const response = commandResponses[cleanCmd] || `Comando no reconocido: '${cleanCmd}'. Escribe 'help' para ver la lista de comandos.`;
-
-    const cmdRow = document.createElement('div');
-    cmdRow.className = 'text-slate-400 mt-2 font-mono';
-    const promptSpan = document.createElement('span');
-    promptSpan.className = 'text-telemetry font-bold';
-    promptSpan.textContent = 'felipe@lab:~$';
-    cmdRow.appendChild(promptSpan);
-    cmdRow.appendChild(document.createTextNode(` ${cleanCmd}`));
-
-    const respRow = document.createElement('div');
-    respRow.className = 'text-slate-200 pl-4 border-l-2 border-telemetry/40 font-mono text-[11px] leading-relaxed';
-    respRow.textContent = response;
-
-    outputEl.appendChild(cmdRow);
-    outputEl.appendChild(respRow);
-
-    if (cleanCmd === 'arch' || cleanCmd === 'radio arch' || cleanCmd === 'microtoodles' || cleanCmd === 'microtoodles arch') {
-      window.location.href = '/microtoodles';
-    }
-
-    outputEl.scrollTop = outputEl.scrollHeight;
-  }
-
-  // Toggle button clicks
-  if (cliToggleBtn) {
-    cliToggleBtn.addEventListener('click', () => toggleTerminal());
-  }
-
-  if (cliCloseBtn) {
-    cliCloseBtn.addEventListener('click', () => toggleTerminal(false));
-  }
-
-  if (cliMinBtn) {
-    cliMinBtn.addEventListener('click', () => {
-      executeCommand('clear');
-    });
-  }
-
-  if (cliExpandBtn) {
-    cliExpandBtn.addEventListener('click', () => {
-      if (outputEl) {
-        outputEl.classList.toggle('max-h-48');
-        outputEl.classList.toggle('max-h-[380px]');
-      }
-    });
-  }
-
-  // Form submit in terminal
-  if (formEl && inputEl) {
-    formEl.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const val = inputEl.value;
-      if (val.trim()) {
-        executeCommand(val);
-        inputEl.value = '';
-      }
-    });
-  }
-
-  // Chips click in terminal
-  if (chipsContainer) {
-    chipsContainer.addEventListener('click', (e) => {
-      const target = (e.target as HTMLElement).closest('button[data-cmd]');
-      if (target) {
-        const cmd = target.getAttribute('data-cmd');
-        if (cmd) {
-          executeCommand(cmd);
-          if (inputEl) inputEl.focus();
-        }
-      }
-    });
-  }
 
   // Smooth scroll to top
   if (scrollTopBtn) {
@@ -720,14 +432,10 @@ import Icon from './Icon.astro';
     });
   }
 
-  // Global Keyboard Shortcuts (ESC to close, ~ or ` to toggle)
+  // Global Keyboard Shortcuts (ESC to close radio, r to toggle playback)
   window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      if (cliPanel && !cliPanel.classList.contains('hidden')) toggleTerminal(false);
       if (radioPanel && !radioPanel.classList.contains('hidden')) toggleRadioPanel(false);
-    } else if ((e.key === '`' || e.key === '~') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
-      e.preventDefault();
-      toggleTerminal();
     } else if ((e.key === 'r' || e.key === 'R') && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
       togglePlayback();
     }
@@ -742,12 +450,6 @@ import Icon from './Icon.astro';
       const radioGroup = radioToggleBtn?.parentElement;
       if (!radioPanel.contains(target) && (!radioGroup || !radioGroup.contains(target))) {
         toggleRadioPanel(false);
-      }
-    }
-
-    if (cliPanel && !cliPanel.classList.contains('hidden')) {
-      if (!cliPanel.contains(target) && (!cliToggleBtn || !cliToggleBtn.contains(target))) {
-        toggleTerminal(false);
       }
     }
   });
@@ -949,9 +651,6 @@ import Icon from './Icon.astro';
     const shouldOpen = forceOpen !== undefined ? forceOpen : !isCurrentlyOpen;
 
     if (shouldOpen) {
-      if (cliPanel && !cliPanel.classList.contains('hidden')) {
-        toggleTerminal(false);
-      }
       radioPanel.classList.remove('hidden');
       if (radioExpandBtn) radioExpandBtn.setAttribute('aria-expanded', 'true');
       if (radioToggleBtn) radioToggleBtn.setAttribute('aria-expanded', 'true');

@@ -66,38 +66,44 @@ const mundaneSolutions = [
 
     <!-- Supporting Sentence (Tested & Frozen) -->
     <p class="font-sans text-slate-300 text-center max-w-2xl mx-auto text-base sm:text-lg leading-relaxed mb-10">
-      En este sitio encontrarás mis proyectos destacados y mi laboratorio de pruebas. Soy <a href="/sobre-mi" class="font-semibold text-white hover:text-telemetry transition-colors duration-140 focus-visible:rounded-tech-sm inline-block group" title="Conocer más sobre mí">feliperiquel<span class="text-telemetry group-hover:underline">.me</span></a>: desarrollador detallista, enfocado en rigor técnico y en construir software sin rodeos.
+      En este sitio encontrarás mis proyectos destacados y mi laboratorio de pruebas. Soy <a href="/sobre-mi" class="font-semibold text-white hover:text-telemetry transition-colors duration-140 focus-visible:rounded-tech-sm inline-block group" title="Conocer más sobre mí">feliperiquel<span class="text-telemetry group-hover:underline">.me</span></a>, estudiante de Ingeniería Civil en Informática (UNAB) en Santiago de Chile: desarrollador detallista, enfocado en rigor técnico y en construir software sin rodeos.
     </p>
 
     <!-- CTAs -->
-    <div class="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-3.5 max-w-2xl mx-auto mb-14">
-      <a
-        href="/lab"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0"
-      >
-        <span class="whitespace-nowrap">Explorar el Laboratorio</span>
-        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
-
-      <a
-        href="/proyectos"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-tech font-mono text-xs font-medium text-slate-200 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0"
-      >
-        <span class="whitespace-nowrap">Ver proyectos & repos</span>
-      </a>
-
+    <div class="flex flex-col gap-3 sm:gap-3.5 max-w-lg sm:max-w-xl mx-auto mb-14 w-full">
+      <!-- Fila 1: Descargar CV (ancho completo) -->
       <a
         href="/cv"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 rounded-tech font-mono text-xs font-medium text-slate-200 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0 group"
+        class="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-tech font-mono text-xs font-bold text-telemetry-dark bg-telemetry hover:bg-telemetry-hover shadow-glow-cyan transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap group"
         title="Ver y descargar Currículum Vitae"
       >
-        <svg class="w-4 h-4 text-telemetry group-hover:scale-110 transition-transform shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-4 h-4 shrink-0 stroke-[2.2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
         <span class="whitespace-nowrap">Descargar CV</span>
       </a>
+
+      <!-- Fila 2: Los otros 2 botones (grid equilibrado) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 w-full">
+        <!-- Secondary CTA: Explorar el Laboratorio -->
+        <a
+          href="/lab"
+          class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-tech font-mono text-xs font-medium text-slate-200 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap group"
+        >
+          <span class="whitespace-nowrap">Explorar el Laboratorio</span>
+          <svg class="w-4 h-4 text-slate-400 group-hover:text-telemetry group-hover:translate-x-0.5 transition-all shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+
+        <!-- Secondary CTA: Ver proyectos & repos -->
+        <a
+          href="/proyectos"
+          class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-tech font-mono text-xs font-medium text-slate-200 hover:text-white bg-canvas-surface hover:bg-canvas-raised border border-canvas-border hover:border-telemetry/50 transition-all duration-140 hover:-translate-y-0.5 whitespace-nowrap"
+        >
+          <span class="whitespace-nowrap">Ver proyectos & repos</span>
+        </a>
+      </div>
     </div>
 
     <!-- Engineering Capability Pillars: Problema Mundano -> Solución Sólida -->
