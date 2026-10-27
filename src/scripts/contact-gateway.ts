@@ -1,3 +1,4 @@
+function initContactGateway() {
 // Copy email button logic
 const copyBtn = document.getElementById('copy-email-btn');
 const copyText = document.getElementById('copy-email-text');
@@ -78,3 +79,7 @@ if (form && statusDiv && submitBtn) {
     }
   });
 }
+
+}
+initContactGateway();
+document.addEventListener('astro:page-load', initContactGateway);

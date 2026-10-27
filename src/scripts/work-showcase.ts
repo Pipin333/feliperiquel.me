@@ -1,3 +1,4 @@
+function initWorkShowcase() {
 // Accordion logic for project rationale cards
 const toggleButtons = document.querySelectorAll<HTMLButtonElement>('button[data-toggle-why]');
 
@@ -22,3 +23,7 @@ toggleButtons.forEach((btn) => {
     }
   });
 });
+
+}
+initWorkShowcase();
+document.addEventListener('astro:page-load', initWorkShowcase);
