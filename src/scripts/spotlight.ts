@@ -8,6 +8,8 @@ function initSpotlight() {
   if (cards.length === 0) return;
 
   cards.forEach((card) => {
+    if (card.dataset.spotlightInitialized === 'true') return;
+    card.dataset.spotlightInitialized = 'true';
     let rect: DOMRect | null = null;
     let ticking = false;
 

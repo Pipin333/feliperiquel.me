@@ -743,7 +743,7 @@ import Icon from '../../components/Icon.astro';
 
   <Footer />
 
-  <script data-astro-rerun>
+  <script>
     const SESSION_TOKEN_KEY = 'ni_idea_session_token';
     const NICKNAME_KEY = 'ni_idea_nickname';
     const PARTYSERVER_HOST = 'ni-idea.pipin333.workers.dev';
@@ -851,14 +851,21 @@ import Icon from '../../components/Icon.astro';
         .replace(/'/g, '&#39;');
     }
 
-    const sessionToken = getOrCreateSessionToken();
-    let socket: WebSocket | null = null;
-    let currentProjection: AsymmetricProjection | null = null;
-    let activeRoomCode = '';
-    let activeNickname = '';
-    let countdownInterval: number | null = null;
+    let activeSocket: WebSocket | null = null;
+    let activeCountdownInterval: number | null = null;
 
-    const viewEntry = document.getElementById('state-entry');
+    function initQuizApp() {
+      const viewEntry = document.getElementById('state-entry');
+      if (!viewEntry) return;
+      if (viewEntry.dataset.initialized === 'true') return;
+      viewEntry.dataset.initialized = 'true';
+
+      const sessionToken = getOrCreateSessionToken();
+      let socket: WebSocket | null = null;
+      let currentProjection: AsymmetricProjection | null = null;
+      let activeRoomCode = '';
+      let activeNickname = '';
+      let countdownInterval: number | null = null;
     const viewLoading = document.getElementById('state-loading');
     const viewError = document.getElementById('state-error');
     const viewActiveRoom = document.getElementById('state-active-room');
@@ -1505,5 +1512,25 @@ import Icon from '../../components/Icon.astro';
         }
       }
     }
+
+    // Assign to module level for clean teardown on page navigation
+    activeSocket = socket;
+    activeCountdownInterval = countdownInterval;
+  }
+
+  // Teardown socket & timers on client navigation away from quiz
+  document.addEventListener('astro:before-swap', () => {
+    if (activeSocket) {
+      try { activeSocket.close(); } catch {}
+      activeSocket = null;
+    }
+    if (activeCountdownInterval) {
+      clearInterval(activeCountdownInterval);
+      activeCountdownInterval = null;
+    }
+  });
+
+  initQuizApp();
+  document.addEventListener('astro:page-load', initQuizApp);
   </script>
 </Layout>
