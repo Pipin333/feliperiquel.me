@@ -1,6 +1,6 @@
 # feliperiquel.me
 
-Portafolio de ingeniería de software y laboratorio interactivo de **Felipe Riquelme**. Construido sobre **Astro**, **Tailwind CSS** y configurado con `@astrojs/vercel` para despliegue estático de alto rendimiento, accesibilidad WCAG 2.2 AA y 100/100 en Core Web Vitals.
+Portafolio de ingeniería de software y laboratorio interactivo de **Felipe Riquelme**. Construido sobre **Astro**, **Tailwind CSS** y configurado con `@astrojs/vercel` para despliegue estático de alto rendimiento, accesibilidad WCAG 2.2 AA y 100/100 en PageSpeed Insights.
 
 ---
 
