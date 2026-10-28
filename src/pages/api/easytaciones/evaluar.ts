@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { decryptDefaultProfile, extractToken, isAuthorized } from './auth';
 import realTendersData from './tenders.json';
 import type { LicitacionData } from './match';
+import { fetchLiveTenderDetail } from '../../../lib/mercadopublico';
 
 export const prerender = false;
 
@@ -1011,13 +1012,24 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const licitacion = REAL_LICITACIONES.find(
+    let licitacion = REAL_LICITACIONES.find(
       lic => lic.codigo_externo.toLowerCase() === codigo.toLowerCase()
     );
 
     if (!licitacion) {
+      const ticket = process.env.MP_TICKET || '';
+      if (ticket && ticket.length > 5) {
+        licitacion = (await fetchLiveTenderDetail(ticket, codigo)) || undefined;
+      }
+    }
+
+    if (!licitacion && body?.licitacion && typeof body.licitacion === 'object') {
+      licitacion = body.licitacion as LicitacionData;
+    }
+
+    if (!licitacion) {
       return new Response(
-        JSON.stringify({ success: false, error: `Licitación '${codigo}' no encontrada.` }),
+        JSON.stringify({ success: false, error: `Licitación '${codigo}' no encontrada en el catálogo activo ni en Mercado Público.` }),
         { status: 404, headers: NO_INDEX_HEADERS }
       );
     }

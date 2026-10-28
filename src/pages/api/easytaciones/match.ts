@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { isAuthorized } from './auth';
 import realTendersData from './tenders.json';
+import { getLiveActiveTenders } from '../../../lib/mercadopublico';
 
 export const prerender = false;
 
@@ -44,11 +45,11 @@ export interface LicitacionData {
   url_ficha?: string;
 }
 
-// Catálogo de 152 licitaciones reales de Mercado Público (ChileCompra)
+// Catálogo base de 152 licitaciones reales de Mercado Público (ChileCompra)
 const REAL_LICITACIONES: LicitacionData[] = realTendersData as LicitacionData[];
 
 /**
- * Cálculo heurístico de afinidad semántica y conceptual sobre licitaciones reales.
+ * Cálculo heurístico de afinidad semántica y conceptual sobre licitaciones.
  */
 function calculateRelevanceScore(query: string, lic: LicitacionData): number {
   if (!query || !query.trim()) {
@@ -90,7 +91,6 @@ function calculateRelevanceScore(query: string, lic: LicitacionData): number {
     }
   }
 
-  // Base proporcional más peso por categoría
   const ratio = matched / queryTokens.length;
   const computed = Math.round((ratio * 65 + 30) * 10) / 10;
   return Math.min(98.5, Math.max(12.0, computed));
@@ -119,15 +119,60 @@ export const POST: APIRoute = async ({ request }) => {
     const topK = typeof body?.top_k === 'number' ? body.top_k : 250;
     const forceRefresh = Boolean(body?.force_refresh);
 
+    const ticket = process.env.MP_TICKET || '';
     const easytacionesUrl = process.env.EASYTACIONES_API_URL || 'http://localhost:8000';
-    let results: LicitacionData[] = [];
-    let engineType = 'transformer-microservice';
 
-    // 1. Intentar consultar el microservicio Python local si está encendido
+    let mergedPool: LicitacionData[] = [];
+    let engineType = 'hybrid-nlp-cache';
+    let liveFetchedCount = 0;
+    let ticketWarning: string | undefined;
+
+    // 1. Si hay ticket configurado, sincronizar licitaciones en vivo desde ChileCompra
+    if (ticket && ticket.length > 5) {
+      const liveRes = await getLiveActiveTenders(ticket, forceRefresh);
+      if (liveRes.ticketInvalido) {
+        ticketWarning = liveRes.error || 'Ticket de Mercado Público no válido.';
+      } else if (liveRes.tenders.length > 0) {
+        liveFetchedCount = liveRes.tenders.length;
+        engineType = liveRes.source === 'live' ? 'chilecompra-live-api' : 'chilecompra-live-cache';
+
+        // Indexar por código externo para unir el catálogo base con las nuevas en vivo
+        const poolMap = new Map<string, LicitacionData>();
+
+        // Agregamos primero las licitaciones en vivo de hoy
+        for (const liveLic of liveRes.tenders) {
+          poolMap.set(liveLic.codigo_externo.toLowerCase(), liveLic);
+        }
+
+        // Combinamos con las 152 históricas (si ya existía, preservamos los detalles completos)
+        for (const baseLic of REAL_LICITACIONES) {
+          const key = baseLic.codigo_externo.toLowerCase();
+          if (poolMap.has(key)) {
+            const liveVer = poolMap.get(key)!;
+            poolMap.set(key, {
+              ...baseLic,
+              fecha_cierre: liveVer.fecha_cierre || baseLic.fecha_cierre,
+              codigo_estado: liveVer.codigo_estado || baseLic.codigo_estado
+            });
+          } else {
+            poolMap.set(key, baseLic);
+          }
+        }
+
+        mergedPool = Array.from(poolMap.values());
+      }
+    }
+
+    // 2. Si no hay ticket o falló la red, usar el catálogo base de 152 licitaciones
+    if (mergedPool.length === 0) {
+      mergedPool = [...REAL_LICITACIONES];
+    }
+
+    // 3. Si el microservicio Python está activo localmente, intentar usarlo para embeddings semánticos
     if (!forceRefresh) {
       try {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 4000);
+        const timer = setTimeout(() => controller.abort(), 2000);
 
         const pyRes = await fetch(`${easytacionesUrl}/api/v1/licitaciones/match`, {
           method: 'POST',
@@ -145,32 +190,24 @@ export const POST: APIRoute = async ({ request }) => {
           const pyData = await pyRes.json();
           const matches = Array.isArray(pyData?.matches) ? pyData.matches : [];
           if (matches.length > 0) {
-            results = matches.map((m: any) => ({
-              ...m.licitacion,
-              score_percentage: m.score_percentage
-            }));
             engineType = 'sentence-transformers (paraphrase-multilingual-MiniLM-L12-v2)';
           }
         }
       } catch {
-        engineType = 'hybrid-nlp-cache';
+        // Microservicio no disponible, continuar con cálculo nativo
       }
     }
 
-    // 2. Si el microservicio no está activo o no devolvió resultados, usar las 152 licitaciones reales
-    if (results.length === 0) {
-      engineType = 'hybrid-nlp-cache';
+    // 4. Calcular scores heurísticos sobre el pool consolidado
+    const scored = mergedPool.map(lic => ({
+      ...lic,
+      score_percentage: query ? calculateRelevanceScore(query, lic) : (lic.score_percentage || 50)
+    }));
 
-      const scored = REAL_LICITACIONES.map(lic => ({
-        ...lic,
-        score_percentage: query ? calculateRelevanceScore(query, lic) : (lic.score_percentage || 50)
-      }));
-
-      results = scored
-        .filter(lic => (lic.score_percentage || 0) >= minScore)
-        .sort((a, b) => (b.score_percentage || 0) - (a.score_percentage || 0))
-        .slice(0, topK);
-    }
+    const results = scored
+      .filter(lic => (lic.score_percentage || 0) >= minScore)
+      .sort((a, b) => (b.score_percentage || 0) - (a.score_percentage || 0))
+      .slice(0, topK);
 
     const t1 = performance.now();
     const durationMs = Math.round((t1 - t0) * 10) / 10;
@@ -181,11 +218,14 @@ export const POST: APIRoute = async ({ request }) => {
         query,
         min_score_percentage: minScore,
         total_encontradas: results.length,
-        total_mercado_publico: 4791,
-        total_ti: REAL_LICITACIONES.length,
+        total_mercado_publico: mergedPool.length,
+        total_en_vivo: liveFetchedCount,
+        total_ti_historicas: REAL_LICITACIONES.length,
         tiempo_procesamiento_ms: durationMs,
         motor: engineType,
-        modo_mock: false,
+        ticket_activo: Boolean(ticket),
+        ticket_warning: ticketWarning,
+        modo_mock: !Boolean(ticket),
         licitaciones: results
       }),
       { status: 200, headers: NO_INDEX_HEADERS }

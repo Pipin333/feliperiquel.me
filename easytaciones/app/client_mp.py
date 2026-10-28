@@ -1,6 +1,7 @@
 """Cliente para la API de Mercado Público (ChileCompra)."""
 
 import logging
+from datetime import datetime, timedelta
 from typing import List, Optional
 import httpx
 from app.config import settings
@@ -36,47 +37,62 @@ class MercadoPublicoClient:
     async def get_licitaciones_activas(self) -> List[Licitacion]:
         """Obtiene las licitaciones actualmente publicadas/activas en Mercado Público.
         
-        Si no se cuenta con ticket válido o la API no está disponible, utiliza
-        datos de muestra realistas para permitir pruebas y desarrollo sin bloqueos.
+        Consulta la API de ChileCompra por fecha diaria (DDMMYYYY). Si no se cuenta con ticket válido
+        o la API no está disponible, utiliza datos de respaldo realistas.
         """
         if self._is_mock_required():
             logger.info("Usando catálogo de licitaciones de prueba (modo mock o ticket no configurado).")
             return list(SAMPLE_LICITACIONES)
 
         url = f"{self.base_url}/licitaciones.json"
-        params = {
-            "estado": "activas",
-            "ticket": self.ticket,
-        }
+
+        # Formato oficial exigido por Mercado Público: DDMMYYYY
+        today = datetime.now()
+        dates_to_try = [
+            today.strftime("%d%m%Y"),
+            (today - timedelta(days=1)).strftime("%d%m%Y")
+        ]
 
         try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
-                logger.info(f"Consultando API Mercado Público: {url}?estado=activas")
-                response = await client.get(url, params=params)
-                response.raise_for_status()
-                data = response.json()
+            # Desactivamos verificación estricta de SSL para compatibilidad con la cadena de ChileCompra en Windows
+            async with httpx.AsyncClient(timeout=self.timeout, verify=False) as client:
+                for date_str in dates_to_try:
+                    params = {
+                        "fecha": date_str,
+                        "ticket": self.ticket,
+                    }
+                    logger.info(f"Consultando API Mercado Público: {url}?fecha={date_str}")
+                    response = await client.get(url, params=params)
+                    response.raise_for_status()
+                    data = response.json()
 
-                # Si la API responde un error estructurado (ej: ticket inválido)
-                if isinstance(data, dict) and "Mensaje" in data and "Listado" not in data:
-                    logger.warning(
-                        f"Respuesta de advertencia desde Mercado Público: {data.get('Mensaje')}. Usando fallback mock."
-                    )
-                    return list(SAMPLE_LICITACIONES)
+                    # Validar si el ticket es inválido
+                    if isinstance(data, dict) and data.get("Codigo") == 203:
+                        logger.error(
+                            f"Ticket inválido en Mercado Público: {data.get('Mensaje')}. Usando fallback."
+                        )
+                        return list(SAMPLE_LICITACIONES)
 
-                raw_list = data.get("Listado", []) if isinstance(data, dict) else []
-                licitaciones = []
+                    raw_list = data.get("Listado", []) if isinstance(data, dict) else []
+                    if not raw_list:
+                        continue
 
-                for item in raw_list:
-                    licitaciones.append(self._parse_raw_licitacion(item))
+                    # Filtrar sólo licitaciones activas/publicadas (CodigoEstado 5 = Publicada, 6 = Cierra hoy)
+                    active_items = [
+                        it for it in raw_list
+                        if it.get("CodigoEstado") in (5, 6)
+                    ]
 
-                if not licitaciones:
-                    logger.warning("La API de Mercado Público retornó 0 licitaciones. Usando fallback mock.")
-                    return list(SAMPLE_LICITACIONES)
+                    licitaciones = [self._parse_raw_licitacion(item) for item in active_items]
+                    if licitaciones:
+                        logger.info(f"Se obtuvieron {len(licitaciones)} licitaciones activas en vivo de Mercado Público.")
+                        return licitaciones
 
-                return licitaciones
+                logger.warning("No se encontraron licitaciones activas en las fechas consultadas. Usando catálogo base.")
+                return list(SAMPLE_LICITACIONES)
 
         except Exception as e:
-            logger.error(f"Error conectando a API Mercado Público: {e}. Usando datos mock de respaldo.")
+            logger.error(f"Error conectando a API Mercado Público: {e}. Usando datos de respaldo.")
             return list(SAMPLE_LICITACIONES)
 
     async def get_licitacion_por_codigo(self, codigo: str) -> Optional[Licitacion]:
@@ -91,7 +107,7 @@ class MercadoPublicoClient:
         params = {"codigo": codigo, "ticket": self.ticket}
 
         try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
+            async with httpx.AsyncClient(timeout=self.timeout, verify=False) as client:
                 response = await client.get(url, params=params)
                 response.raise_for_status()
                 data = response.json()
@@ -140,12 +156,15 @@ class MercadoPublicoClient:
         except (ValueError, TypeError):
             monto_float = None
 
+        fechas = item.get("Fechas", {})
+        fecha_cierre = fechas.get("FechaCierre") if isinstance(fechas, dict) else item.get("FechaCierre")
+
         return Licitacion(
             codigo_externo=item.get("CodigoExterno", "N/A"),
             nombre=item.get("Nombre", "Sin título"),
             codigo_estado=item.get("CodigoEstado"),
-            descripcion=item.get("Descripcion"),
-            fecha_cierre=item.get("FechaCierre"),
+            descripcion=item.get("Descripcion") or item.get("Nombre", ""),
+            fecha_cierre=fecha_cierre,
             monto_estimado=monto_float,
             moneda=item.get("Moneda", "CLP"),
             comprador=comprador,

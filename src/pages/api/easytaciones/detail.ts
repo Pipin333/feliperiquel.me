@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { isAuthorized } from './auth';
 import realTendersData from './tenders.json';
 import type { LicitacionData } from './match';
+import { fetchLiveTenderDetail } from '../../../lib/mercadopublico';
 
 export const prerender = false;
 
@@ -36,16 +37,28 @@ export const GET: APIRoute = async ({ request, url }) => {
 
   if (found) {
     return new Response(
-      JSON.stringify({ success: true, licitacion: found }),
+      JSON.stringify({ success: true, licitacion: found, origen: 'catalogo-base' }),
       { status: 200, headers: NO_INDEX_HEADERS }
     );
   }
 
-  // 2. Intentar consultar microservicio Python
+  // 2. Si hay ticket de Mercado Público, consultar en vivo a ChileCompra
+  const ticket = process.env.MP_TICKET || '';
+  if (ticket && ticket.length > 5) {
+    const liveDetail = await fetchLiveTenderDetail(ticket, codigo);
+    if (liveDetail) {
+      return new Response(
+        JSON.stringify({ success: true, licitacion: liveDetail, origen: 'chilecompra-live' }),
+        { status: 200, headers: NO_INDEX_HEADERS }
+      );
+    }
+  }
+
+  // 3. Intentar consultar microservicio Python
   const easytacionesUrl = process.env.EASYTACIONES_API_URL || 'http://localhost:8000';
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 4000);
+    const timer = setTimeout(() => controller.abort(), 3000);
     const pyRes = await fetch(`${easytacionesUrl}/api/v1/licitaciones/${encodeURIComponent(codigo)}`, {
       signal: controller.signal
     });
@@ -54,17 +67,17 @@ export const GET: APIRoute = async ({ request, url }) => {
     if (pyRes.ok) {
       const data = await pyRes.json();
       return new Response(
-        JSON.stringify({ success: true, licitacion: data }),
+        JSON.stringify({ success: true, licitacion: data, origen: 'python-microservice' }),
         { status: 200, headers: NO_INDEX_HEADERS }
       );
     }
   } catch {}
 
-  // 3. Fallback no encontrada
+  // 4. Fallback no encontrada
   return new Response(
     JSON.stringify({
       success: false,
-      error: `Licitación '${codigo}' no encontrada en el catálogo activo.`
+      error: `Licitación '${codigo}' no encontrada en el catálogo activo ni en Mercado Público.`
     }),
     { status: 404, headers: NO_INDEX_HEADERS }
   );
