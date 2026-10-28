@@ -80,6 +80,40 @@ export interface HeadsUpBrecha {
   mitigacion_sugerida: string;
 }
 
+export interface AnexoDetectado {
+  codigo: string;
+  nombre: string;
+  categoria: 'Administrativo' | 'Técnico' | 'Económico';
+  excluyente: boolean;
+}
+
+export interface ClausulaCritica {
+  titulo: string;
+  detalle: string;
+  riesgo: 'alto' | 'medio' | 'bajo';
+}
+
+export interface AnalisisBasesDocumentales {
+  activo: boolean;
+  archivos_procesados: string[];
+  caracteres_analizados: number;
+  ponderacion_extraida_del_documento: boolean;
+  ponderaciones: {
+    economica: number;
+    tecnica: number;
+    experiencia: number;
+    formal: number;
+  };
+  presupuesto_extraido_clp: number | null;
+  req_anios_jp: number | null;
+  req_anios_dev: number | null;
+  req_anios_empresa: number | null;
+  porcentaje_fiel_cumplimiento: number | null;
+  exenta_garantia_seriedad: boolean;
+  anexos_detectados: AnexoDetectado[];
+  clausulas_criticas: ClausulaCritica[];
+}
+
 export interface EvaluationResult {
   codigo_externo: string;
   nombre_licitacion: string;
@@ -93,6 +127,7 @@ export interface EvaluationResult {
   criterios_evaluacion: CriterioEvaluacion[];
   auditoria_requisitos: RequisitoAuditoria[];
   heads_up_brechas: HeadsUpBrecha[];
+  analisis_bases: AnalisisBasesDocumentales;
   fortalezas: string[];
   riesgos_dealbreakers: string[];
   recomendacion_estrategica: string;
@@ -108,27 +143,285 @@ const DOMAIN_CONCEPTS: Array<{ label: string; regex: RegExp; weight: number }> =
   { label: 'Business Intelligence & Analítica', regex: /business intelligence|\bbi\b|microstrategy|power bi|tablero|dashboard|anal[ií]tica|estad[ií]stic|reporter[ií]a/, weight: 15 },
   { label: 'Arquitectura Cloud / IaaS / SaaS', regex: /nube|cloud|aws|azure|gcp|virtualizaci[oó]n|hosting|datacenter|iaas|saas|contenedor|docker|linux/, weight: 14 },
   { label: 'Integración de Sistemas / APIs / Interoperabilidad', regex: /\bapi\b|integraci[oó]n|interoperabilidad|webservice|rest|microservicio|arquitectura/, weight: 12 },
-  { label: 'Consultoría TI & Gestión de Proyectos Ágiles', regex: /consultor[ií]a|asesor[ií]a|gesti[oó]n| Diagn[oó]stico|levantamiento|scrum|[aá]gil|pmp|transformaci[oó]n digital/i, weight: 12 },
+  { label: 'Consultoría TI & Gestión de Proyectos Ágiles', regex: /consultor[ií]a|asesor[ií]a|gesti[oó]n|diagn[oó]stico|levantamiento|scrum|[aá]gil|pmp|transformaci[oó]n digital/i, weight: 12 },
   { label: 'Inteligencia Artificial & Automatización', regex: /inteligencia artificial|\bia\b|\bai\b|machine learning|algoritm|automatizaci[oó]n|predictiv/, weight: 12 },
   { label: 'Ciberseguridad & Continuidad Operativa', regex: /ciberseguridad|seguridad de la informaci[oó]n|iso 27001|vulnerabilidad|respaldo|continuidad|contingencia/, weight: 10 },
-  { label: 'Mantención Evolutiva y Soporte Técnico TI', regex: /mantenci[oó]n|mantenimiento|soporte|mesa de ayuda| evolutiv|correctiv|sla|continuidad operacional/, weight: 10 }
+  { label: 'Mantención Evolutiva y Soporte Técnico TI', regex: /mantenci[oó]n|mantenimiento|soporte|mesa de ayuda|evolutiv|correctiv|sla|continuidad operacional/, weight: 10 }
 ];
 
 /**
+ * Analizador forense de Bases Administrativas, Bases Técnicas y Términos de Referencia (TDR).
+ * Extrae tabla de evaluación, anexos obligatorios, presupuesto, garantías, SLA/multas y exigencias de equipo.
+ */
+export function parseBasesDocument(
+  rawText?: string,
+  archivos?: string[]
+): AnalisisBasesDocumentales {
+  const clean = (rawText || '').trim();
+  const defaultPonderaciones = { economica: 45, tecnica: 35, experiencia: 15, formal: 5 };
+
+  if (clean.length < 40) {
+    return {
+      activo: false,
+      archivos_procesados: [],
+      caracteres_analizados: 0,
+      ponderacion_extraida_del_documento: false,
+      ponderaciones: defaultPonderaciones,
+      presupuesto_extraido_clp: null,
+      req_anios_jp: null,
+      req_anios_dev: null,
+      req_anios_empresa: null,
+      porcentaje_fiel_cumplimiento: null,
+      exenta_garantia_seriedad: false,
+      anexos_detectados: [],
+      clausulas_criticas: []
+    };
+  }
+
+  // 1. Extracción de Ponderaciones de Criterios (%)
+  const extractWeight = (patterns: RegExp[]): number | null => {
+    for (const pat of patterns) {
+      const m = clean.match(pat);
+      if (m && m[1]) {
+        const val = parseInt(m[1], 10);
+        if (val >= 2 && val <= 90) return val;
+      }
+    }
+    return null;
+  };
+
+  const wEco = extractWeight([
+    /(?:oferta\s+econ[oó]mica|evaluaci[oó]n\s+econ[oó]mica|propuesta\s+econ[oó]mica|\bprecio\b)[^\d%\n]{1,65}(\d{1,2})\s*%/i,
+    /(\d{1,2})\s*%[^\n]{1,45}(?:oferta\s+econ[oó]mica|propuesta\s+econ[oó]mica|\bprecio\b)/i
+  ]);
+
+  const wTech = extractWeight([
+    /(?:propuesta\s+t[eé]cnica|evaluaci[oó]n\s+t[eé]cnica|calidad\s+t[eé]cnica|metodolog[ií]a(?:\s+de\s+trabajo)?)[^\d%\n]{1,65}(\d{1,2})\s*%/i,
+    /(\d{1,2})\s*%[^\n]{1,45}(?:propuesta\s+t[eé]cnica|evaluaci[oó]n\s+t[eé]cnica|metodolog[ií]a)/i
+  ]);
+
+  const wExp = extractWeight([
+    /(?:experiencia(?:\s+del\s+oferente|\s+previa|\s+del\s+equipo|\s+y\s+equipo)?|equipo\s+de\s+trabajo|calificaci[oó]n\s+del\s+equipo)[^\d%\n]{1,65}(\d{1,2})\s*%/i,
+    /(\d{1,2})\s*%[^\n]{1,45}(?:experiencia\s+del\s+oferente|equipo\s+de\s+trabajo)/i
+  ]);
+
+  const wForm = extractWeight([
+    /(?:cumplimiento\s+(?:de\s+)?requisitos\s+formales|requisitos\s+formales|sustentabilidad|inclusi[oó]n|sello\s+mujer)[^\d%\n]{1,65}(\d{1,2})\s*%/i,
+    /(\d{1,2})\s*%[^\n]{1,45}(?:requisitos\s+formales|cumplimiento\s+formal)/i
+  ]);
+
+  const foundCount = [wEco, wTech, wExp, wForm].filter(v => v !== null).length;
+  let ponderacionExtraida = false;
+  let finalPonderaciones = { ...defaultPonderaciones };
+
+  if (foundCount >= 2) {
+    ponderacionExtraida = true;
+    const rawEco = wEco ?? 40;
+    const rawTech = wTech ?? 35;
+    const rawExp = wExp ?? 20;
+    const rawForm = wForm ?? 5;
+    const sum = rawEco + rawTech + rawExp + rawForm;
+
+    if (sum === 100) {
+      finalPonderaciones = { economica: rawEco, tecnica: rawTech, experiencia: rawExp, formal: rawForm };
+    } else if (sum > 0) {
+      const normEco = Math.round((rawEco / sum) * 100);
+      const normTech = Math.round((rawTech / sum) * 100);
+      const normExp = Math.round((rawExp / sum) * 100);
+      const normForm = Math.max(0, 100 - (normEco + normTech + normExp));
+      finalPonderaciones = { economica: normEco, tecnica: normTech, experiencia: normExp, formal: normForm };
+    }
+  }
+
+  // 2. Extracción de Presupuesto Oficial desde el Documento
+  let presupuestoExtraido: number | null = null;
+  const mClp = clean.match(/(?:presupuesto(?:\s+m[aá]ximo|\s+estimado|\s+referencial|\s+disponible)?|monto\s+m[aá]ximo(?:\s+disponible)?)[^\n$]{0,90}\$\s*([\d.]{6,15})/i);
+  if (mClp && mClp[1]) {
+    const num = parseInt(mClp[1].replace(/\./g, ''), 10);
+    if (num >= 1000000 && num <= 10000000000) {
+      presupuestoExtraido = num;
+    }
+  } else {
+    const mUtm = clean.match(/(?:presupuesto(?:\s+m[aá]ximo|\s+disponible)?|monto\s+m[aá]ximo)[^\n]{0,80}?([\d.]{2,6})\s*UTM\b/i);
+    if (mUtm && mUtm[1]) {
+      const utm = parseInt(mUtm[1].replace(/\./g, ''), 10);
+      if (utm >= 10 && utm <= 50000) presupuestoExtraido = utm * 67500;
+    } else {
+      const mUf = clean.match(/(?:presupuesto(?:\s+m[aá]ximo|\s+disponible)?|monto\s+m[aá]ximo)[^\n]{0,80}?([\d.]{2,6})\s*UF\b/i);
+      if (mUf && mUf[1]) {
+        const uf = parseInt(mUf[1].replace(/\./g, ''), 10);
+        if (uf >= 30 && uf <= 100000) presupuestoExtraido = uf * 38500;
+      }
+    }
+  }
+
+  // 3. Extracción de Años de Experiencia Exigidos en las Bases
+  let reqAniosJp: number | null = null;
+  const mJp = clean.match(/(?:jefe\s+de\s+proyecto|director\s+de\s+proyecto|coordinador\s+del?\s+proyecto)[^\n.]{0,140}?(\d{1,2})\s*a[ñn]os\s+de\s+experiencia/i);
+  if (mJp && mJp[1]) {
+    const y = parseInt(mJp[1], 10);
+    if (y >= 1 && y <= 25) reqAniosJp = y;
+  }
+
+  let reqAniosDev: number | null = null;
+  const mDev = clean.match(/(?:desarrollador|arquitecto|ingeniero\s+de\s+software|especialista\s+t[eé]cnico|programador|analista)[^\n.]{0,140}?(\d{1,2})\s*a[ñn]os\s+de\s+experiencia/i);
+  if (mDev && mDev[1]) {
+    const y = parseInt(mDev[1], 10);
+    if (y >= 1 && y <= 20) reqAniosDev = y;
+  }
+
+  let reqAniosEmpresa: number | null = null;
+  const mEmp = clean.match(/(?:experiencia\s+del\s+oferente|antig[uü]edad\s+de\s+la\s+empresa)[^\n.]{0,120}?(\d{1,2})\s*a[ñn]os/i);
+  if (mEmp && mEmp[1]) {
+    const y = parseInt(mEmp[1], 10);
+    if (y >= 1 && y <= 25) reqAniosEmpresa = y;
+  }
+
+  // 4. Detección de Anexos Obligatorios (Anexo N° X / Formulario N° X)
+  const anexosMap = new Map<string, AnexoDetectado>();
+  const anexoRegex = /\b(Anexo|Formulario)\s*(?:N[°ºo.]?\s*)?(\d{1,2}[A-Z]?)\b[\s:.\-–—]*([^\n\r]{3,95})/gi;
+  let matchAnexo: RegExpExecArray | null;
+
+  while ((matchAnexo = anexoRegex.exec(clean)) !== null) {
+    const tipoDoc = matchAnexo[1];
+    const num = matchAnexo[2].toUpperCase();
+    const key = `${tipoDoc.toUpperCase()}_${num}`;
+    if (anexosMap.has(key)) continue;
+
+    let rawTitle = matchAnexo[3].trim().replace(/[.;,]+$/, '').trim();
+    if (rawTitle.length > 82) rawTitle = `${rawTitle.slice(0, 79)}...`;
+
+    // Filtrar falsos positivos de oraciones genéricas
+    if (/^(del|de la|que|para|seg[uú]n|en el|deber[aá]|ser[aá])\b/i.test(rawTitle) && rawTitle.length < 18) {
+      continue;
+    }
+
+    const low = rawTitle.toLowerCase();
+    let categoria: 'Administrativo' | 'Técnico' | 'Económico' = 'Administrativo';
+    if (/econ[oó]mic|precio|valor|oferta\s+econ|presupuesto|tarifa/.test(low)) {
+      categoria = 'Económico';
+    } else if (/t[eé]cnic|experiencia|equipo|curr[ií]cul|metodolog|plazo|sla|arquitectura|plan\s+de\s+trabajo/.test(low)) {
+      categoria = 'Técnico';
+    }
+
+    const excluyente = /declaraci[oó]n|econ[oó]mic|identificaci[oó]n|t[eé]cnic|oferta/.test(low) || parseInt(num, 10) <= 6;
+
+    anexosMap.set(key, {
+      codigo: `${tipoDoc} N° ${num}`,
+      nombre: rawTitle,
+      categoria,
+      excluyente
+    });
+
+    if (anexosMap.size >= 14) break;
+  }
+
+  // 5. Detección de Garantías y Cláusulas Críticas ("Letra Chica")
+  const clausulas: ClausulaCritica[] = [];
+  const exentaSeriedad = /no\s+se\s+exigir[aá]\s+garant[ií]a\s+de\s+seriedad|exent[oa]\s+de\s+garant[ií]a\s+de\s+seriedad/i.test(clean);
+
+  let pctFielCumplimiento: number | null = null;
+  const mFiel = clean.match(/fiel\s+(?:y\s+oportuno\s+)?cumplimiento[^\n%]{0,120}?(\d{1,2})\s*%/i);
+  if (mFiel && mFiel[1]) {
+    const p = parseInt(mFiel[1], 10);
+    if (p >= 3 && p <= 30) pctFielCumplimiento = p;
+  }
+
+  // Visita a terreno o reunión informativa
+  if (/visita\s+a\s+terreno|reuni[oó]n\s+informativa/i.test(clean)) {
+    const esObligatoria = /(?:visita\s+a\s+terreno|reuni[oó]n\s+informativa)[^\n.]{0,90}(?:obligatoria|excluyente)/i.test(clean);
+    clausulas.push({
+      titulo: esObligatoria ? '🚨 Visita a Terreno / Reunión Informativa OBLIGATORIA' : 'Reunión Informativa / Visita a Terreno Opcional',
+      detalle: esObligatoria
+        ? 'Las bases establecen asistencia obligatoria a visita a terreno o reunión informativa. La inasistencia deja la oferta fuera de bases en el acto de apertura.'
+        : 'Las bases contemplan instancia informativa o visita de carácter voluntario/no excluyente.',
+      riesgo: esObligatoria ? 'alto' : 'bajo'
+    });
+  }
+
+  // Multas y SLA
+  const mMulta = clean.match(/multa[s]?[^\n.]{0,140}?(?:\d+[,.]?\d*\s*(?:UF|UTM|%)|tope\s+de[^\n.]{0,50})/i);
+  if (mMulta) {
+    clausulas.push({
+      titulo: 'Régimen de Multas y Penalidades por SLA / Atraso',
+      detalle: `Cláusula detectada en bases: "${mMulta[0].trim()}". Verificar tiempos de respuesta y topes de cobro.`,
+      riesgo: 'medio'
+    });
+  }
+
+  // Plazo de ejecución / vigencia del contrato
+  const mPlazo = clean.match(/(?:plazo\s+de\s+ejecuci[oó]n|duraci[oó]n\s+del\s+contrato|vigencia\s+del\s+contrato)[^\n.]{0,110}?(\d{1,3}\s*(?:meses|d[ií]as\s+corridos|d[ií]as\s+h[aá]biles))/i);
+  if (mPlazo && mPlazo[1]) {
+    clausulas.push({
+      titulo: `Plazo Contractual Detectado: ${mPlazo[1]}`,
+      detalle: `El documento establece una vigencia o plazo de implementación referencial de ${mPlazo[1]}.`,
+      riesgo: 'bajo'
+    });
+  }
+
+  // Propiedad intelectual y código fuente
+  if (/propiedad\s+intelectual|c[oó]digo\s+fuente|cesi[oó]n\s+de\s+derechos/i.test(clean)) {
+    clausulas.push({
+      titulo: 'Cláusula de Propiedad Intelectual y Entrega de Código Fuente',
+      detalle: 'Las bases exigen transferencia de propiedad patrimonial o entrega de repositorios de código fuente y documentación técnica al organismo.',
+      riesgo: 'bajo'
+    });
+  }
+
+  // Subcontratación y UTP
+  if (/proh[ií]be\s+(?:la\s+)?subcontrataci[oó]n|no\s+se\s+permite\s+subcontratar/i.test(clean)) {
+    clausulas.push({
+      titulo: 'Prohibición Expresa de Subcontratación',
+      detalle: 'Las bases prohíben subcontratar servicios críticos; el 100% del equipo ejecutor debe pertenecer al oferente o a una UTP formalizada.',
+      riesgo: 'medio'
+    });
+  }
+
+  return {
+    activo: true,
+    archivos_procesados: Array.isArray(archivos) && archivos.length > 0 ? archivos : ['Bases_Licitacion.pdf'],
+    caracteres_analizados: clean.length,
+    ponderacion_extraida_del_documento: ponderacionExtraida,
+    ponderaciones: finalPonderaciones,
+    presupuesto_extraido_clp: presupuestoExtraido,
+    req_anios_jp: reqAniosJp,
+    req_anios_dev: reqAniosDev,
+    req_anios_empresa: reqAniosEmpresa,
+    porcentaje_fiel_cumplimiento: pctFielCumplimiento,
+    exenta_garantia_seriedad: exentaSeriedad,
+    anexos_detectados: Array.from(anexosMap.values()),
+    clausulas_criticas: clausulas
+  };
+}
+
+/**
  * Motor de Scoring y Contraste de Bases para Mercado Público de Chile.
- * Aplica las fórmulas reales de los decretos y bases tipo de la Dirección de Compras y Contratación Pública (ChileCompra).
+ * Aplica las fórmulas reales de ChileCompra y enriquece el cálculo cuando el usuario adjunta el PDF/DOCX de las Bases.
  */
 export function evaluateTender(
   lic: LicitacionData,
   profile: CompanyProfile,
-  customOfertaClp?: number
+  customOfertaClp?: number,
+  basesTexto?: string,
+  basesArchivos?: string[]
 ): EvaluationResult {
   const t0 = performance.now();
-  const presupuesto = lic.monto_estimado && lic.monto_estimado > 0 ? lic.monto_estimado : 50000000;
+  const analisisBases = parseBasesDocument(basesTexto, basesArchivos);
+
+  const presupuesto = analisisBases.presupuesto_extraido_clp
+    ? analisisBases.presupuesto_extraido_clp
+    : (lic.monto_estimado && lic.monto_estimado > 0 ? lic.monto_estimado : 50000000);
+
   const factor = profile.factor_oferta_default || 94;
   const oferta = customOfertaClp && customOfertaClp > 0 ? customOfertaClp : Math.round(presupuesto * (factor / 100));
 
-  const textTotal = `${lic.nombre} ${lic.descripcion} ${lic.categoria_label || ''}`.toLowerCase();
+  const wEco = analisisBases.ponderaciones.economica;
+  const wTech = analisisBases.ponderaciones.tecnica;
+  const wExp = analisisBases.ponderaciones.experiencia;
+  const wForm = analisisBases.ponderaciones.formal;
+
+  // El texto total ahora incluye tanto la ficha de Mercado Público como el texto completo extraído del PDF de las Bases
+  const textTotal = `${lic.nombre} ${lic.descripcion} ${lic.categoria_label || ''} ${basesTexto || ''}`.toLowerCase();
   const equipo = Array.isArray(profile.equipo) ? profile.equipo : (DEFAULT_COMPANY_PROFILE.equipo || []);
   const teamText = equipo.map(e => `${e.rol || ''} ${e.titulo || ''} ${e.certificaciones || ''}`).join(' ').toLowerCase();
 
@@ -145,7 +438,7 @@ export function evaluateTender(
   }) || equipo.find(e => e !== jp);
 
   // ============================================================================
-  // 1. EVALUACIÓN TÉCNICA Y AFINIDAD DE GIRO (Ponderación 35%)
+  // 1. EVALUACIÓN TÉCNICA Y AFINIDAD DE GIRO
   // ============================================================================
   const catId = (lic.categoria_id || '').toLowerCase();
   const esHardwarePuro = catId === 'hardware' && !/software|sistema|plataforma|base de datos|desarrollo|consultor/.test(textTotal);
@@ -174,7 +467,6 @@ export function evaluateTender(
     conceptPoints += 10;
   }
 
-  // Base según categoría de la licitación + afinidad semántica precalculada
   const baseSemantic = lic.score_percentage || 60;
   let techScore = Math.round(baseSemantic * 0.62 + Math.min(36, conceptPoints));
 
@@ -191,56 +483,53 @@ export function evaluateTender(
   techScore = Math.min(98, Math.max(20, techScore));
 
   // ============================================================================
-  // 2. EVALUACIÓN ECONÓMICA CONTINUA (Ponderación 45%)
+  // 2. EVALUACIÓN ECONÓMICA CONTINUA
   // Fórmula ChileCompra: P = (Precio Mínimo Estimado / Precio Ofertado) * 100
   // ============================================================================
   const ratioOferta = oferta / presupuesto;
-  // El precio mínimo competitivo de mercado suele ubicarse en torno al 82% del presupuesto referencial
   const ratioReferenciaMinimo = 0.82;
   let economicScore = 80;
 
   if (ratioOferta <= 1.0) {
-    // Curva continua suave: 82% o menos -> ~98-100 pts; 94% -> ~91 pts; 100% -> 84 pts
     const raw = (ratioReferenciaMinimo / Math.max(0.70, ratioOferta)) * 100;
     economicScore = Math.min(100, Math.max(82, Math.round(raw * 1.025)));
   } else {
-    // Sobre el 100% del presupuesto referencial cae drásticamente por riesgo de inadmisibilidad presupuestaria
     economicScore = Math.max(15, Math.round(84 - (ratioOferta - 1.0) * 450));
   }
 
   const esOfertaTemeraria = ratioOferta < 0.78;
 
   // ============================================================================
-  // 3. EXPERIENCIA DEL PROVEEDOR Y NÓMINA DE EQUIPO (Ponderación 15%)
-  // Depende dinámicamente tanto de los años de la empresa como de los integrantes en profile.equipo
+  // 3. EXPERIENCIA DEL PROVEEDOR Y NÓMINA DE EQUIPO
   // ============================================================================
   const isGranCompra = lic.codigo_externo.includes('LR') || presupuesto > 100000000;
 
   // Subfactor A: Antigüedad de la empresa (hasta 40 pts del criterio)
-  const reqAniosEmpresa = isGranCompra ? 5 : 3;
+  const reqAniosEmpresa = analisisBases.req_anios_empresa ?? (isGranCompra ? 5 : 3);
   const scoreEmpresa = profile.anios_experiencia >= reqAniosEmpresa
     ? 40
     : Math.max(15, Math.round((profile.anios_experiencia / reqAniosEmpresa) * 40));
 
   // Subfactor B: Nómina Técnica y Liderazgo (hasta 60 pts del criterio)
+  const reqJpTarget = analisisBases.req_anios_jp ?? 6;
+  const reqDevTarget = analisisBases.req_anios_dev ?? 4;
+
   let scoreNomina = 0;
   if (equipo.length === 0) {
-    scoreNomina = 10; // Penalización severa si no hay equipo asignado
+    scoreNomina = 10;
   } else {
-    // Presencia y experiencia del Jefe de Proyecto (hasta 32 pts)
     if (jp) {
       const aniosJp = jp.anios_exp ?? 0;
-      const jpExpPts = Math.min(22, Math.round((aniosJp / 6) * 22));
+      const jpExpPts = Math.min(22, Math.round((aniosJp / Math.max(1, reqJpTarget)) * 22));
       const jpCertPts = (jp.certificaciones && jp.certificaciones.trim().length > 3) ? 10 : 4;
       scoreNomina += jpExpPts + jpCertPts;
     } else {
-      scoreNomina += 8; // Sin JP formal designado
+      scoreNomina += 8;
     }
 
-    // Presencia y experiencia del Lead Developer / Ingeniero de Producto (hasta 28 pts)
     if (devLead) {
       const aniosDev = devLead.anios_exp ?? 0;
-      const devExpPts = Math.min(18, Math.round((aniosDev / 4) * 18));
+      const devExpPts = Math.min(18, Math.round((aniosDev / Math.max(1, reqDevTarget)) * 18));
       const devCertPts = (devLead.certificaciones && devLead.certificaciones.trim().length > 3) ? 10 : 4;
       scoreNomina += devExpPts + devCertPts;
     } else if (equipo.length >= 1) {
@@ -251,50 +540,53 @@ export function evaluateTender(
   const expScore = Math.min(100, Math.max(20, scoreEmpresa + scoreNomina));
 
   // ============================================================================
-  // 4. CUMPLIMIENTO FORMAL Y CAPACITACIÓN SENCE / SUSTENTABILIDAD (Ponderación 5%)
+  // 4. CUMPLIMIENTO FORMAL Y CAPACITACIÓN SENCE / SUSTENTABILIDAD
   // ============================================================================
   const tieneSence = /sence|conflicto|inclusi[oó]n|sustentabilidad/.test(teamText) ||
                      profile.certificaciones.some(c => /sence/i.test(c));
   const formalScore = tieneSence ? 100 : 90;
 
-  // Matriz de Ponderación Oficial
+  const origenPonderacionLabel = analisisBases.ponderacion_extraida_del_documento
+    ? ' (Extraído de Bases PDF)'
+    : '';
+
   const criterios: CriterioEvaluacion[] = [
     {
-      criterio: 'Oferta Económica (Precio)',
-      ponderacion: 45,
+      criterio: `Oferta Económica (Precio)${origenPonderacionLabel}`,
+      ponderacion: wEco,
       puntaje_obtenido: economicScore,
-      puntaje_ponderado: Math.round((45 * economicScore) / 100 * 10) / 10,
+      puntaje_ponderado: Math.round((wEco * economicScore) / 100 * 10) / 10,
       observacion: esOfertaTemeraria
         ? `Oferta al ${Math.round(ratioOferta * 100)}% ($${Number(oferta).toLocaleString('es-CL')} CLP). ¡Atención!: Bajo el 78% existe riesgo de exigencia de caución por oferta temeraria.`
         : ratioOferta > 1.0
           ? `Oferta supera en ${Math.round((ratioOferta - 1) * 100)}% el presupuesto referencial. Alto riesgo de rechazo en apertura económica.`
-          : `Oferta competitiva de $${Number(oferta).toLocaleString('es-CL')} CLP (${Math.round(ratioOferta * 100)}% del presupuesto referencial).`
+          : `Oferta competitiva de $${Number(oferta).toLocaleString('es-CL')} CLP (${Math.round(ratioOferta * 100)}% del presupuesto${analisisBases.presupuesto_extraido_clp ? ' oficial extraído del PDF' : ' referencial'}).`
     },
     {
-      criterio: 'Propuesta Técnica y Metodología',
-      ponderacion: 35,
+      criterio: `Propuesta Técnica y Metodología${origenPonderacionLabel}`,
+      ponderacion: wTech,
       puntaje_obtenido: techScore,
-      puntaje_ponderado: Math.round((35 * techScore) / 100 * 10) / 10,
+      puntaje_ponderado: Math.round((wTech * techScore) / 100 * 10) / 10,
       observacion: esHardwarePuro
         ? 'Licitación orientada a provisión de equipamiento físico/hardware; baja alineación con giro de consultoría de software.'
         : matchedConceptLabels.length > 0
-          ? `Calce técnico en: ${matchedConceptLabels.slice(0, 3).join(', ')}.`
+          ? `Calce técnico en: ${matchedConceptLabels.slice(0, 4).join(', ')}.`
           : `Evaluación técnica basada en categoría (${lic.categoria_label || 'TI'}) y metodología estándar.`
     },
     {
-      criterio: 'Experiencia del Proveedor y Equipo',
-      ponderacion: 15,
+      criterio: `Experiencia del Proveedor y Equipo${origenPonderacionLabel}`,
+      ponderacion: wExp,
       puntaje_obtenido: expScore,
-      puntaje_ponderado: Math.round((15 * expScore) / 100 * 10) / 10,
+      puntaje_ponderado: Math.round((wExp * expScore) / 100 * 10) / 10,
       observacion: equipo.length > 0
-        ? `Empresa con ${profile.anios_experiencia} años + nómina activa de ${equipo.length} integrante(s) (${equipo.map(e => `${e.nombre}: ${e.anios_exp || 0}a`).join(', ')}).`
+        ? `Empresa con ${profile.anios_experiencia} años (exigido: ${reqAniosEmpresa}a) + nómina activa (${equipo.map(e => `${e.nombre}: ${e.anios_exp || 0}a`).join(', ')}).`
         : `Empresa con ${profile.anios_experiencia} años, pero sin nómina de profesionales asignada (penalización en pauta técnica).`
     },
     {
-      criterio: 'Requisitos Formales y SENCE',
-      ponderacion: 5,
+      criterio: `Requisitos Formales y SENCE${origenPonderacionLabel}`,
+      ponderacion: wForm,
       puntaje_obtenido: formalScore,
-      puntaje_ponderado: Math.round((5 * formalScore) / 100 * 10) / 10,
+      puntaje_ponderado: Math.round((wForm * formalScore) / 100 * 10) / 10,
       observacion: tieneSence
         ? 'Habilidad ChileProveedores al día + bonificación por capacitación certificada SENCE en el equipo.'
         : 'Habilidad vigente en ChileProveedores y declaraciones juradas al día.'
@@ -310,18 +602,19 @@ export function evaluateTender(
   const fortalezas: string[] = [];
   const riesgos: string[] = [];
 
-  // Chequeo 1: Garantías Financieras Unificadas (Seriedad 2% y Fiel Cumplimiento 5% del monto ofertado)
-  const exigeGarantia = isGranCompra || presupuesto > 40000000;
-  const garantiaSeriedad = Math.round(presupuesto * 0.02);
-  const garantiaFielCumplimiento = Math.round(oferta * 0.05 * 1.19); // 5% del contrato IVA incluido
+  // Chequeo 1: Garantías Financieras Unificadas (considerando extracción desde el PDF si existe)
+  const pctFiel = (analisisBases.porcentaje_fiel_cumplimiento ?? 5) / 100;
+  const exigeGarantia = !analisisBases.exenta_garantia_seriedad && (isGranCompra || presupuesto > 40000000 || analisisBases.porcentaje_fiel_cumplimiento !== null);
+  const garantiaSeriedad = analisisBases.exenta_garantia_seriedad ? 0 : Math.round(presupuesto * 0.02);
+  const garantiaFielCumplimiento = Math.round(oferta * pctFiel * 1.19);
 
   if (exigeGarantia) {
     if (garantiaFielCumplimiento <= profile.capacidad_garantia_max_clp) {
       auditoria.push({
         tipo: 'legal',
-        item: 'Garantías de Seriedad (2%) y Fiel Cumplimiento (5%)',
+        item: `Garantías de Seriedad y Fiel Cumplimiento (${Math.round(pctFiel * 100)}%)`,
         estado: 'cumplido',
-        detalle: `Seriedad estimada: $${Number(garantiaSeriedad).toLocaleString('es-CL')} CLP. Fiel cumplimiento: $${Number(garantiaFielCumplimiento).toLocaleString('es-CL')} CLP. Cubiertas por línea de pólizas ($${Number(profile.capacidad_garantia_max_clp).toLocaleString('es-CL')} CLP).`
+        detalle: `Seriedad estimada: $${Number(garantiaSeriedad).toLocaleString('es-CL')} CLP. Fiel cumplimiento (${Math.round(pctFiel * 100)}%): $${Number(garantiaFielCumplimiento).toLocaleString('es-CL')} CLP. Cubiertas por línea de pólizas ($${Number(profile.capacidad_garantia_max_clp).toLocaleString('es-CL')} CLP).`
       });
       fortalezas.push(`Capacidad de pólizas ($${Number(profile.capacidad_garantia_max_clp).toLocaleString('es-CL')} CLP) cubre holgadamente el fiel cumplimiento del contrato.`);
     } else {
@@ -329,21 +622,21 @@ export function evaluateTender(
         tipo: 'legal',
         item: 'Límite de Póliza de Fiel Cumplimiento',
         estado: 'critico',
-        detalle: `La caución de fiel cumplimiento estimada ($${Number(garantiaFielCumplimiento).toLocaleString('es-CL')} CLP) supera la capacidad máxima declarada ($${Number(profile.capacidad_garantia_max_clp).toLocaleString('es-CL')} CLP).`
+        detalle: `La caución de fiel cumplimiento estimada ($${Number(garantiaFielCumplimiento).toLocaleString('es-CL')} CLP al ${Math.round(pctFiel * 100)}%) supera la capacidad máxima declarada ($${Number(profile.capacidad_garantia_max_clp).toLocaleString('es-CL')} CLP).`
       });
       riesgos.push('Garantía de contrato supera el cupo actual de pólizas: requiere ampliar línea con aseguradora o postular en UTP.');
     }
   } else {
     auditoria.push({
       tipo: 'legal',
-      item: 'Exención de Boleta de Seriedad (< 1.000 UTM)',
+      item: 'Exención de Boleta de Seriedad (< 1.000 UTM / Exenta en Bases)',
       estado: 'cumplido',
-      detalle: 'Por monto referencial, las bases tipo eximen de boleta de seriedad de la oferta o solicitan caución menor.'
+      detalle: 'Por monto referencial o disposición expresa de las bases, no se inmoviliza boleta de seriedad en la etapa de oferta.'
     });
     fortalezas.push('Baja barrera financiera de entrada: no inmoviliza línea de crédito en etapa de postulación.');
   }
 
-  // Chequeo 2: Nómina de Equipo Técnico (Integrado directamente en el motor)
+  // Chequeo 2: Nómina de Equipo Técnico
   if (jp && devLead) {
     auditoria.push({
       tipo: 'tecnico',
@@ -410,7 +703,7 @@ export function evaluateTender(
     riesgos.push(`Considerar costos de traslado eventual a ${regionComprador.trim()} si las bases exigen hitos presenciales.`);
   }
 
-  if ( ratioOferta > 1.0 ) {
+  if (ratioOferta > 1.0) {
     auditoria.push({
       tipo: 'legal',
       item: 'Límite de Presupuesto Máximo Disponible',
@@ -423,6 +716,21 @@ export function evaluateTender(
   // ANÁLISIS FORENSE DE BRECHAS & HEADS-UP ESTRATÉGICO
   // ============================================================================
   const headsUpBrechas: HeadsUpBrecha[] = [];
+
+  if (analisisBases.activo) {
+    headsUpBrechas.push({
+      tipo: 'documental',
+      severidad: 'baja',
+      titulo: `Lectura Forense de Bases Activa (${analisisBases.archivos_procesados.join(', ')})`,
+      hallazgo: `Se analizaron ${Number(analisisBases.caracteres_analizados).toLocaleString('es-CL')} caracteres del documento oficial. ${
+        analisisBases.ponderacion_extraida_del_documento
+          ? `Ponderación real detectada: ${wEco}% Económica / ${wTech}% Técnica / ${wExp}% Experiencia / ${wForm}% Formal.`
+          : 'Se aplicó matriz estándar complementada con extracción de anexos y cláusulas del documento.'
+      }${analisisBases.anexos_detectados.length > 0 ? ` Se identificaron ${analisisBases.anexos_detectados.length} Anexos/Formularios en las bases.` : ''}`,
+      impacto_puntaje: 'Simulación calibrada directamente contra el texto completo de las Bases Administrativas/Técnicas.',
+      mitigacion_sugerida: 'Revisar el desglose de Anexos Obligatorios y Cláusulas Críticas extraídas más abajo antes de subir la oferta al portal.'
+    });
+  }
 
   // 0. Calce con el Catálogo de 4 Soluciones Pre-Construidas
   const PREBUILT_SOLUTIONS = [
@@ -493,7 +801,7 @@ export function evaluateTender(
       titulo: 'Sensibilidad a Soporte Cercano y Gestión Municipal',
       hallazgo: 'Las municipalidades priorizan en su evaluación la rapidez de soporte técnico (SLA de respuesta ante caídas) y la capacitación a funcionarios municipales.',
       impacto_puntaje: 'Incide entre un 10% y 15% en el criterio de metodología y plan de capacitación.',
-      mitigacion_sugerida: 'Destacar la certificación SENCE de Resolución de Conflictos de Felipe para el plan de capacitación y gestión del cambio con los funcionarios.'
+      mitigacion_sugerida: 'Destacar la certificación SENCE de Resolución de Conflictos en el plan de capacitación y gestión del cambio con los funcionarios.'
     });
   } else if (esGobiernoCentral) {
     headsUpBrechas.push({
@@ -518,12 +826,13 @@ export function evaluateTender(
     });
   } else {
     const aniosJP = jp.anios_exp ?? 0;
-    if (aniosJP < 5) {
+    const minJpRequired = analisisBases.req_anios_jp ?? 5;
+    if (aniosJP < minJpRequired) {
       headsUpBrechas.push({
         tipo: 'equipo',
         severidad: 'media',
-        titulo: `Antigüedad del Jefe de Proyecto (${jp.nombre}: ${aniosJP} años)`,
-        hallazgo: `El Jefe de Proyecto registra ${aniosJP} años de experiencia. En licitaciones sobre 1.000 UTM el corte para el puntaje máximo (100 pts) suele fijarse en 5 a 6 años.`,
+        titulo: `Antigüedad del Jefe de Proyecto (${jp.nombre}: ${aniosJP} años vs ${minJpRequired} exigidos)`,
+        hallazgo: `El Jefe de Proyecto registra ${aniosJP} años de experiencia frente a un umbral de ${minJpRequired} años ${analisisBases.req_anios_jp ? 'extraído del PDF de las bases' : 'estándar en licitaciones mayores'}.`,
         impacto_puntaje: 'Tramo intermedio de puntuación en liderazgo de proyecto.',
         mitigacion_sugerida: 'Acreditar la totalidad de contratos de consultoría previos desde la fecha de titulación.'
       });
@@ -532,7 +841,7 @@ export function evaluateTender(
         tipo: 'equipo',
         severidad: 'baja',
         titulo: `Respaldo de Jefatura y Titulación Profesional (${jp.nombre})`,
-        hallazgo: `${jp.nombre} (${jp.titulo || 'Profesional Titulado'}) acredita ${aniosJP} años de experiencia y certificaciones (${jp.certificaciones || 'Gestión'}). Cumple el requisito legal de profesional universitario titulado a cargo del contrato.`,
+        hallazgo: `${jp.nombre} (${jp.titulo || 'Profesional Titulado'}) acredita ${aniosJP} años de experiencia (superando el corte de ${minJpRequired} años) y certificaciones (${jp.certificaciones || 'Gestión'}). Cumple el requisito legal de profesional universitario titulado a cargo del contrato.`,
         impacto_puntaje: '100% de los puntos en el perfil de Jefe de Proyecto.',
         mitigacion_sugerida: 'Verificar que al menos 2 certificados de experiencia del JP correspondan a proyectos similares con recepción conforme.'
       });
@@ -561,7 +870,7 @@ export function evaluateTender(
         titulo: `Rol Técnico & Producto (${devLead.nombre} — ${aniosDev} años exp.)`,
         hallazgo: `${devLead.nombre} (${devLead.titulo}) aporta ${aniosDev} años de experiencia práctica en desarrollo de software y arquitectura, más capacitación SENCE/IA (${devLead.certificaciones || 'Estándar'}). La Jefatura de Proyecto cubre la exigencia de título universitario emitido, permitiendo que el Líder Técnico encabece la arquitectura y ejecución del producto.`,
         impacto_puntaje: 'Óptimo para bases estándar donde el equipo desarrollador se evalúa por experiencia práctica y portafolio.',
-        mitigacion_sugerida: 'Si una base puntual exige copia de título emitido para el 100% de los integrantes, presentar certificado de alumno regular/tesista UNAB junto con los certificados de experiencia laboral.'
+        mitigacion_sugerida: 'Si una base puntual exige copia de título emitido para el 100% de los integrantes, presentar certificado de alumno regular/tesista junto con los certificados de experiencia laboral.'
       });
     } else {
       headsUpBrechas.push({
@@ -593,24 +902,24 @@ export function evaluateTender(
   const tieneRiesgoCritico = auditoria.some(a => a.estado === 'critico');
   const cantidadAlertas = auditoria.filter(a => a.estado === 'alerta').length;
   const brechasAltas = headsUpBrechas.filter(b => b.severidad === 'alta').length;
+  const clausulasAltas = analisisBases.clausulas_criticas.filter(c => c.riesgo === 'alto').length;
 
-  // Ajustes reales por riesgos y brechas detectadas
   if (tieneRiesgoCritico) {
     winProb -= 32;
   }
   winProb -= cantidadAlertas * 5;
   winProb -= brechasAltas * 14;
+  winProb -= clausulasAltas * 8;
   if (esReventaLicencias) {
     winProb -= 12;
   }
 
   if (esOfertaTemeraria) {
-    winProb -= 6; // Riesgo de descalificación por precio temerario
+    winProb -= 6;
   }
 
   winProb = Math.min(95, Math.max(12, Math.round(winProb)));
 
-  // Decisión GO / CONDITIONAL / NO_GO
   let decision: 'GO' | 'CONDITIONAL_GO' | 'NO_GO' = 'GO';
   let decisionLabel = 'POSTULAR RECOMENDADO (Alta Probabilidad de Adjudicación)';
   let decisionColor = 'emerald';
@@ -629,7 +938,6 @@ export function evaluateTender(
     decisionColor = 'rose';
   }
 
-  // Recomendación Estratégica Específica
   let recomendacion = '';
   if (decision === 'GO') {
     recomendacion = `Presentar oferta como ${profile.razon_social} por $${Number(oferta).toLocaleString('es-CL')} CLP (${Math.round(ratioOferta * 100)}% del presupuesto). Posicionar a ${jp ? jp.nombre : 'el Jefe de Proyecto'} como Jefe de Proyecto titular y a ${devLead ? devLead.nombre : 'el Líder Técnico'} como líder técnico y de producto, destacando las capacidades en ${matchedConceptLabels.slice(0, 2).join(' y ') || 'arquitectura de software y datos'}.`;
@@ -656,6 +964,7 @@ export function evaluateTender(
     criterios_evaluacion: criterios,
     auditoria_requisitos: auditoria,
     heads_up_brechas: headsUpBrechas,
+    analisis_bases: analisisBases,
     fortalezas,
     riesgos_dealbreakers: riesgos,
     recomendacion_estrategica: recomendacion,
@@ -678,6 +987,9 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json().catch(() => ({}));
     const codigo = typeof body?.codigo_externo === 'string' ? body.codigo_externo.trim() : '';
     const customOferta = typeof body?.monto_ofertado_clp === 'number' ? body.monto_ofertado_clp : undefined;
+    const basesTexto = typeof body?.bases_texto === 'string' ? body.bases_texto : undefined;
+    const basesArchivos = Array.isArray(body?.bases_archivos) ? body.bases_archivos : undefined;
+
     const decryptedVault = decryptDefaultProfile<CompanyProfile>(extractToken(request));
     const baseProfile: CompanyProfile = decryptedVault
       ? { ...DEFAULT_COMPANY_PROFILE, ...decryptedVault }
@@ -710,7 +1022,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const resultado = evaluateTender(licitacion, customProfile, customOferta);
+    const resultado = evaluateTender(licitacion, customProfile, customOferta, basesTexto, basesArchivos);
 
     return new Response(
       JSON.stringify({

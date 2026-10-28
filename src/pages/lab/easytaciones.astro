@@ -461,6 +461,107 @@ const pageDescription = "Consola técnica interna para detección semántica, au
             </div>
           </div>
 
+          <!-- ANALIZADOR FORENSE DE BASES OFICIALES (SUBIR PDF / DOCX / PEGAR BASES) -->
+          <div class="p-5 rounded-2xl bg-cyan-950/20 border-2 border-cyan-500/40 space-y-3.5 shadow-lg shadow-cyan-950/30">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-cyan-500/20 pb-3">
+              <div>
+                <h4 class="text-sm font-bold text-cyan-300 font-display flex items-center gap-2">
+                  <span>📄</span>
+                  <span>Analizador Forense de Bases Administrativas y Técnicas (PDF / DOCX / Texto)</span>
+                </h4>
+                <p class="text-xs text-slate-300 font-sans mt-0.5">
+                  Sube el PDF/Word oficial descargado de Mercado Público para extraer la <strong>tabla real de ponderación (%)</strong>, los <strong>Anexos obligatorios</strong>, el presupuesto oculto y las cláusulas de multas/SLA.
+                </p>
+              </div>
+              <span id="basesStatusBadge" class="text-[10px] font-mono px-2.5 py-1 rounded bg-slate-900 text-slate-300 border border-slate-700 whitespace-nowrap w-fit">
+                Sin PDF adjunto (Usando carátula API)
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <label
+                for="basesFileInput"
+                class="px-3.5 py-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 shadow-md shadow-cyan-500/20"
+              >
+                <span>📤 Subir PDF / DOCX de Bases</span>
+              </label>
+              <input
+                id="basesFileInput"
+                type="file"
+                accept=".pdf,.docx,.txt,.md"
+                multiple
+                class="hidden"
+              />
+
+              <button
+                type="button"
+                id="btnTogglePasteBases"
+                class="px-3 py-2 bg-canvas hover:bg-slate-800 border border-cyan-500/40 text-cyan-200 rounded-xl text-xs font-mono transition-colors cursor-pointer"
+              >
+                📋 Pegar Texto de Bases
+              </button>
+
+              <button
+                type="button"
+                id="btnLoadSampleBases"
+                class="px-3 py-2 bg-canvas hover:bg-slate-800 border border-amber-500/40 text-amber-300 rounded-xl text-xs font-mono transition-colors cursor-pointer"
+                title="Cargar un documento real tipo de Bases Administrativas y Técnicas para probar el extractor"
+              >
+                🧪 Probar con Bases Tipo de Ejemplo
+              </button>
+
+              <button
+                type="button"
+                id="btnClearBases"
+                class="hidden px-3 py-2 bg-rose-950/50 hover:bg-rose-900/60 border border-rose-500/40 text-rose-300 rounded-xl text-xs font-mono transition-colors cursor-pointer"
+              >
+                ✕ Quitar Documento
+              </button>
+            </div>
+
+            <!-- Área colapsable para pegar texto directo de bases -->
+            <div id="pasteBasesCollapse" class="hidden space-y-2 pt-2">
+              <textarea
+                id="pasteBasesTextarea"
+                rows="5"
+                placeholder="Pega aquí los artículos de Criterios de Evaluación, Garantías, Anexos o Presupuesto de las Bases Administrativas / Técnicas..."
+                class="w-full bg-canvas border border-canvas-border rounded-xl p-3 text-xs text-slate-200 font-mono focus:outline-none focus:border-cyan-400"
+              ></textarea>
+              <div class="flex justify-end gap-2">
+                <button
+                  type="button"
+                  id="btnApplyPastedBases"
+                  class="px-4 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs font-mono cursor-pointer"
+                >
+                  Analizar Texto y Recalcular Simulación
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel de Resultados Extraídos del PDF (Oculto cuando no hay PDF cargado) -->
+            <div id="suiteBasesExtractedBox" class="hidden pt-3 border-t border-cyan-500/30 space-y-4">
+              <div id="suiteBasesSummaryPills" class="flex flex-wrap gap-2"></div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-3.5 rounded-xl bg-canvas border border-canvas-border space-y-2">
+                  <div class="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider flex items-center justify-between">
+                    <span>📋 Anexos & Formularios Detectados</span>
+                    <span id="suiteAnexosCount" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">0</span>
+                  </div>
+                  <div id="suiteAnexosList" class="space-y-1.5 text-xs"></div>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-canvas border border-canvas-border space-y-2">
+                  <div class="text-xs font-mono font-bold text-amber-300 uppercase tracking-wider flex items-center justify-between">
+                    <span>🔍 Cláusulas Críticas & Letra Chica</span>
+                    <span id="suiteClausulasCount" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/30">0</span>
+                  </div>
+                  <div id="suiteClausulasList" class="space-y-1.5 text-xs"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- HEADS-UP ESTRATÉGICO & RESUMEN DE BRECHAS DEL EQUIPO (GAP ANALYSIS) -->
           <div class="p-5 rounded-2xl bg-amber-950/20 border-2 border-amber-500/40 space-y-3.5 shadow-lg shadow-amber-950/30">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-500/20 pb-3">
@@ -771,6 +872,9 @@ const pageDescription = "Consola técnica interna para detección semántica, au
   let isCheckingAuth = false;
   let activeCategory = 'all';
   let activeEvaluatingLic = null;
+  let activeEffectivePresupuesto = 50000000;
+  let activeBasesTexto = '';
+  let activeBasesArchivos = [];
 
   // Perfil inicial neutro en cliente (los datos reales se desencriptan en servidor sólo tras autenticar)
   let currentProfile = {
@@ -1161,13 +1265,18 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       btn.addEventListener('click', (e) => {
         const codigo = e.currentTarget.getAttribute('data-codigo');
         const tender = currentTenders.find(t => t.codigo_externo === codigo);
-        if (tender) openEvaluationSuite(tender);
+        if (tender) openEvaluationSuite(tender, null, false);
       });
     });
   }
 
   // 5. Suite de Auditoría & Win Probability
-  async function openEvaluationSuite(lic, customOferta = null) {
+  async function openEvaluationSuite(lic, customOferta = null, preserveBases = true) {
+    const isNewTender = !activeEvaluatingLic || activeEvaluatingLic.codigo_externo !== lic.codigo_externo;
+    if (isNewTender && !preserveBases) {
+      activeBasesTexto = '';
+      activeBasesArchivos = [];
+    }
     activeEvaluatingLic = lic;
     const modal = document.getElementById('evaluationSuiteModal');
     const codigo = document.getElementById('suiteModalCodigo');
@@ -1193,7 +1302,9 @@ const pageDescription = "Consola técnica interna para detección semántica, au
         body: JSON.stringify({
           codigo_externo: lic.codigo_externo,
           perfil: currentProfile,
-          monto_ofertado_clp: customOferta
+          monto_ofertado_clp: customOferta,
+          bases_texto: activeBasesTexto || undefined,
+          bases_archivos: activeBasesArchivos.length > 0 ? activeBasesArchivos : undefined
         })
       });
 
@@ -1242,6 +1353,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
     winValue.textContent = `${evalResult.win_probability}%`;
     winValue.className = `text-3xl sm:text-4xl font-bold font-display ${evalResult.win_probability >= 70 ? 'text-emerald-400' : (evalResult.win_probability >= 50 ? 'text-amber-400' : 'text-rose-400')}`;
 
+    activeEffectivePresupuesto = evalResult.monto_estimado_clp || 50000000;
     if (simRef) simRef.textContent = `$${Number(evalResult.monto_estimado_clp).toLocaleString('es-CL')} CLP`;
     if (simOferta) simOferta.textContent = `$${Number(evalResult.monto_ofertado_clp).toLocaleString('es-CL')} CLP`;
     const factorActual = Math.round((evalResult.monto_ofertado_clp / evalResult.monto_estimado_clp) * 100);
@@ -1342,6 +1454,99 @@ const pageDescription = "Consola técnica interna para detección semántica, au
         `;
       }).join('');
     }
+
+    // Renderizado del Analizador Forense de Bases Oficiales (PDF / DOCX / Texto)
+    const basesBadge = document.getElementById('basesStatusBadge');
+    const basesBox = document.getElementById('suiteBasesExtractedBox');
+    const btnClearBases = document.getElementById('btnClearBases');
+    const pillsContainer = document.getElementById('suiteBasesSummaryPills');
+    const anexosList = document.getElementById('suiteAnexosList');
+    const anexosCount = document.getElementById('suiteAnexosCount');
+    const clausulasList = document.getElementById('suiteClausulasList');
+    const clausulasCount = document.getElementById('suiteClausulasCount');
+
+    const ab = evalResult.analisis_bases;
+    if (ab && ab.activo) {
+      if (basesBadge) {
+        basesBadge.textContent = `✓ Bases Activas (${ab.archivos_procesados.join(', ')} · ${Number(ab.caracteres_analizados).toLocaleString('es-CL')} chars)`;
+        basesBadge.className = 'text-[10px] font-mono px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 whitespace-nowrap w-fit';
+      }
+      if (basesBox) basesBox.classList.remove('hidden');
+      if (btnClearBases) btnClearBases.classList.remove('hidden');
+
+      if (pillsContainer) {
+        const pills = [];
+        if (ab.ponderacion_extraida_del_documento) {
+          pills.push(`<span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">⚖ Ponderación extraída del PDF: ${ab.ponderaciones.economica}% Eco / ${ab.ponderaciones.tecnica}% Téc / ${ab.ponderaciones.experiencia}% Exp / ${ab.ponderaciones.formal}% Formal</span>`);
+        } else {
+          pills.push(`<span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">⚖ Ponderación estándar aplicada (45/35/15/5)</span>`);
+        }
+        if (ab.presupuesto_extraido_clp) {
+          pills.push(`<span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-cyan-950/80 text-cyan-300 border border-cyan-500/40">💰 Presupuesto en Bases: $${Number(ab.presupuesto_extraido_clp).toLocaleString('es-CL')} CLP</span>`);
+        }
+        if (ab.req_anios_jp) {
+          pills.push(`<span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-amber-950/80 text-amber-300 border border-amber-500/40">👔 Exigencia JP: ${ab.req_anios_jp} años</span>`);
+        }
+        if (ab.req_anios_dev) {
+          pills.push(`<span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-amber-950/80 text-amber-300 border border-amber-500/40">💻 Exigencia Equipo: ${ab.req_anios_dev} años</span>`);
+        }
+        pillsContainer.innerHTML = pills.join('');
+      }
+
+      if (anexosCount) anexosCount.textContent = String((ab.anexos_detectados || []).length);
+      if (anexosList) {
+        if (ab.anexos_detectados && ab.anexos_detectados.length > 0) {
+          anexosList.innerHTML = ab.anexos_detectados.map(a => {
+            const catColor = a.categoria === 'Económico'
+              ? 'bg-emerald-950 text-emerald-300 border-emerald-500/30'
+              : a.categoria === 'Técnico'
+                ? 'bg-cyan-950 text-cyan-300 border-cyan-500/30'
+                : 'bg-slate-800 text-slate-300 border-slate-600';
+            return `
+              <div class="p-2 rounded-lg bg-canvas-subtle border border-canvas-border flex items-center justify-between gap-2">
+                <div class="truncate">
+                  <strong class="text-white font-mono">${a.codigo}:</strong>
+                  <span class="text-slate-300 ml-1">${a.nombre}</span>
+                </div>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 ${catColor}">
+                  ${a.categoria}
+                </span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          anexosList.innerHTML = '<div class="text-slate-500 italic py-2">No se detectaron menciones explícitas a "Anexo N° X" en el fragmento cargado.</div>';
+        }
+      }
+
+      if (clausulasCount) clausulasCount.textContent = String((ab.clausulas_criticas || []).length);
+      if (clausulasList) {
+        if (ab.clausulas_criticas && ab.clausulas_criticas.length > 0) {
+          clausulasList.innerHTML = ab.clausulas_criticas.map(c => {
+            const rColor = c.riesgo === 'alto'
+              ? 'border-rose-500/40 bg-rose-950/20 text-rose-200'
+              : c.riesgo === 'medio'
+                ? 'border-amber-500/40 bg-amber-950/20 text-amber-200'
+                : 'border-canvas-border bg-canvas-subtle text-slate-200';
+            return `
+              <div class="p-2 rounded-lg border ${rColor} space-y-0.5">
+                <div class="font-bold text-[11px]">${c.titulo}</div>
+                <div class="text-[11px] text-slate-300 leading-snug">${c.detalle}</div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          clausulasList.innerHTML = '<div class="text-slate-500 italic py-2">Sin cláusulas restrictivas inusuales detectadas.</div>';
+        }
+      }
+    } else {
+      if (basesBadge) {
+        basesBadge.textContent = 'Sin PDF adjunto (Usando carátula API)';
+        basesBadge.className = 'text-[10px] font-mono px-2.5 py-1 rounded bg-slate-900 text-slate-300 border border-slate-700 whitespace-nowrap w-fit';
+      }
+      if (basesBox) basesBox.classList.add('hidden');
+      if (btnClearBases) btnClearBases.classList.add('hidden');
+    }
   }
 
   // Listener para el Slider de Oferta del Simulador
@@ -1350,7 +1555,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
     simSlider.addEventListener('input', (e) => {
       if (!activeEvaluatingLic) return;
       const factor = parseInt(e.target.value, 10) || 94;
-      const ref = activeEvaluatingLic.monto_estimado || 50000000;
+      const ref = activeEffectivePresupuesto || activeEvaluatingLic.monto_estimado || 50000000;
       const nuevoMonto = Math.round(ref * (factor / 100));
 
       const simOferta = document.getElementById('simOfertaDisplay');
@@ -1362,6 +1567,192 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       window.__simTimeout = setTimeout(() => {
         openEvaluationSuite(activeEvaluatingLic, nuevoMonto);
       }, 250);
+    });
+  }
+
+  // Extractor Forense de Archivos PDF / DOCX / TXT en Cliente
+  let pdfJsLoaded = false;
+  async function ensurePdfJs() {
+    if (pdfJsLoaded && window.pdfjsLib) return window.pdfjsLib;
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfJsLoaded = true;
+    return window.pdfjsLib;
+  }
+
+  async function extractPdfTextFromFile(file, onProgress) {
+    const pdfjsLib = await ensurePdfJs();
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pagesText = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      if (onProgress) onProgress(i, pdf.numPages);
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const strings = content.items.map(item => item.str || '');
+      pagesText.push(strings.join(' '));
+    }
+    return { text: pagesText.join('\n\n'), pages: pdf.numPages };
+  }
+
+  async function extractDocxTextFromFile(file) {
+    const buf = new Uint8Array(await file.arrayBuffer());
+    const targetName = 'word/document.xml';
+    let offset = 0;
+    while (offset + 30 < buf.length) {
+      if (buf[offset] === 0x50 && buf[offset + 1] === 0x4b && buf[offset + 2] === 0x03 && buf[offset + 3] === 0x04) {
+        const compression = buf[offset + 8] | (buf[offset + 9] << 8);
+        const compSize = (buf[offset + 18] | (buf[offset + 19] << 8) | (buf[offset + 20] << 16) | (buf[offset + 21] << 24)) >>> 0;
+        const nameLen = buf[offset + 26] | (buf[offset + 27] << 8);
+        const extraLen = buf[offset + 28] | (buf[offset + 29] << 8);
+        const nameBytes = buf.subarray(offset + 30, offset + 30 + nameLen);
+        const fileName = new TextDecoder().decode(nameBytes);
+        const dataStart = offset + 30 + nameLen + extraLen;
+        if (fileName === targetName && compSize > 0) {
+          const compressedData = buf.subarray(dataStart, dataStart + compSize);
+          let xmlText = '';
+          if (compression === 0) {
+            xmlText = new TextDecoder().decode(compressedData);
+          } else if (compression === 8 && typeof DecompressionStream !== 'undefined') {
+            const ds = new DecompressionStream('deflate-raw');
+            const writer = ds.writable.getWriter();
+            writer.write(compressedData);
+            writer.close();
+            const xmlBuf = await new Response(ds.readable).arrayBuffer();
+            xmlText = new TextDecoder().decode(xmlBuf);
+          }
+          if (xmlText) {
+            return xmlText.replace(/<\/w:p>/g, '\n').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+          }
+        }
+        offset = dataStart + (compSize > 0 ? compSize : 1);
+      } else {
+        offset++;
+      }
+    }
+    return '';
+  }
+
+  const basesFileInput = document.getElementById('basesFileInput');
+  if (basesFileInput) {
+    basesFileInput.addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0 || !activeEvaluatingLic) return;
+
+      const basesBadge = document.getElementById('basesStatusBadge');
+      if (basesBadge) {
+        basesBadge.textContent = '⏳ Extrayendo texto de las Bases...';
+        basesBadge.className = 'text-[10px] font-mono px-2.5 py-1 rounded bg-amber-950 text-amber-300 border border-amber-500/40 whitespace-nowrap w-fit animate-pulse';
+      }
+
+      const chunks = [];
+      const labels = [];
+
+      for (const file of files) {
+        const ext = file.name.toLowerCase().split('.').pop();
+        try {
+          if (ext === 'pdf') {
+            const res = await extractPdfTextFromFile(file, (p, total) => {
+              if (basesBadge) basesBadge.textContent = `⏳ Leyendo ${file.name} (pág ${p}/${total})...`;
+            });
+            chunks.push(res.text);
+            labels.push(`${file.name} (${res.pages} págs)`);
+          } else if (ext === 'docx') {
+            const docxText = await extractDocxTextFromFile(file);
+            chunks.push(docxText);
+            labels.push(file.name);
+          } else {
+            const raw = await file.text();
+            chunks.push(raw);
+            labels.push(file.name);
+          }
+        } catch (err) {
+          console.error('Error procesando archivo de bases:', err);
+        }
+      }
+
+      activeBasesTexto = chunks.join('\n\n');
+      activeBasesArchivos = labels;
+      basesFileInput.value = '';
+      openEvaluationSuite(activeEvaluatingLic);
+    });
+  }
+
+  const btnTogglePasteBases = document.getElementById('btnTogglePasteBases');
+  const pasteBasesCollapse = document.getElementById('pasteBasesCollapse');
+  if (btnTogglePasteBases && pasteBasesCollapse) {
+    btnTogglePasteBases.addEventListener('click', () => {
+      pasteBasesCollapse.classList.toggle('hidden');
+    });
+  }
+
+  const btnApplyPastedBases = document.getElementById('btnApplyPastedBases');
+  if (btnApplyPastedBases) {
+    btnApplyPastedBases.addEventListener('click', () => {
+      const ta = document.getElementById('pasteBasesTextarea');
+      if (!ta || !ta.value.trim() || !activeEvaluatingLic) return;
+      activeBasesTexto = ta.value.trim();
+      activeBasesArchivos = ['Texto_Pegado_Bases.txt'];
+      if (pasteBasesCollapse) pasteBasesCollapse.classList.add('hidden');
+      openEvaluationSuite(activeEvaluatingLic);
+    });
+  }
+
+  const btnLoadSampleBases = document.getElementById('btnLoadSampleBases');
+  if (btnLoadSampleBases) {
+    btnLoadSampleBases.addEventListener('click', () => {
+      if (!activeEvaluatingLic) return;
+      const refMonto = activeEvaluatingLic.monto_estimado && activeEvaluatingLic.monto_estimado > 0
+        ? activeEvaluatingLic.monto_estimado
+        : 68500000;
+      activeBasesTexto = `
+        BASES ADMINISTRATIVAS Y TÉCNICAS DE LICITACIÓN PÚBLICA
+        1. PRESUPUESTO Y PLAZO DEL CONTRATO:
+        El presupuesto máximo disponible para la presente contratación asciende a $${Number(refMonto).toLocaleString('es-CL')} IVA incluido.
+        El plazo de ejecución del contrato será de 8 meses corridos a partir de la total tramitación de la resolución aprobatoria.
+
+        2. PAUTA Y CRITERIOS DE EVALUACIÓN DE LAS OFERTAS:
+        La Comisión Evaluadora calificará las ofertas admisibles conforme a la siguiente tabla de ponderación:
+        - Oferta Económica (Precio): 35%
+        - Propuesta Técnica y Metodología de Trabajo: 40%
+        - Experiencia del Oferente y Equipo de Trabajo: 20%
+        - Cumplimiento de Requisitos Formales y Sustentabilidad: 5%
+
+        3. REQUISITOS DEL EQUIPO DE TRABAJO Y TECNOLOGÍAS:
+        El oferente deberá presentar un Jefe de Proyecto con título profesional del área informática y al menos 6 años de experiencia en proyectos de ingeniería de datos, modelos ODS, SQL Server, Oracle, ETL, AWS o Power BI, deseable certificación Scrum Master.
+        Asimismo, deberá incluir un Desarrollador / Arquitecto de Software con al menos 3 años de experiencia en desarrollo backend Python, FastAPI, PostgreSQL, integración de APIs REST y despliegue en contenedores Docker.
+
+        4. ANEXOS OBLIGATORIOS PARA LA PRESENTACIÓN DE LA OFERTA:
+        - Anexo N° 1: Identificación del Oferente y Representante Legal.
+        - Anexo N° 2: Declaración Jurada Simple de Ausencia de Inhabilidades y Conflictos de Interés (Art. 4° Ley 19.886).
+        - Anexo N° 3: Acreditación de Experiencia del Oferente en Proyectos Similares.
+        - Anexo N° 4: Nómina del Equipo de Trabajo y Currículums Vitae Firmados.
+        - Anexo N° 5: Propuesta Técnica, Arquitectura Propuesta y Plan de Trabajo Gantt.
+        - Anexo N° 6: Oferta Económica Detallada por Hitos de Entrega.
+
+        5. GARANTÍAS, MULTAS Y PROPIEDAD INTELECTUAL:
+        Garantía de Fiel y Oportuno Cumplimiento del Contrato equivalente al 5% del valor total del contrato.
+        Se aplicará una multa de 1,5 UF por cada día hábil de atraso en la entrega de los hitos, con un tope de 10% del valor total.
+        Se contempla una reunión informativa de carácter voluntario a través de Microsoft Teams.
+        Todo el código fuente, modelos de datos y documentación generada serán de propiedad intelectual del organismo comprador sin costos de licenciamiento por usuario.
+      `;
+      activeBasesArchivos = ['Bases_Tipo_ChileCompra_Simuladas.pdf (18 págs)'];
+      openEvaluationSuite(activeEvaluatingLic);
+    });
+  }
+
+  const btnClearBases = document.getElementById('btnClearBases');
+  if (btnClearBases) {
+    btnClearBases.addEventListener('click', () => {
+      activeBasesTexto = '';
+      activeBasesArchivos = [];
+      if (activeEvaluatingLic) openEvaluationSuite(activeEvaluatingLic);
     });
   }
 
