@@ -125,6 +125,7 @@ export const POST: APIRoute = async ({ request }) => {
     let mergedPool: LicitacionData[] = [];
     let engineType = 'hybrid-nlp-cache';
     let liveFetchedCount = 0;
+    let totalMercadoPublico = 5017;
     let ticketWarning: string | undefined;
 
     // 1. Si hay ticket configurado, sincronizar licitaciones en vivo desde ChileCompra
@@ -134,6 +135,7 @@ export const POST: APIRoute = async ({ request }) => {
         ticketWarning = liveRes.error || 'Ticket de Mercado Público no válido.';
       } else if (liveRes.tenders.length > 0) {
         liveFetchedCount = liveRes.tenders.length;
+        totalMercadoPublico = liveRes.totalCantidad || liveRes.tenders.length;
         engineType = liveRes.source === 'live' ? 'chilecompra-live-api' : 'chilecompra-live-cache';
 
         // Indexar por código externo para unir el catálogo base con las nuevas en vivo
@@ -218,7 +220,7 @@ export const POST: APIRoute = async ({ request }) => {
         query,
         min_score_percentage: minScore,
         total_encontradas: results.length,
-        total_mercado_publico: mergedPool.length,
+        total_mercado_publico: totalMercadoPublico,
         total_en_vivo: liveFetchedCount,
         total_ti_historicas: REAL_LICITACIONES.length,
         tiempo_procesamiento_ms: durationMs,

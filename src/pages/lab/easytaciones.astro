@@ -145,7 +145,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
             class="px-3 py-1.5 bg-canvas hover:bg-slate-800 border border-canvas-border rounded-lg text-xs font-mono text-slate-200 transition-colors flex items-center gap-2 cursor-pointer"
           >
             <span id="syncSpinner" class="inline-block transition-transform">↻</span>
-            <span>Actualizar Catálogo</span>
+            <span id="syncBtnLabel">Actualizar Catálogo</span>
           </button>
 
           <button
@@ -1069,14 +1069,33 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       if (data.success && Array.isArray(data.licitaciones)) {
         currentTenders = data.licitaciones;
 
+        const totalMP = document.getElementById('kpiTotalMP');
         const totalTI = document.getElementById('kpiTotalTI');
         const latency = document.getElementById('kpiLatency');
         const highMatch = document.getElementById('kpiHighMatch');
+        if (totalMP && data.total_mercado_publico) {
+          totalMP.textContent = Number(data.total_mercado_publico).toLocaleString('es-CL');
+        }
         if (totalTI) totalTI.textContent = String(currentTenders.length);
         if (latency) latency.textContent = `Inferencia: ${data.tiempo_procesamiento_ms || 4.2} ms`;
         if (highMatch) {
           const highCount = currentTenders.filter(t => (t.score_percentage || 0) >= 75).length;
           highMatch.textContent = String(highCount);
+        }
+
+        if (forceRefresh) {
+          const syncLabel = document.getElementById('syncBtnLabel');
+          if (syncLabel) {
+            if (data.ticket_warning) {
+              syncLabel.textContent = '⚠ Error en Ticket';
+            } else {
+              const countStr = Number(data.total_mercado_publico || currentTenders.length).toLocaleString('es-CL');
+              syncLabel.textContent = `✓ ${countStr} activas`;
+            }
+            setTimeout(() => {
+              syncLabel.textContent = 'Actualizar Catálogo';
+            }, 3500);
+          }
         }
 
         updateCategoryPillCounts();
