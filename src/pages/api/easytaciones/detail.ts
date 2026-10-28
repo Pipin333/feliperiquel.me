@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { isAuthorized } from './auth';
 import realTendersData from './tenders.json';
 import type { LicitacionData } from './match';
 
@@ -11,31 +12,6 @@ const NO_INDEX_HEADERS = {
 };
 
 const REAL_LICITACIONES: LicitacionData[] = realTendersData as LicitacionData[];
-
-function isAuthorized(request: Request): boolean {
-  const secret = process.env.EASYTACIONES_ACCESS_TOKEN || 'felipe_easytaciones_2026_key';
-
-  const authHeader = request.headers.get('authorization');
-  if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
-    const token = authHeader.slice(7).trim();
-    if (token === secret.trim()) return true;
-  }
-
-  const cookieHeader = request.headers.get('cookie');
-  if (cookieHeader) {
-    const cookies = Object.fromEntries(
-      cookieHeader.split(';').map(c => {
-        const [k, ...v] = c.trim().split('=');
-        return [k, decodeURIComponent(v.join('='))];
-      })
-    );
-    if (cookies['easytaciones_session'] === secret.trim()) {
-      return true;
-    }
-  }
-
-  return false;
-}
 
 export const GET: APIRoute = async ({ request, url }) => {
   if (!isAuthorized(request)) {

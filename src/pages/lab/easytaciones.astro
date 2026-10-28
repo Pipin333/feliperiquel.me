@@ -5,8 +5,8 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
 
-const pageTitle = "Easytaciones // Radar Semántico de Licitaciones TI | Felipe Riquelme";
-const pageDescription = "Consola técnica interna y privada para detección semántica de licitaciones reales de Mercado Público (ChileCompra) y matching vectorial.";
+const pageTitle = "Easytaciones // Radar Semántico & Suite de Adjudicación TI | Felipe Riquelme";
+const pageDescription = "Consola técnica interna para detección semántica, auditoría de bases y scoring de probabilidad de adjudicación en Mercado Público (ChileCompra).";
 ---
 
 <Layout title={pageTitle} description={pageDescription} robots="noindex, nofollow, noarchive">
@@ -28,6 +28,10 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
           </div>
 
           <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-emerald-500/30 bg-emerald-950/30 text-emerald-300">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              SUITE DE BASES & WIN RATE ACTIVA
+            </span>
             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-amber-500/30 bg-amber-950/30 text-amber-300">
               <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
               NO-INDEX // ACCESO RESTRINGIDO
@@ -40,11 +44,11 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             <span>Easytaciones</span>
             <span class="text-slate-600">//</span>
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200">
-              Radar Semántico TI
+              Radar Semántico & Suite de Adjudicación
             </span>
           </h1>
           <p class="max-w-4xl text-sm sm:text-base text-slate-300 leading-relaxed font-sans pt-1">
-            Motor de procesamiento de lenguaje natural y similitud vectorial sobre <strong class="text-white">152 licitaciones informáticas reales</strong> del Estado de Chile (Mercado Público / ChileCompra). Clasificación continua con <code class="text-amber-300 font-mono text-xs">SentenceTransformers</code> y matching por afinidad conceptual sin exposición de credenciales.
+            Motor de procesamiento de lenguaje natural sobre <strong class="text-white">152 licitaciones informáticas reales</strong> de ChileCompra, integrado con <strong class="text-amber-300">Auditoría de Bases, Contraste de Requisitos Legales y Gestión de Equipo/CVs</strong> bajo las reglas de compras públicas de Chile.
           </p>
         </div>
 
@@ -110,7 +114,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       </div>
     </section>
 
-    <!-- PANTALLA 2: WORKSPACE DE MATCHING (Oculto inicialmente) -->
+    <!-- PANTALLA 2: WORKSPACE DE MATCHING & EVALUACIÓN (Oculto inicialmente) -->
     <div id="workspaceSection" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
       
       <!-- Top Action Ribbon -->
@@ -118,14 +122,20 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-slate-300">Motor:</span>
-            <span id="activeEngineText" class="text-amber-400 font-semibold">Cargando catálogo real...</span>
+            <span class="text-slate-300">Empresa:</span>
+            <span id="profileNameDisplay" class="text-amber-400 font-semibold">Consultora TI</span>
           </div>
 
-          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono text-slate-300">
-            <span>Mercado Público:</span>
-            <span class="text-emerald-400 font-semibold">152 Licitaciones Reales Activas</span>
-          </div>
+          <!-- Botón de Configuración de Empresa & CVs -->
+          <button
+            type="button"
+            id="btnOpenProfileConfig"
+            class="px-3 py-1.5 rounded-lg bg-canvas border border-canvas-border text-xs font-mono text-slate-300 hover:text-amber-300 hover:border-amber-400/50 transition-colors flex items-center gap-1.5 cursor-pointer"
+            title="Ajustar empresa, nómina del equipo técnico y certificados/CVs"
+          >
+            <span>⚙ Perfil de Empresa & Equipo (CVs)</span>
+            <span id="badgeTeamCount" class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-500/40">2 profesionales</span>
+          </button>
         </div>
 
         <div class="flex items-center gap-2">
@@ -205,41 +215,57 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
           </div>
         </div>
 
-        <!-- Presets rápidos -->
+        <!-- Presets rápidos por línea de solución -->
         <div class="space-y-2">
-          <span class="text-xs font-mono text-slate-400">Perfiles Rápidos:</span>
+          <span class="text-xs font-mono text-slate-400">Líneas de Solución TI:</span>
           <div class="flex flex-wrap gap-2" id="presetChipsContainer">
             <button
               type="button"
-              data-query="Fábrica de software, desarrollo frontend React NodeJS, backend FastAPI Python y microservicios"
+              data-query="Desarrollo de plataformas y portales web empresariales, sistemas transaccionales, React Next.js Node.js TypeScript Python .NET Core Java Spring"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Fábrica de Software
+              Plataformas Web & ERP Cloud
             </button>
             <button
               type="button"
-              data-query="Administración de bases de datos Oracle SQL, arquitectura de datos ODS, Business Intelligence, MicroStrategy y ETL"
+              data-query="Modelos de datos ODS Operational Data Store, administración de bases de datos SQL Server PostgreSQL Oracle Snowflake, tuberías ETL Data Factory y Business Intelligence"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Bases de Datos & BI
+              Modelos ODS, BD & BI
             </button>
             <button
               type="button"
-              data-query="Auditoría de ciberseguridad perimetral, pentesting, ethical hacking, enlaces de fibra óptica y redes"
+              data-query="Hub de integración de sistemas y ecosistema de APIs REST, conectores ERP SAP Softland Oracle, CRM, facturación electrónica SII y modernización de legados"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Ciberseguridad & Redes
+              Hub APIs & Conector ERP
             </button>
             <button
               type="button"
-              data-query="Arriendo de servidores de alto rendimiento, renovación de infraestructura tecnológica y almacenamiento SAN"
+              data-query="Infraestructura Multi-Cloud resiliente AWS ECS Lambda, Microsoft Azure App Services, Google Cloud GKE Kubernetes, contenedores Docker y DevOps CI/CD"
               data-score="50"
               class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
             >
-              Servidores & Datacenter
+              Multi-Cloud (AWS / Azure / GCP)
+            </button>
+            <button
+              type="button"
+              data-query="Portal de tracking satelital, monitoreo GPS de flotas y cargas, visibilidad logística B2B, mapas interactivos y control de inventario"
+              data-score="50"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Tracking Satelital & Logística
+            </button>
+            <button
+              type="button"
+              data-query="Consultoría estratégica TI, auditoría de ciberseguridad OWASP, diagnóstico de deuda técnica, gobernanza de datos y planes de modernización"
+              data-score="50"
+              class="preset-chip px-3 py-1.5 rounded-lg text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:border-amber-400/50 hover:text-amber-300 transition-colors cursor-pointer"
+            >
+              Consultoría & Gobernanza TI
             </button>
           </div>
         </div>
@@ -340,7 +366,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 
     </div>
 
-    <!-- MODAL DE DETALLE DE LICITACIÓN -->
+    <!-- MODAL 1: DETALLE DE LICITACIÓN BÁSICO -->
     <div id="tenderModalBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
       <div class="bg-canvas-subtle border border-canvas-border rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         
@@ -388,6 +414,353 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       </div>
     </div>
 
+    <!-- MODAL 2: SUITE DE AUDITORÍA DE BASES & WIN PROBABILITY (AVANZADA) -->
+    <div id="evaluationSuiteModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5">
+      <div class="bg-canvas-subtle border border-canvas-border rounded-2xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        
+        <!-- Header de la Suite -->
+        <div class="p-5 border-b border-canvas-border bg-canvas flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold">
+                SUITE DE ADJUDICACIÓN CHILECOMPRA
+              </span>
+              <span id="suiteModalCodigo" class="text-xs font-mono text-amber-300 px-2 py-0.5 rounded bg-slate-800"></span>
+            </div>
+            <h3 id="suiteModalTitulo" class="text-base sm:text-lg font-bold text-white font-display leading-tight"></h3>
+            <span id="suiteModalOrganismo" class="text-xs font-mono text-slate-400 block"></span>
+          </div>
+
+          <button
+            type="button"
+            id="btnCloseSuiteModal"
+            class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors"
+            aria-label="Cerrar suite"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Contenido Scrollable de la Suite -->
+        <div class="p-6 overflow-y-auto space-y-6 text-sm text-slate-200" id="suiteModalBody">
+          
+          <!-- BANNER DE DICTAMEN & WIN PROBABILITY -->
+          <div id="suiteDecisionBanner" class="p-5 rounded-2xl border transition-all flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="space-y-1 text-center sm:text-left">
+              <span class="text-xs font-mono uppercase tracking-wider text-slate-400">Veredicto Estratégico de Postulación</span>
+              <div id="suiteDecisionLabel" class="text-xl sm:text-2xl font-bold font-display"></div>
+              <p id="suiteDecisionSub" class="text-xs text-slate-300 max-w-lg leading-relaxed"></p>
+            </div>
+
+            <div class="flex items-center gap-4 bg-canvas/80 px-5 py-3 rounded-xl border border-canvas-border">
+              <div class="text-right">
+                <span class="text-[11px] font-mono text-slate-400 block uppercase">Win Probability</span>
+                <span class="text-xs text-slate-500 font-mono">Índice Ponderado</span>
+              </div>
+              <div class="text-3xl sm:text-4xl font-bold font-display" id="suiteWinProbValue">--%</div>
+            </div>
+          </div>
+
+          <!-- HEADS-UP ESTRATÉGICO & RESUMEN DE BRECHAS DEL EQUIPO (GAP ANALYSIS) -->
+          <div class="p-5 rounded-2xl bg-amber-950/20 border-2 border-amber-500/40 space-y-3.5 shadow-lg shadow-amber-950/30">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-500/20 pb-3">
+              <div>
+                <h4 class="text-sm font-bold text-amber-300 font-display flex items-center gap-2">
+                  <span>⚡</span>
+                  <span>Heads-Up Estratégico & Brechas del Equipo (Gap Analysis)</span>
+                </h4>
+                <p class="text-xs text-slate-300 font-sans mt-0.5">
+                  Contraste forense entre lo que exigen las bases de este organismo y lo que acredita tu nómina actual.
+                </p>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-900/60 text-amber-200 border border-amber-500/30 whitespace-nowrap w-fit">
+                Pauta de Comisión Evaluadora
+              </span>
+            </div>
+
+            <div id="suiteHeadsUpList" class="space-y-2.5">
+              <!-- Inyectado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- SIMULADOR INTERACTIVO DE OFERTA ECONÓMICA -->
+          <div class="p-5 rounded-xl bg-canvas border border-canvas-border space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="space-y-0.5">
+                <h4 class="text-sm font-bold text-white font-display flex items-center gap-2">
+                  <span class="text-emerald-400">💲</span>
+                  <span>Simulador de Oferta Económica & Sensibilidad de Ganancia</span>
+                </h4>
+                <p class="text-xs text-slate-400 font-sans">
+                  Ajusta el monto ofertado para ver el impacto en la fórmula oficial: <code class="text-emerald-300 font-mono text-[11px]">P = (Precio Mínimo / Oferta) × 100</code>
+                </p>
+              </div>
+
+              <div class="text-right">
+                <span class="text-xs font-mono text-slate-400">Presupuesto Referencial:</span>
+                <div id="simPresupuestoRef" class="text-sm font-bold font-mono text-white">$0 CLP</div>
+              </div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="text-slate-300">Monto a Ofertar: <strong id="simOfertaDisplay" class="text-emerald-400 text-sm">$0 CLP</strong></span>
+                <span id="simFactorDisplay" class="text-amber-300 font-bold">94% del presupuesto</span>
+              </div>
+
+              <input
+                id="simOfertaSlider"
+                type="range"
+                min="70"
+                max="110"
+                step="1"
+                value="94"
+                class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400"
+              />
+
+              <div class="flex justify-between text-[11px] font-mono text-slate-500">
+                <span>70% (Agresivo / Máx Puntaje)</span>
+                <span>94% (Óptimo Competitivo)</span>
+                <span>100% (Techo Referencial)</span>
+                <span>110% (Riesgo Descalificación)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MATRIZ DE CRITERIOS DE EVALUACIÓN (TABLA DE COMPRAS PÚBLICAS) -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-bold text-white font-display flex items-center gap-2">
+              <span class="text-amber-400">⚖</span>
+              <span>Matriz de Ponderación Oficial de la Licitación</span>
+            </h4>
+            <div class="overflow-x-auto rounded-xl border border-canvas-border">
+              <table class="w-full text-left text-xs font-mono">
+                <thead class="bg-canvas text-slate-400 border-b border-canvas-border">
+                  <tr>
+                    <th class="p-3">Criterio de Evaluación</th>
+                    <th class="p-3 text-center">Ponderación</th>
+                    <th class="p-3 text-center">Puntaje Base</th>
+                    <th class="p-3 text-center">Puntaje Ponderado</th>
+                    <th class="p-3">Observación Técnica</th>
+                  </tr>
+                </thead>
+                <tbody id="suiteCriteriosTableBody" class="divide-y divide-canvas-border bg-canvas/40">
+                  <!-- Inyectado dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CHECKLIST DE AUDITORÍA: BASES LEGALES Y TÉCNICAS -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-bold text-white font-display flex items-center gap-2">
+              <span class="text-cyan-400">🛡</span>
+              <span>Auditoría de Requisitos Críticos & Bases Administrativas</span>
+            </h4>
+            <div id="suiteAuditoriaList" class="space-y-2">
+              <!-- Inyectado dinámicamente -->
+            </div>
+          </div>
+
+          <!-- FORTALEZAS Y SHOWSTOPPERS -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-2">
+              <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>✓</span> Fortalezas Competitivas del Oferente
+              </span>
+              <ul id="suiteFortalezasList" class="text-xs text-slate-300 space-y-1 list-disc list-inside"></ul>
+            </div>
+
+            <div class="p-4 rounded-xl bg-rose-950/20 border border-rose-500/30 space-y-2">
+              <span class="text-xs font-mono font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚠</span> Puntos de Atención & Riesgos
+              </span>
+              <ul id="suiteRiesgosList" class="text-xs text-slate-300 space-y-1 list-disc list-inside"></ul>
+            </div>
+          </div>
+
+          <!-- RECOMENDACIÓN TÁCTICA FINAL -->
+          <div class="p-4 rounded-xl bg-canvas border border-canvas-border space-y-1.5">
+            <span class="text-xs font-mono uppercase text-amber-400 tracking-wider font-bold">
+              Estrategia Recomendada para Ganar la Licitación
+            </span>
+            <p id="suiteRecomendacionText" class="text-xs text-slate-300 leading-relaxed font-sans"></p>
+          </div>
+
+        </div>
+
+        <!-- Footer de la Suite -->
+        <div class="p-4 border-t border-canvas-border bg-canvas flex flex-wrap items-center justify-between gap-3">
+          <a
+            id="suiteBtnFichaOficial"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-semibold rounded-lg text-xs font-mono transition-colors"
+          >
+            Postular en Mercado Público ↗
+          </a>
+          <button
+            type="button"
+            id="btnDismissSuiteModal"
+            class="px-4 py-2 bg-canvas-border hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-mono transition-colors cursor-pointer"
+          >
+            Cerrar Suite
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL 3: CONFIGURACIÓN INTEGRAL DE EMPRESA & EQUIPO TÉCNICO (CVs) -->
+    <div id="companyProfileModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5">
+      <div class="bg-canvas-subtle border border-canvas-border rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        
+        <!-- Header del Modal -->
+        <div class="p-5 border-b border-canvas-border bg-canvas flex items-center justify-between">
+          <div class="space-y-0.5">
+            <h3 class="text-base sm:text-lg font-bold text-white font-display">Perfil del Postulante & Equipo de Trabajo</h3>
+            <p class="text-xs text-slate-400 font-mono">Gestión de capacidades, nómina técnica y Curriculums Vitae (CVs)</p>
+          </div>
+          <button type="button" id="btnCloseProfileModal" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+        </div>
+
+        <!-- Pestañas de Navegación del Modal -->
+        <div class="flex border-b border-canvas-border bg-canvas px-5 gap-2 text-xs font-mono">
+          <button
+            type="button"
+            id="tabBtnCompany"
+            class="profile-subtab active py-2.5 px-4 border-b-2 border-amber-400 text-amber-300 font-bold transition-all cursor-pointer"
+          >
+            🏢 Empresa & Finanzas
+          </button>
+          <button
+            type="button"
+            id="tabBtnTeam"
+            class="profile-subtab py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            <span>👥 Equipo Técnico & CVs</span>
+            <span id="tabCountTeam" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-800 text-slate-300">2</span>
+          </button>
+        </div>
+
+        <!-- Contenido de las Pestañas -->
+        <div class="p-6 overflow-y-auto space-y-6 text-xs font-mono text-slate-200">
+          
+          <!-- SUB-PESTAÑA 1: EMPRESA & FINANZAS -->
+          <div id="subtabCompanyContent" class="space-y-4">
+            <div class="space-y-1">
+              <label class="text-slate-300">Razón Social:</label>
+              <input id="cfgRazonSocial" type="text" value="" placeholder="Razón Social SpA" class="w-full bg-canvas border border-canvas-border rounded-lg p-2.5 text-slate-100" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="space-y-1">
+                <label class="text-slate-300">RUT Empresa:</label>
+                <input id="cfgRut" type="text" value="" placeholder="77.XXX.XXX-X" class="w-full bg-canvas border border-canvas-border rounded-lg p-2.5 text-slate-100" />
+              </div>
+              <div class="space-y-1">
+                <label class="text-slate-300">Años de Trayectoria:</label>
+                <input id="cfgAniosExp" type="number" value="7" min="1" max="30" class="w-full bg-canvas border border-canvas-border rounded-lg p-2.5 text-slate-100" />
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-slate-300 flex items-center justify-between">
+                <span>Capacidad Máx de Pólizas de Garantía ($ CLP):</span>
+                <span class="text-slate-500 font-sans text-[11px]">Cupo disponible en aseguradora</span>
+              </label>
+              <input id="cfgCapacidadGarantia" type="number" value="35000000" step="1000000" class="w-full bg-canvas border border-canvas-border rounded-lg p-2.5 text-slate-100 font-mono text-emerald-400 font-bold" />
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-slate-300">Factor de Oferta por Defecto (% sobre presupuesto estimado):</label>
+              <input id="cfgFactorOferta" type="number" value="94" min="70" max="105" class="w-full bg-canvas border border-canvas-border rounded-lg p-2.5 text-slate-100" />
+            </div>
+          </div>
+
+          <!-- SUB-PESTAÑA 2: EQUIPO TÉCNICO & SUBIDA DE CVS -->
+          <div id="subtabTeamContent" class="hidden space-y-5">
+            
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-sm font-bold text-white font-display">Nómina de Profesionales para Licitaciones</h4>
+                <p class="text-[11px] text-slate-400">Los perfiles que se contrastan contra los requerimientos de bases técnicas.</p>
+              </div>
+
+              <button
+                type="button"
+                id="btnShowAddMemberForm"
+                class="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 rounded-lg text-xs font-mono transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span>+ Agregar Profesional</span>
+              </button>
+            </div>
+
+            <!-- Formulario Desplegable para Agregar Profesional -->
+            <div id="addMemberFormBox" class="hidden p-4 rounded-xl bg-canvas border border-amber-500/40 space-y-3 animate-in fade-in duration-150">
+              <h5 class="text-xs font-bold text-amber-300 uppercase tracking-wider">Nuevo Integrante del Equipo</h5>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-slate-300">Nombre Completo:</label>
+                  <input id="newMemberNombre" type="text" placeholder="Ej: Juan Pérez" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-100" />
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-300">Rol en la Oferta:</label>
+                  <input id="newMemberRol" type="text" placeholder="Ej: Administrador de BD / DBA" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-100" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-slate-300">Título Profesional Universitario:</label>
+                  <input id="newMemberTitulo" type="text" placeholder="Ej: Ingeniero en Informática" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-100" />
+                </div>
+                <div class="space-y-1">
+                  <label class="text-slate-300">Años de Experiencia en el Rol:</label>
+                  <input id="newMemberExp" type="number" value="4" min="1" max="30" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-100" />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-slate-300">Certificaciones & Especializaciones:</label>
+                <input id="newMemberCert" type="text" placeholder="Ej: Oracle OCP, Scrum Master, Azure" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-100" />
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-slate-300">Archivo de Curriculum Vitae (CV PDF):</label>
+                <input id="newMemberCvFile" type="file" accept=".pdf,.doc,.docx" class="w-full bg-canvas-subtle border border-canvas-border rounded-lg p-2 text-slate-300 text-[11px] cursor-pointer" />
+              </div>
+
+              <div class="flex justify-end gap-2 pt-2">
+                <button type="button" id="btnCancelAddMember" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700">Cancelar</button>
+                <button type="button" id="btnSaveMember" class="px-4 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg">Guardar en Nómina</button>
+              </div>
+            </div>
+
+            <!-- Lista de Integrantes Actuales -->
+            <div id="teamMembersList" class="space-y-3">
+              <!-- Inyectado dinámicamente -->
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Footer del Modal -->
+        <div class="p-4 border-t border-canvas-border bg-canvas flex justify-end gap-3">
+          <button type="button" id="btnDismissProfileModal" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-mono transition-colors">
+            Cerrar
+          </button>
+          <button type="button" id="btnSaveAllProfile" class="px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold rounded-lg text-xs font-mono transition-all cursor-pointer">
+            Guardar Configuración
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </main>
 
   <Footer />
@@ -397,6 +770,43 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
   let currentTenders = [];
   let isCheckingAuth = false;
   let activeCategory = 'all';
+  let activeEvaluatingLic = null;
+
+  // Perfil inicial neutro en cliente (los datos reales se desencriptan en servidor sólo tras autenticar)
+  let currentProfile = {
+    profile_version: 6,
+    razon_social: 'Consultora TI',
+    rut_empresa: '',
+    anios_experiencia: 7,
+    capacidad_garantia_max_clp: 35000000,
+    factor_oferta_default: 94,
+    equipo: []
+  };
+
+  function hydrateVaultProfile(decryptedProfile) {
+    if (decryptedProfile && typeof decryptedProfile === 'object') {
+      currentProfile = { ...currentProfile, ...decryptedProfile, profile_version: 6 };
+    }
+    try {
+      const saved = localStorage.getItem('easytaciones_company_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object' && parsed.profile_version === 6) {
+          currentProfile = { ...currentProfile, ...parsed };
+        } else if (decryptedProfile) {
+          localStorage.setItem('easytaciones_company_profile', JSON.stringify(currentProfile));
+        }
+      } else if (decryptedProfile) {
+        localStorage.setItem('easytaciones_company_profile', JSON.stringify(currentProfile));
+      }
+    } catch {}
+
+    const nameDisp = document.getElementById('profileNameDisplay');
+    if (nameDisp && currentProfile.razon_social) {
+      nameDisp.textContent = currentProfile.razon_social;
+    }
+    updateTeamBadge();
+  }
 
   // 1. Verificación Inicial de Autenticación
   async function checkSession() {
@@ -408,6 +818,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated) {
+          if (data.defaultProfile) hydrateVaultProfile(data.defaultProfile);
           showWorkspace();
           return;
         }
@@ -429,7 +840,16 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     const ws = document.getElementById('workspaceSection');
     if (gate) gate.classList.add('hidden');
     if (ws) ws.classList.remove('hidden');
+    updateTeamBadge();
     runSearch();
+  }
+
+  function updateTeamBadge() {
+    const badge = document.getElementById('badgeTeamCount');
+    const tabCount = document.getElementById('tabCountTeam');
+    const count = (currentProfile.equipo || []).length;
+    if (badge) badge.textContent = `${count} profesionales`;
+    if (tabCount) tabCount.textContent = String(count);
   }
 
   // 2. Manejo de Login
@@ -461,6 +881,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 
         if (res.ok && data.authenticated) {
           input.value = '';
+          if (data.defaultProfile) hydrateVaultProfile(data.defaultProfile);
           showWorkspace();
         } else {
           errBox.textContent = data.error || 'Clave de acceso inválida.';
@@ -498,6 +919,7 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     btnLogout.addEventListener('click', async () => {
       try {
         await fetch('/api/easytaciones/auth', { method: 'DELETE' });
+        localStorage.removeItem('easytaciones_company_profile');
       } catch {}
       showAuthGate();
     });
@@ -509,7 +931,6 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     const skeleton = document.getElementById('loadingSkeleton');
     const container = document.getElementById('tendersContainer');
     const emptyState = document.getElementById('emptyResultsState');
-    const engineText = document.getElementById('activeEngineText');
     const syncSpinner = document.getElementById('syncSpinner');
 
     if (!queryInput || !skeleton || !container || !emptyState) return;
@@ -522,7 +943,6 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     const query = queryInput.value.trim();
 
     try {
-      // Solicitamos con min_score: 0 y top_k: 250 para cargar las 152 licitaciones reales
       const res = await fetch('/api/easytaciones/match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -544,9 +964,6 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
 
       if (data.success && Array.isArray(data.licitaciones)) {
         currentTenders = data.licitaciones;
-        if (engineText) {
-          engineText.textContent = 'Catálogo Real ChileCompra (152 licitaciones)';
-        }
 
         const totalTI = document.getElementById('kpiTotalTI');
         const latency = document.getElementById('kpiLatency');
@@ -704,19 +1121,29 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
             </div>
           </div>
 
-          <!-- Footer de Tarjeta -->
+          <!-- Footer de Tarjeta con Dos Acciones -->
           <div class="pt-2 border-t border-canvas-border flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div class="text-slate-400">
               Monto Estimado: <strong class="text-emerald-400 font-sans font-semibold">${montoFormatted}</strong>
             </div>
 
-            <button
-              type="button"
-              data-index="${index}"
-              class="btn-open-detail px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors cursor-pointer"
-            >
-              Ficha & Detalle
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                data-index="${index}"
+                class="btn-open-detail px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors cursor-pointer"
+              >
+                Ficha Básica
+              </button>
+
+              <button
+                type="button"
+                data-codigo="${lic.codigo_externo}"
+                class="btn-open-suite px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold shadow-md shadow-emerald-500/20 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Auditar Bases & Win Rate ✦</span>
+              </button>
+            </div>
           </div>
         </article>
       `;
@@ -726,14 +1153,237 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
       btn.addEventListener('click', (e) => {
         const target = e.currentTarget;
         const idx = parseInt(target.getAttribute('data-index') || '0', 10);
-        if (list[idx]) {
-          openDetailModal(list[idx]);
-        }
+        if (list[idx]) openDetailModal(list[idx]);
+      });
+    });
+
+    document.querySelectorAll('.btn-open-suite').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const codigo = e.currentTarget.getAttribute('data-codigo');
+        const tender = currentTenders.find(t => t.codigo_externo === codigo);
+        if (tender) openEvaluationSuite(tender);
       });
     });
   }
 
-  // 5. Modal de Detalle
+  // 5. Suite de Auditoría & Win Probability
+  async function openEvaluationSuite(lic, customOferta = null) {
+    activeEvaluatingLic = lic;
+    const modal = document.getElementById('evaluationSuiteModal');
+    const codigo = document.getElementById('suiteModalCodigo');
+    const titulo = document.getElementById('suiteModalTitulo');
+    const organismo = document.getElementById('suiteModalOrganismo');
+    const btnOficial = document.getElementById('suiteBtnFichaOficial');
+
+    if (!modal || !codigo || !titulo || !organismo) return;
+
+    codigo.textContent = lic.codigo_externo;
+    titulo.textContent = lic.nombre;
+    organismo.textContent = `${lic.comprador?.nombre_organismo || 'Organismo del Estado'} · ${lic.comprador?.region || 'Chile'}`;
+    if (btnOficial) {
+      btnOficial.href = `https://www.mercadopublico.cl/FichaLicitacion.html?idLicitacion=${encodeURIComponent(lic.codigo_externo)}`;
+    }
+
+    modal.classList.remove('hidden');
+
+    try {
+      const res = await fetch('/api/easytaciones/evaluar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          codigo_externo: lic.codigo_externo,
+          perfil: currentProfile,
+          monto_ofertado_clp: customOferta
+        })
+      });
+
+      if (!res.ok) throw new Error('Fallo al evaluar licitación');
+      const data = await res.json();
+      if (data.success && data.evaluacion) {
+        renderSuiteEvaluation(data.evaluacion);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function renderSuiteEvaluation(evalResult) {
+    const banner = document.getElementById('suiteDecisionBanner');
+    const label = document.getElementById('suiteDecisionLabel');
+    const sub = document.getElementById('suiteDecisionSub');
+    const winValue = document.getElementById('suiteWinProbValue');
+    const tableBody = document.getElementById('suiteCriteriosTableBody');
+    const auditoriaList = document.getElementById('suiteAuditoriaList');
+    const fortalezasList = document.getElementById('suiteFortalezasList');
+    const riesgosList = document.getElementById('suiteRiesgosList');
+    const recText = document.getElementById('suiteRecomendacionText');
+    const simRef = document.getElementById('simPresupuestoRef');
+    const simOferta = document.getElementById('simOfertaDisplay');
+    const simFactor = document.getElementById('simFactorDisplay');
+    const simSlider = document.getElementById('simOfertaSlider');
+
+    if (!banner || !label || !winValue || !tableBody || !auditoriaList) return;
+
+    let borderColor = 'border-emerald-500/40 bg-emerald-950/30 text-emerald-300';
+    if (evalResult.decision === 'CONDITIONAL_GO') {
+      borderColor = 'border-amber-500/40 bg-amber-950/30 text-amber-300';
+    } else if (evalResult.decision === 'NO_GO') {
+      borderColor = 'border-rose-500/40 bg-rose-950/30 text-rose-300';
+    }
+
+    banner.className = `p-5 rounded-2xl border transition-all flex flex-col sm:flex-row items-center justify-between gap-6 ${borderColor}`;
+    label.textContent = evalResult.decision_label;
+    if (sub) {
+      sub.textContent = evalResult.decision === 'GO'
+        ? `Cumple con el perfil de ${currentProfile.razon_social} y nómina de ${currentProfile.equipo.length} profesionales acreditados.`
+        : 'Requiere revisión de las cláusulas destacadas en la auditoría antes de comprometer pólizas.';
+    }
+
+    winValue.textContent = `${evalResult.win_probability}%`;
+    winValue.className = `text-3xl sm:text-4xl font-bold font-display ${evalResult.win_probability >= 70 ? 'text-emerald-400' : (evalResult.win_probability >= 50 ? 'text-amber-400' : 'text-rose-400')}`;
+
+    if (simRef) simRef.textContent = `$${Number(evalResult.monto_estimado_clp).toLocaleString('es-CL')} CLP`;
+    if (simOferta) simOferta.textContent = `$${Number(evalResult.monto_ofertado_clp).toLocaleString('es-CL')} CLP`;
+    const factorActual = Math.round((evalResult.monto_ofertado_clp / evalResult.monto_estimado_clp) * 100);
+    if (simFactor) simFactor.textContent = `${factorActual}% del presupuesto`;
+    if (simSlider) simSlider.value = String(factorActual);
+
+    tableBody.innerHTML = evalResult.criterios_evaluacion.map(c => `
+      <tr class="hover:bg-slate-800/40 transition-colors">
+        <td class="p-3 font-bold text-white">${c.criterio}</td>
+        <td class="p-3 text-center text-slate-400">${c.ponderacion}%</td>
+        <td class="p-3 text-center font-bold ${c.puntaje_obtenido >= 80 ? 'text-emerald-400' : 'text-amber-400'}">${c.puntaje_obtenido} / 100</td>
+        <td class="p-3 text-center font-bold text-white">${c.puntaje_ponderado} pts</td>
+        <td class="p-3 text-slate-300 text-[11px]">${c.observacion}</td>
+      </tr>
+    `).join('');
+
+    // Auditoría de Requisitos (Calculada integralmente por el motor de evaluar.ts)
+    const auditoriaItems = [...evalResult.auditoria_requisitos];
+
+    auditoriaList.innerHTML = auditoriaItems.map(r => {
+      let icon = '✓';
+      let pillClass = 'bg-emerald-950 text-emerald-300 border-emerald-500/30';
+      if (r.estado === 'alerta') {
+        icon = '⚠';
+        pillClass = 'bg-amber-950 text-amber-300 border-amber-500/30';
+      } else if (r.estado === 'critico') {
+        icon = '✕';
+        pillClass = 'bg-rose-950 text-rose-300 border-rose-500/30';
+      }
+
+      return `
+        <div class="p-3 rounded-lg bg-canvas border border-canvas-border flex items-start gap-3">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold border ${pillClass} shrink-0 mt-0.5">
+            ${icon}
+          </span>
+          <div class="space-y-0.5 text-xs font-sans">
+            <div class="font-bold text-white flex items-center gap-2">
+              <span>${r.item}</span>
+              <span class="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">${r.tipo}</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">${r.detalle}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    if (fortalezasList) {
+      fortalezasList.innerHTML = evalResult.fortalezas.map(f => `<li>${f}</li>`).join('') || '<li class="text-slate-500 italic">Sin ventajas diferenciales declaradas.</li>';
+    }
+    if (riesgosList) {
+      riesgosList.innerHTML = evalResult.riesgos_dealbreakers.map(r => `<li>${r}</li>`).join('') || '<li class="text-slate-500 italic">Sin showstoppers críticos identificados en las bases.</li>';
+    }
+
+    if (recText) {
+      recText.textContent = evalResult.recomendacion_estrategica;
+    }
+
+    // Heads-Up Estratégico & Brechas del Equipo
+    const headsUpList = document.getElementById('suiteHeadsUpList');
+    if (headsUpList && evalResult.heads_up_brechas) {
+      headsUpList.innerHTML = evalResult.heads_up_brechas.map(b => {
+        let borderClass = 'border-amber-500/30 bg-canvas';
+        let badgeClass = 'bg-amber-950 text-amber-300 border-amber-500/30';
+        let icon = '⚡';
+        if (b.severidad === 'alta') {
+          borderClass = 'border-rose-500/40 bg-rose-950/20';
+          badgeClass = 'bg-rose-950 text-rose-300 border-rose-500/40';
+          icon = '🚨';
+        } else if (b.severidad === 'baja') {
+          borderClass = 'border-emerald-500/30 bg-emerald-950/20';
+          badgeClass = 'bg-emerald-950 text-emerald-300 border-emerald-500/30';
+          icon = '✓';
+        }
+
+        return `
+          <div class="p-3.5 rounded-xl border ${borderClass} space-y-2">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <div class="flex items-center gap-2">
+                <span class="text-sm shrink-0">${icon}</span>
+                <span class="font-bold text-xs text-white">${b.titulo}</span>
+              </div>
+              <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${badgeClass} w-fit">
+                ${b.severidad === 'alta' ? 'Brecha Crítica' : b.severidad === 'media' ? 'Atención Requerida' : 'Conforme'}
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed">${b.hallazgo}</p>
+
+            <div class="pt-2 border-t border-canvas-border/50 grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+              <div class="text-rose-300/90 leading-normal">
+                <strong class="text-rose-200">Impacto en Pauta:</strong> ${b.impacto_puntaje}
+              </div>
+              <div class="text-emerald-300/90 leading-normal">
+                <strong class="text-emerald-200">Táctica Sugerida:</strong> ${b.mitigacion_sugerida}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  // Listener para el Slider de Oferta del Simulador
+  const simSlider = document.getElementById('simOfertaSlider');
+  if (simSlider) {
+    simSlider.addEventListener('input', (e) => {
+      if (!activeEvaluatingLic) return;
+      const factor = parseInt(e.target.value, 10) || 94;
+      const ref = activeEvaluatingLic.monto_estimado || 50000000;
+      const nuevoMonto = Math.round(ref * (factor / 100));
+
+      const simOferta = document.getElementById('simOfertaDisplay');
+      const simFactor = document.getElementById('simFactorDisplay');
+      if (simOferta) simOferta.textContent = `$${Number(nuevoMonto).toLocaleString('es-CL')} CLP`;
+      if (simFactor) simFactor.textContent = `${factor}% del presupuesto`;
+
+      clearTimeout(window.__simTimeout);
+      window.__simTimeout = setTimeout(() => {
+        openEvaluationSuite(activeEvaluatingLic, nuevoMonto);
+      }, 250);
+    });
+  }
+
+  // Cierre de Suite Modal
+  const btnCloseSuite = document.getElementById('btnCloseSuiteModal');
+  const btnDismissSuite = document.getElementById('btnDismissSuiteModal');
+  const suiteModal = document.getElementById('evaluationSuiteModal');
+
+  function closeSuiteModal() {
+    if (suiteModal) suiteModal.classList.add('hidden');
+    activeEvaluatingLic = null;
+  }
+
+  if (btnCloseSuite) btnCloseSuite.addEventListener('click', closeSuiteModal);
+  if (btnDismissSuite) btnDismissSuite.addEventListener('click', closeSuiteModal);
+  if (suiteModal) {
+    suiteModal.addEventListener('click', (e) => {
+      if (e.target === suiteModal) closeSuiteModal();
+    });
+  }
+
+  // 6. Modal de Detalle Básico
   function openDetailModal(lic) {
     const modal = document.getElementById('tenderModalBackdrop');
     const codigo = document.getElementById('modalCodigo');
@@ -796,8 +1446,423 @@ const pageDescription = "Consola técnica interna y privada para detección sem�
     });
   }
 
+  // 7. GESTIÓN INTEGRAL DE PERFIL DE EMPRESA Y EQUIPO (CVS)
+  const profileModal = document.getElementById('companyProfileModal');
+  const btnOpenProfile = document.getElementById('btnOpenProfileConfig');
+  const btnCloseProfile = document.getElementById('btnCloseProfileModal');
+  const btnDismissProfile = document.getElementById('btnDismissProfileModal');
+  const btnSaveAllProfile = document.getElementById('btnSaveAllProfile');
+
+  const tabBtnCompany = document.getElementById('tabBtnCompany');
+  const tabBtnTeam = document.getElementById('tabBtnTeam');
+  const subtabCompany = document.getElementById('subtabCompanyContent');
+  const subtabTeam = document.getElementById('subtabTeamContent');
+
+  function switchProfileTab(tab) {
+    if (!tabBtnCompany || !tabBtnTeam || !subtabCompany || !subtabTeam) return;
+
+    if (tab === 'company') {
+      tabBtnCompany.classList.add('active', 'border-amber-400', 'text-amber-300', 'font-bold');
+      tabBtnCompany.classList.remove('border-transparent', 'text-slate-400');
+      tabBtnTeam.classList.remove('active', 'border-amber-400', 'text-amber-300', 'font-bold');
+      tabBtnTeam.classList.add('border-transparent', 'text-slate-400');
+
+      subtabCompany.classList.remove('hidden');
+      subtabTeam.classList.add('hidden');
+    } else {
+      tabBtnTeam.classList.add('active', 'border-amber-400', 'text-amber-300', 'font-bold');
+      tabBtnTeam.classList.remove('border-transparent', 'text-slate-400');
+      tabBtnCompany.classList.remove('active', 'border-amber-400', 'text-amber-300', 'font-bold');
+      tabBtnCompany.classList.add('border-transparent', 'text-slate-400');
+
+      subtabTeam.classList.remove('hidden');
+      subtabCompany.classList.add('hidden');
+      renderTeamMembersList();
+    }
+  }
+
+  if (tabBtnCompany) tabBtnCompany.addEventListener('click', () => switchProfileTab('company'));
+  if (tabBtnTeam) tabBtnTeam.addEventListener('click', () => switchProfileTab('team'));
+
+  let editingMemberId = null;
+
+  function escapeHtmlAttr(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function saveProfileToStorage() {
+    try {
+      localStorage.setItem('easytaciones_company_profile', JSON.stringify(currentProfile));
+    } catch (e) {
+      console.warn('No se pudo guardar perfil en localStorage:', e);
+    }
+  }
+
+  function renderTeamMembersList() {
+    const listContainer = document.getElementById('teamMembersList');
+    if (!listContainer) return;
+
+    if (!currentProfile.equipo || currentProfile.equipo.length === 0) {
+      listContainer.innerHTML = `
+        <div class="text-center py-6 text-slate-500 italic">
+          No hay profesionales registrados en la nómina. Agrega integrantes para validar el cumplimiento de bases.
+        </div>
+      `;
+      return;
+    }
+
+    listContainer.innerHTML = currentProfile.equipo.map((member, idx) => {
+      const memberKey = member.id || String(idx);
+      const isEditing = editingMemberId === memberKey;
+
+      if (isEditing) {
+        return `
+          <div class="p-4 rounded-xl bg-canvas border-2 border-amber-500/60 shadow-lg shadow-amber-500/10 space-y-3">
+            <div class="flex items-center justify-between pb-2 border-b border-canvas-border">
+              <div class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <span>✏ Editando Profesional</span>
+                <span class="text-slate-400 font-normal">(${escapeHtmlAttr(member.nombre)})</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  data-idx="${idx}"
+                  class="btn-save-member-edit text-xs bg-amber-500 hover:bg-amber-400 text-canvas font-bold px-3 py-1 rounded transition-colors"
+                >
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="btn-cancel-member-edit text-xs text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-canvas-subtle transition-colors"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1 font-mono">Nombre Completo</label>
+                <input
+                  type="text"
+                  id="editMemberNombre_${idx}"
+                  value="${escapeHtmlAttr(member.nombre)}"
+                  class="w-full bg-canvas-subtle border border-canvas-border rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1 font-mono">Rol / Cargo en Proyecto</label>
+                <input
+                  type="text"
+                  id="editMemberRol_${idx}"
+                  value="${escapeHtmlAttr(member.rol)}"
+                  class="w-full bg-canvas-subtle border border-canvas-border rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1 font-mono">🎓 Carrera / Título Profesional</label>
+                <input
+                  type="text"
+                  id="editMemberTitulo_${idx}"
+                  value="${escapeHtmlAttr(member.titulo || '')}"
+                  placeholder="Ej: Ingeniero Civil en Informática"
+                  class="w-full bg-canvas-subtle border border-canvas-border rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1 font-mono">⏱ Años de Experiencia Acreditable</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="60"
+                  id="editMemberExp_${idx}"
+                  value="${member.anios_exp ?? 0}"
+                  class="w-full bg-canvas-subtle border border-canvas-border rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] text-slate-400 mb-1 font-mono">📜 Certificaciones Técnicas & Metodológicas</label>
+                <input
+                  type="text"
+                  id="editMemberCert_${idx}"
+                  value="${escapeHtmlAttr(member.certificaciones || '')}"
+                  placeholder="Ej: AWS Solutions Architect, PMP, Scrum Master"
+                  class="w-full bg-canvas-subtle border border-canvas-border rounded-lg px-2.5 py-1.5 text-white text-xs focus:outline-none focus:border-amber-400"
+                />
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="p-4 rounded-xl bg-canvas border border-canvas-border space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <div class="font-bold text-sm text-white flex items-center gap-2">
+                <span>${member.nombre}</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-500/30">
+                  ${member.cv_status || 'Acreditado'}
+                </span>
+              </div>
+              <div class="text-amber-300 text-xs">${member.rol}</div>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button
+                type="button"
+                data-idx="${idx}"
+                class="btn-edit-member text-xs text-amber-400 hover:text-amber-300 px-2 py-1 rounded hover:bg-amber-950/30 transition-colors font-medium border border-amber-500/30"
+              >
+                ✏ Editar
+              </button>
+              <button
+                type="button"
+                data-idx="${idx}"
+                class="btn-delete-member text-xs text-rose-400 hover:text-rose-300 px-2 py-1 rounded hover:bg-rose-950/30 transition-colors"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-300 pt-1 border-t border-canvas-border/50">
+            <div>🎓 <strong>Carrera / Título:</strong> ${member.titulo || 'No especificado'}</div>
+            <div>⏱ <strong>Experiencia:</strong> ${member.anios_exp} años acreditables</div>
+            <div class="sm:col-span-2">📜 <strong>Certificaciones:</strong> ${member.certificaciones || 'Estándar'}</div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between text-[11px] bg-canvas-subtle p-2.5 rounded-lg border border-canvas-border">
+            <div class="flex items-center gap-2 text-slate-300">
+              <span class="text-amber-400">📄</span>
+              <span>CV Oficial: <strong class="text-white">${member.cv_filename || 'CV_Adjunto.pdf'}</strong></span>
+            </div>
+
+            <label class="cursor-pointer text-amber-400 hover:text-amber-300 font-bold">
+              <span>Reemplazar CV</span>
+              <input type="file" accept=".pdf,.doc,.docx" class="hidden input-replace-cv" data-idx="${idx}" />
+            </label>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Eventos editar
+    document.querySelectorAll('.btn-edit-member').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-idx') || '0', 10);
+        const mem = currentProfile.equipo[idx];
+        editingMemberId = mem ? (mem.id || String(idx)) : null;
+        renderTeamMembersList();
+      });
+    });
+
+    // Eventos cancelar edición
+    document.querySelectorAll('.btn-cancel-member-edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        editingMemberId = null;
+        renderTeamMembersList();
+      });
+    });
+
+    // Eventos guardar edición inline
+    document.querySelectorAll('.btn-save-member-edit').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-idx') || '0', 10);
+        const mem = currentProfile.equipo[idx];
+        if (!mem) return;
+
+        const nomInput = document.getElementById(`editMemberNombre_${idx}`);
+        const rolInput = document.getElementById(`editMemberRol_${idx}`);
+        const titInput = document.getElementById(`editMemberTitulo_${idx}`);
+        const expInput = document.getElementById(`editMemberExp_${idx}`);
+        const certInput = document.getElementById(`editMemberCert_${idx}`);
+
+        const nombre = nomInput ? nomInput.value.trim() : mem.nombre;
+        const rol = rolInput ? rolInput.value.trim() : mem.rol;
+        const titulo = titInput ? titInput.value.trim() : mem.titulo;
+        const exp = expInput ? parseInt(expInput.value, 10) : mem.anios_exp;
+        const cert = certInput ? certInput.value.trim() : mem.certificaciones;
+
+        if (!nombre || !rol) {
+          alert('Por favor indica al menos el nombre y cargo del profesional.');
+          return;
+        }
+
+        mem.nombre = nombre;
+        mem.rol = rol;
+        mem.titulo = titulo || 'Profesional de Software';
+        mem.anios_exp = isNaN(exp) ? 0 : Math.max(0, exp);
+        mem.certificaciones = cert || 'Capacitación Continua';
+
+        saveProfileToStorage();
+        editingMemberId = null;
+        updateTeamBadge();
+        renderTeamMembersList();
+
+        if (activeEvaluatingLic) {
+          openEvaluationSuite(activeEvaluatingLic);
+        }
+      });
+    });
+
+    // Eventos eliminar
+    document.querySelectorAll('.btn-delete-member').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-idx') || '0', 10);
+        currentProfile.equipo.splice(idx, 1);
+        saveProfileToStorage();
+        updateTeamBadge();
+        renderTeamMembersList();
+        if (activeEvaluatingLic) {
+          openEvaluationSuite(activeEvaluatingLic);
+        }
+      });
+    });
+
+    // Eventos reemplazar archivo
+    document.querySelectorAll('.input-replace-cv').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-idx') || '0', 10);
+        const file = e.target.files?.[0];
+        if (file && currentProfile.equipo[idx]) {
+          currentProfile.equipo[idx].cv_filename = file.name;
+          currentProfile.equipo[idx].cv_status = 'CV Cargado';
+          saveProfileToStorage();
+          renderTeamMembersList();
+        }
+      });
+    });
+  }
+
+  // Toggle form nuevo integrante
+  const btnShowAddMember = document.getElementById('btnShowAddMemberForm');
+  const addMemberBox = document.getElementById('addMemberFormBox');
+  const btnCancelAddMember = document.getElementById('btnCancelAddMember');
+  const btnSaveMember = document.getElementById('btnSaveMember');
+
+  if (btnShowAddMember && addMemberBox) {
+    btnShowAddMember.addEventListener('click', () => {
+      addMemberBox.classList.remove('hidden');
+    });
+  }
+
+  if (btnCancelAddMember && addMemberBox) {
+    btnCancelAddMember.addEventListener('click', () => {
+      addMemberBox.classList.add('hidden');
+    });
+  }
+
+  if (btnSaveMember && addMemberBox) {
+    btnSaveMember.addEventListener('click', () => {
+      const nombre = document.getElementById('newMemberNombre').value.trim();
+      const rol = document.getElementById('newMemberRol').value.trim();
+      const titulo = document.getElementById('newMemberTitulo').value.trim();
+      const exp = parseInt(document.getElementById('newMemberExp').value, 10) || 3;
+      const cert = document.getElementById('newMemberCert').value.trim();
+      const fileInput = document.getElementById('newMemberCvFile');
+      const fileName = fileInput?.files?.[0]?.name || 'Curriculum_Vitae.pdf';
+
+      if (!nombre || !rol) {
+        alert('Por favor indica al menos el nombre y rol del profesional.');
+        return;
+      }
+
+      currentProfile.equipo.push({
+        id: String(Date.now()),
+        nombre,
+        rol,
+        titulo: titulo || 'Profesional de Software',
+        anios_exp: exp,
+        certificaciones: cert || 'Capacitación Continua',
+        cv_status: fileInput?.files?.[0] ? 'CV Cargado' : 'Acreditado',
+        cv_filename: fileName
+      });
+
+      // Limpiar campos
+      document.getElementById('newMemberNombre').value = '';
+      document.getElementById('newMemberRol').value = '';
+      document.getElementById('newMemberTitulo').value = '';
+      document.getElementById('newMemberCert').value = '';
+      if (fileInput) fileInput.value = '';
+
+      addMemberBox.classList.add('hidden');
+      saveProfileToStorage();
+      updateTeamBadge();
+      renderTeamMembersList();
+      if (activeEvaluatingLic) {
+        openEvaluationSuite(activeEvaluatingLic);
+      }
+    });
+  }
+
+  // Abrir y cerrar modal general
+  if (btnOpenProfile && profileModal) {
+    btnOpenProfile.addEventListener('click', () => {
+      document.getElementById('cfgRazonSocial').value = currentProfile.razon_social;
+      document.getElementById('cfgRut').value = currentProfile.rut_empresa;
+      document.getElementById('cfgAniosExp').value = currentProfile.anios_experiencia;
+      document.getElementById('cfgCapacidadGarantia').value = currentProfile.capacidad_garantia_max_clp;
+      document.getElementById('cfgFactorOferta').value = currentProfile.factor_oferta_default;
+      switchProfileTab('company');
+      profileModal.classList.remove('hidden');
+    });
+  }
+
+  function closeProfileModal() {
+    if (profileModal) profileModal.classList.add('hidden');
+  }
+
+  if (btnCloseProfile) btnCloseProfile.addEventListener('click', closeProfileModal);
+  if (btnDismissProfile) btnDismissProfile.addEventListener('click', closeProfileModal);
+
+  // Guardar configuración completa de perfil
+  if (btnSaveAllProfile) {
+    btnSaveAllProfile.addEventListener('click', () => {
+      const razon = document.getElementById('cfgRazonSocial').value.trim();
+      const rut = document.getElementById('cfgRut').value.trim();
+      const exp = parseInt(document.getElementById('cfgAniosExp').value, 10) || 7;
+      const cap = parseInt(document.getElementById('cfgCapacidadGarantia').value, 10) || 35000000;
+      const factor = parseInt(document.getElementById('cfgFactorOferta').value, 10) || 94;
+
+      currentProfile.razon_social = razon;
+      currentProfile.rut_empresa = rut;
+      currentProfile.anios_experiencia = exp;
+      currentProfile.capacidad_garantia_max_clp = cap;
+      currentProfile.factor_oferta_default = factor;
+
+      try {
+        localStorage.setItem('easytaciones_company_profile', JSON.stringify(currentProfile));
+      } catch {}
+
+      const disp = document.getElementById('profileNameDisplay');
+      if (disp) disp.textContent = razon;
+
+      updateTeamBadge();
+      closeProfileModal();
+
+      if (activeEvaluatingLic) {
+        openEvaluationSuite(activeEvaluatingLic);
+      }
+    });
+  }
+
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+      closeModal();
+      closeSuiteModal();
+      closeProfileModal();
+    }
   });
 
   // Slider & Presets Events

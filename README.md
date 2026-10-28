@@ -141,10 +141,11 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   ├── terminos.astro        # Términos y condiciones de uso del software
 │   │   ├── api/
 │   │   │   ├── contact.ts        # Endpoint serverless: rate limiting, Supabase, Resend y tickets VIP
-│   │   │   ├── easytaciones/     # Endpoints serverless privados (auth, match y detail)
+│   │   │   ├── easytaciones/     # Endpoints serverless privados (auth, match, detail y evaluar)
 │   │   │   │   ├── auth.ts       # Sesión por cookie HttpOnly y validación de token
 │   │   │   │   ├── match.ts      # Búsqueda y ranking semántico de licitaciones
-│   │   │   │   └── detail.ts     # Ficha técnica oficial e ítems sin exponer ticket
+│   │   │   │   ├── detail.ts     # Ficha técnica oficial e ítems sin exponer ticket
+│   │   │   │   └── evaluar.ts    # Suite de auditoría de bases y scoring de adjudicación
 │   │   │   └── lab/
 │   │   │       └── retorica.ts   # Proxy serverless anti-SSRF para inferencia BYOK LLM
 │   │   └── lab/
