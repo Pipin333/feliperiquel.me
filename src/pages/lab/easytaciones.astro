@@ -26,17 +26,6 @@ const pageDescription = "Consola técnica interna para detección semántica, au
             <span>/</span>
             <span class="text-amber-400 font-semibold">easytaciones</span>
           </div>
-
-          <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-emerald-500/30 bg-emerald-950/30 text-emerald-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              SUITE DE BASES & WIN RATE ACTIVA
-            </span>
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border border-amber-500/30 bg-amber-950/30 text-amber-300">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-              NO-INDEX // ACCESO RESTRINGIDO
-            </span>
-          </div>
         </div>
 
         <div class="space-y-2">
@@ -48,7 +37,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
             </span>
           </h1>
           <p class="max-w-4xl text-sm sm:text-base text-slate-300 leading-relaxed font-sans pt-1">
-            Motor de procesamiento de lenguaje natural sobre <strong class="text-white">152 licitaciones informáticas reales</strong> de ChileCompra, integrado con <strong class="text-amber-300">Auditoría de Bases, Contraste de Requisitos Legales y Gestión de Equipo/CVs</strong> bajo las reglas de compras públicas de Chile.
+            Motor de procesamiento de lenguaje natural sobre <strong id="heroTiCount" class="text-white">licitaciones informáticas reales</strong> de ChileCompra, integrado con <strong class="text-amber-300">Auditoría de Bases, Contraste de Requisitos Legales y Gestión de Equipo/CVs</strong> bajo las reglas de compras públicas de Chile.
           </p>
         </div>
 
@@ -162,13 +151,13 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
           <span class="text-xs font-mono text-slate-400">Total Mercado Público</span>
-          <div class="text-2xl font-bold font-display text-white" id="kpiTotalMP">4.791</div>
+          <div class="text-2xl font-bold font-display text-white" id="kpiTotalMP">--</div>
           <span class="text-[11px] text-slate-500 font-mono">Licitaciones en Chile</span>
         </div>
 
         <div class="p-4 rounded-xl bg-canvas-subtle border border-canvas-border space-y-1">
           <span class="text-xs font-mono text-slate-400">Licitaciones TI Reales</span>
-          <div class="text-2xl font-bold font-display text-amber-400" id="kpiTotalTI">152</div>
+          <div class="text-2xl font-bold font-display text-amber-400" id="kpiTotalTI">--</div>
           <span class="text-[11px] text-slate-500 font-mono" id="kpiLatency">Inferencia: -- ms</span>
         </div>
 
@@ -275,7 +264,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
           <span class="text-xs font-mono text-slate-400">Filtrar por Categoría TI:</span>
           <div class="flex flex-wrap gap-2" id="categoryFilterContainer">
             <button type="button" data-cat="all" class="cat-pill active px-3 py-1 rounded-full text-xs font-mono bg-amber-400 text-slate-950 font-bold transition-all cursor-pointer">
-              Todas (<span id="catCountAll">152</span>)
+              Todas (<span id="catCountAll">--</span>)
             </button>
             <button type="button" data-cat="software" class="cat-pill px-3 py-1 rounded-full text-xs font-mono bg-canvas border border-canvas-border text-slate-300 hover:text-white transition-all cursor-pointer">
               Software (<span id="catCountSoftware">0</span>)
@@ -1076,7 +1065,10 @@ const pageDescription = "Consola técnica interna para detección semántica, au
         if (totalMP && data.total_mercado_publico) {
           totalMP.textContent = Number(data.total_mercado_publico).toLocaleString('es-CL');
         }
-        if (totalTI) totalTI.textContent = String(currentTenders.length);
+        const heroTiCount = document.getElementById('heroTiCount');
+        const tiCount = data.total_ti || currentTenders.length;
+        if (totalTI) totalTI.textContent = String(tiCount);
+        if (heroTiCount) heroTiCount.textContent = `${tiCount} licitaciones informáticas reales`;
         if (latency) latency.textContent = `Inferencia: ${data.tiempo_procesamiento_ms || 4.2} ms`;
         if (highMatch) {
           const highCount = currentTenders.filter(t => (t.score_percentage || 0) >= 75).length;
