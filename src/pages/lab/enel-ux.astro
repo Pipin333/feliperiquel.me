@@ -1,0 +1,979 @@
+---
+// src/pages/lab/enel-ux.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<Layout
+  title="Autopsia UX & Rediseño: Checkout Móvil Enel | El Laboratorio"
+  description="Desglose heurístico, evidencia visual y simulador interactivo del embudo de pago móvil de Enel. De un flujo bloqueado por pop-ups y fallos de accesibilidad a un checkout rápido en 2 pasos (~20s)."
+  image="/images/lab/enel-ux/enel-desktop-glitch.jpg"
+  imageAlt="Autopsia de Experiencia de Usuario y Rediseño del Checkout Móvil de Enel"
+  robots="noindex, nofollow"
+>
+  <Header />
+
+  <main id="main-content" class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 font-mono text-xs text-slate-400 mb-8" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true" class="text-slate-600">/</span>
+      <a href="/lab" class="hover:text-white transition-colors">Lab</a>
+      <span aria-hidden="true" class="text-slate-600">/</span>
+      <span class="text-amber-400 font-medium" aria-current="page">Enel UX Autopsy</span>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+        Autopsia & Rediseño: <span class="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent">Checkout Móvil Enel</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
+        Cuando un usuario entra a <strong class="text-white font-medium">su</strong> portal para pagar una cuenta básica, cada segundo y cada capa de fricción cuesta dinero real en soporte y morosidad. Aquí analizamos por qué el flujo actual colapsa en dispositivos móviles y cómo transformarlo en un <strong class="text-white font-medium">Pago Rápido en 2 pasos (~20 segundos)</strong>.
+      </p>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <div class="flex items-center gap-2 border-b border-slate-800 mb-8 pb-px" role="tablist" aria-label="Secciones del laboratorio">
+      <button
+        type="button"
+        id="tab-btn-simulator"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-simulator"
+        class="tab-btn px-4 py-2.5 font-medium text-sm border-b-2 border-amber-400 text-amber-300 flex items-center gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-t-tech"
+      >
+        <Icon name="phone" class="w-4 h-4 text-amber-400" />
+        <span>1. Simulador Interactivo (Antes vs. Después)</span>
+      </button>
+
+      <button
+        type="button"
+        id="tab-btn-audit"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-audit"
+        class="tab-btn px-4 py-2.5 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-t-tech"
+      >
+        <Icon name="exclamation-triangle" class="w-4 h-4 text-slate-400" />
+        <span>2. Auditoría Heurística & Evidencia</span>
+      </button>
+
+      <button
+        type="button"
+        id="tab-btn-pitch"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-pitch"
+        class="tab-btn px-4 py-2.5 font-medium text-sm border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-t-tech"
+      >
+        <Icon name="check2-circle" class="w-4 h-4 text-slate-400" />
+        <span>3. Problema → Solución & Contacto</span>
+      </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: SIMULADOR INTERACTIVO               -->
+    <!-- ========================================== -->
+    <section id="panel-simulator" role="tabpanel" aria-labelledby="tab-btn-simulator" class="space-y-8">
+      
+      <!-- Simulator Controls -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-tech bg-slate-900/80 border border-slate-800">
+        <div>
+          <h2 class="text-base font-semibold text-white">Prueba ambos flujos en el emulador móvil</h2>
+          <p class="text-xs text-slate-400">Alterna entre la experiencia real de Enel y la propuesta de checkout rediseñada.</p>
+        </div>
+
+        <div class="inline-flex p-1 rounded-tech bg-slate-950 border border-slate-800 self-start sm:self-auto" role="group" aria-label="Selector de experiencia">
+          <button
+            type="button"
+            id="sim-mode-before"
+            class="px-3.5 py-1.5 rounded-tech text-xs font-mono font-medium transition-all text-white bg-rose-600/90 shadow-sm focus-visible:ring-2 focus-visible:ring-rose-400"
+            aria-pressed="true"
+          >
+            ⚠️ El Desastre Real (Antes)
+          </button>
+          <button
+            type="button"
+            id="sim-mode-after"
+            class="px-3.5 py-1.5 rounded-tech text-xs font-mono font-medium transition-all text-slate-400 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-400"
+            aria-pressed="false"
+          >
+            ✨ Propuesta Limpia (Después)
+          </button>
+        </div>
+      </div>
+
+      <!-- Simulator Layout: Phone Mockup (Center) + Live Annotations (Sides) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Interactive Phone Chassis (6 cols on lg) -->
+        <div class="lg:col-span-6 flex justify-center">
+          <div class="w-full max-w-[360px] rounded-[38px] p-3 bg-slate-950 border-4 border-slate-700 shadow-2xl relative overflow-hidden ring-1 ring-slate-800">
+            <!-- Phone Notch / Camera -->
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-900 rounded-full z-30 flex items-center justify-center">
+              <div class="w-2.5 h-2.5 rounded-full bg-slate-800"></div>
+            </div>
+
+            <!-- Screen Area (18.5:9 ratio container) -->
+            <div class="w-full min-h-[580px] max-h-[640px] rounded-[28px] bg-white text-slate-900 overflow-y-auto relative pt-7 flex flex-col font-sans select-none border border-slate-200" id="phone-screen">
+              
+              <!-- ============================================== -->
+              <!-- VISTA ANTES: EL DESASTRE REAL                   -->
+              <!-- ============================================== -->
+              <div id="sim-view-before" class="flex flex-col flex-1 w-full text-[12px] relative">
+                <!-- 1. Skip-link desnudado -->
+                <div class="w-full text-center py-2 bg-white border-b border-rose-300">
+                  <a href="#main" class="text-rose-600 font-bold underline text-xs">
+                    Saltar al contenido principal
+                  </a>
+                </div>
+
+                <!-- Enel Header Azul -->
+                <div class="w-full bg-[#0055ff] text-white px-3 py-2 flex items-center justify-between shadow-sm">
+                  <span class="font-bold text-sm tracking-tight font-sans">enel</span>
+                  <div class="flex items-center gap-2 text-xs">
+                    <Icon name="phone" class="w-3.5 h-3.5 opacity-80" />
+                    <span class="text-xs">≡</span>
+                  </div>
+                </div>
+
+                <!-- 2-column layout aplastado -->
+                <div class="p-2.5 border-b border-slate-200 flex items-center justify-between gap-1 bg-slate-50">
+                  <div class="space-y-1 text-[8px] leading-tight text-slate-600 max-w-[150px]">
+                    <p class="text-orange-600">Si aún no estás registrado en Sucursal Virtual...</p>
+                    <p class="text-pink-600">¿Olvidaste tu contraseña? Recupérala</p>
+                    <p class="text-blue-600">¿Copia de boleta? Pídela aquí</p>
+                    <p class="text-green-600">¿Otra forma de pagar? Conoce medios</p>
+                  </div>
+                  <!-- Mini sliced woman graphic -->
+                  <div class="w-16 h-14 bg-gradient-to-b from-blue-100 to-indigo-100 rounded border border-slate-300 flex flex-col justify-around p-0.5 overflow-hidden relative">
+                    <div class="h-1 bg-white opacity-90"></div>
+                    <div class="h-1 bg-white opacity-90"></div>
+                    <div class="h-1 bg-white opacity-90"></div>
+                    <span class="text-[7px] text-center text-slate-400 font-mono">[Arte Roto]</span>
+                  </div>
+                </div>
+
+                <!-- Main Form (Debajo) -->
+                <div class="p-3 space-y-3 flex-1 bg-white">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-4 h-4 rounded-full border border-slate-800 text-[10px] flex items-center justify-center font-bold">1</span>
+                    <h3 class="font-bold text-xs text-slate-800">Consultar y pagar cuenta</h3>
+                  </div>
+
+                  <div class="space-y-1">
+                    <label for="sim-input-client" class="block text-[10px] text-slate-600 font-medium">
+                      Ingresa el número de cliente, con dígito verificador:
+                    </label>
+                    <input
+                      id="sim-input-client"
+                      type="text"
+                      placeholder="Ej: 33683356-K"
+                      value="33683356-K"
+                      class="w-full px-2 py-1 text-xs border border-slate-300 rounded bg-slate-50 text-slate-700"
+                    />
+                    <p class="text-[8px] text-slate-500">Si no lo sabes puedes Busca aquí tu número</p>
+                  </div>
+
+                  <!-- Botón Gris (Parece desactivado) -->
+                  <button
+                    type="button"
+                    id="sim-btn-consultar"
+                    class="w-full py-2 bg-slate-500 text-white font-bold text-xs rounded hover:bg-slate-600 uppercase tracking-wide"
+                  >
+                    Consultar Deuda
+                  </button>
+
+                  <div class="pt-2 text-[9px] text-slate-400 border-t border-slate-100 space-y-1">
+                    <p>• Paso 2: Selección de medio</p>
+                    <p>• Paso 3: Confirmación</p>
+                    <p>• Paso 4: Comprobante</p>
+                  </div>
+                </div>
+
+                <!-- EL MODAL INVASIVO (CUBRE EL 65% DEL VIEWPORT) -->
+                <div id="sim-modal-survey" class="absolute inset-x-2 bottom-6 top-24 bg-[#0055ff] text-white p-4 rounded-xl shadow-2xl flex flex-col justify-center items-center text-center z-20 border border-blue-400 animate-pulse-subtle">
+                  <button
+                    type="button"
+                    id="sim-modal-close"
+                    class="absolute top-2 right-2 text-white hover:text-rose-200 text-sm font-bold w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center"
+                    aria-label="Cerrar modal de encuesta"
+                  >
+                    ×
+                  </button>
+                  <p class="text-sm font-semibold mb-4 text-white">Danos tu opinión</p>
+                  <button
+                    type="button"
+                    class="px-6 py-2 bg-[#ff007f] hover:bg-[#e00070] text-white font-bold text-xs rounded-tech shadow-md uppercase tracking-wider"
+                  >
+                    Encuesta
+                  </button>
+                  <p class="text-[9px] text-blue-200 mt-4 max-w-[200px]">
+                    (Este modal tapa el campo de pago hasta que encuentras la diminuta 'x')
+                  </p>
+                </div>
+
+                <!-- Floating Chat Bubble -->
+                <div class="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-[#0055ff] text-white flex items-center justify-center shadow-lg z-10">
+                  <Icon name="chat-quote" class="w-4 h-4 text-white" />
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- VISTA DESPUÉS: CHECKOUT RÁPIDO Y FLUIDO        -->
+              <!-- Con paleta de producción Enel (Azul #0055ff)    -->
+              <!-- ============================================== -->
+              <div id="sim-view-after" class="hidden flex-col flex-1 w-full text-[12px] bg-slate-50 text-slate-800 relative">
+                <!-- Header Enel Oficial -->
+                <div class="w-full bg-[#0055ff] text-white px-3.5 py-2.5 flex items-center justify-between shadow-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-sm tracking-tight font-sans">enel</span>
+                    <span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/20 text-white font-semibold border border-white/30">
+                      Pago Rápido
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-1 text-[10px] text-white/90 font-mono">
+                    <Icon name="shield-check" class="w-3.5 h-3.5 text-white" />
+                    <span>Transacción Segura</span>
+                  </div>
+                </div>
+
+                <!-- Estado 1: Formulario de Pago Rápido -->
+                <div id="sim-after-form" class="p-3.5 space-y-3.5 flex-1 overflow-y-auto bg-slate-50">
+                  
+                  <!-- Banner de Cliente Identificado -->
+                  <div class="p-2.5 rounded-tech bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                    <div>
+                      <span class="text-[9px] font-mono text-slate-500 uppercase tracking-wider block">Cuenta Identificada</span>
+                      <strong class="text-xs font-mono text-slate-900 font-bold">#33683356-K</strong>
+                      <span class="text-[10px] text-slate-600 block">Av. Providencia 1240, Dpto 402</span>
+                    </div>
+                    <button type="button" class="text-[10px] text-[#0055ff] hover:underline font-mono font-medium">Cambiar</button>
+                  </div>
+
+                  <!-- Tarjeta de Saldo a Pagar (Estilo Enel) -->
+                  <div class="p-3.5 rounded-tech bg-gradient-to-b from-[#f0f5ff] to-white border border-[#0055ff]/30 shadow-sm">
+                    <div class="flex justify-between items-start mb-1">
+                      <span class="text-[10px] font-mono uppercase tracking-wider text-[#0055ff] font-bold">Total a Pagar</span>
+                      <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Al Día</span>
+                    </div>
+                    <div class="text-2xl font-black text-slate-900 font-mono mb-2">
+                      $24.590 <span class="text-xs font-medium text-slate-500">CLP</span>
+                    </div>
+
+                    <!-- Mini desglose expandible -->
+                    <details class="text-[10px] text-slate-700 border-t border-slate-200/80 pt-2">
+                      <summary class="cursor-pointer text-[#0055ff] hover:text-[#0047d9] font-mono font-medium flex items-center justify-between">
+                        <span>Ver detalle boleta (142 kWh)</span>
+                        <span>▾</span>
+                      </summary>
+                      <div class="mt-2 space-y-1 text-slate-600 font-mono text-[9px] pl-1">
+                        <div class="flex justify-between"><span>Consumo del mes (142 kWh):</span> <span class="font-semibold text-slate-800">$18.200</span></div>
+                        <div class="flex justify-between"><span>Cargo por servicio y transporte:</span> <span class="font-semibold text-slate-800">$4.100</span></div>
+                        <div class="flex justify-between"><span>IVA 19%:</span> <span class="font-semibold text-slate-800">$2.290</span></div>
+                      </div>
+                    </details>
+                  </div>
+
+                  <!-- Selección de Medio de Pago -->
+                  <div class="space-y-1.5">
+                    <label class="block text-[11px] font-semibold text-slate-800">Medio de pago:</label>
+                    <div class="grid grid-cols-2 gap-2">
+                      <label class="flex items-center gap-2 p-2 rounded-tech border-2 border-[#0055ff] bg-[#f0f5ff] cursor-pointer shadow-xs">
+                        <input type="radio" name="pay-method" value="webpay" checked class="accent-[#0055ff]" />
+                        <span class="text-[10px] font-bold text-[#0055ff]">Webpay Plus</span>
+                      </label>
+                      <label class="flex items-center gap-2 p-2 rounded-tech border border-slate-200 bg-white hover:border-slate-300 cursor-pointer">
+                        <input type="radio" name="pay-method" value="cuenta-rut" class="accent-[#0055ff]" />
+                        <span class="text-[10px] font-medium text-slate-700">CuentaRUT</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Email para Comprobante -->
+                  <div class="space-y-1">
+                    <label for="sim-input-email" class="block text-[10px] font-mono text-slate-600">Comprobante de pago a:</label>
+                    <input
+                      id="sim-input-email"
+                      type="email"
+                      value="cliente@ejemplo.cl"
+                      class="w-full px-2.5 py-1.5 rounded-tech text-xs bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-[#0055ff] focus:ring-1 focus:ring-[#0055ff]"
+                    />
+                  </div>
+
+                  <!-- Casilla de Términos (Copy Legal Blindado) -->
+                  <div class="flex items-start gap-2 pt-1">
+                    <input type="checkbox" id="sim-check-terms" checked class="mt-0.5 rounded accent-[#0055ff]" />
+                    <label for="sim-check-terms" class="text-[9px] text-slate-600 leading-tight">
+                      He leído y <strong class="text-slate-900 font-bold">acepto</strong> los Términos del Servicio y Política de Privacidad.
+                    </label>
+                  </div>
+
+                  <!-- Botón Primario de Pago (Enel Blue #0055ff de Alta Conversión) -->
+                  <button
+                    type="button"
+                    id="sim-btn-pay"
+                    class="w-full py-2.5 rounded-tech bg-[#0055ff] hover:bg-[#0047d9] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-blue-500/20 active:scale-[0.99] transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <span>Pagar $24.590 con Webpay</span>
+                    <Icon name="arrow-right" class="w-3.5 h-3.5 text-white" />
+                  </button>
+                </div>
+
+                <!-- Estado 2: Pantalla de Éxito & Encuesta Reubicada -->
+                <div id="sim-after-success" class="hidden p-4 space-y-4 flex-1 overflow-y-auto bg-slate-50 text-center">
+                  <div class="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-inner mt-2">
+                    <Icon name="check2-circle" class="w-7 h-7 text-emerald-600" />
+                  </div>
+                  <div>
+                    <span class="text-[10px] font-mono text-emerald-700 font-bold uppercase tracking-wider">Pago Procesado con Éxito</span>
+                    <h4 class="text-xl font-black text-slate-900 font-mono mt-0.5">$24.590 CLP</h4>
+                    <p class="text-[10px] text-slate-500 mt-1">Comprobante #TRX-839210 enviado a cliente@ejemplo.cl</p>
+                  </div>
+
+                  <!-- LA ENCUESTA REUBICADA POST-TRANSACCIÓN -->
+                  <div class="p-3.5 rounded-tech bg-white border border-slate-200 shadow-sm text-left space-y-2 mt-4">
+                    <div class="flex items-center justify-between">
+                      <span class="text-[9px] font-mono font-bold text-[#0055ff] uppercase tracking-wider">Encuesta de Experiencia</span>
+                      <span class="text-[9px] font-mono text-slate-400">Opcional</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800 leading-snug">¿Qué tan fácil te resultó pagar tu cuenta hoy?</p>
+                    <div class="grid grid-cols-5 gap-1 pt-1" id="sim-rating-group">
+                      <button type="button" class="py-1.5 rounded border border-slate-200 hover:border-[#0055ff] hover:bg-[#f0f5ff] text-xs font-mono font-bold text-slate-600">1</button>
+                      <button type="button" class="py-1.5 rounded border border-slate-200 hover:border-[#0055ff] hover:bg-[#f0f5ff] text-xs font-mono font-bold text-slate-600">2</button>
+                      <button type="button" class="py-1.5 rounded border border-slate-200 hover:border-[#0055ff] hover:bg-[#f0f5ff] text-xs font-mono font-bold text-slate-600">3</button>
+                      <button type="button" class="py-1.5 rounded border border-slate-200 hover:border-[#0055ff] hover:bg-[#f0f5ff] text-xs font-mono font-bold text-slate-600">4</button>
+                      <button type="button" class="py-1.5 rounded border-2 border-[#0055ff] bg-[#f0f5ff] text-xs font-mono font-black text-[#0055ff]">5</button>
+                    </div>
+                    <p class="text-[9px] text-emerald-700 bg-emerald-50 p-1.5 rounded border border-emerald-200 leading-tight">
+                      ✓ <strong>Timing Correcto:</strong> La encuesta se presenta después de resolver la necesidad del usuario, sin secuestrar la pantalla ni bloquear el pago.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    id="sim-btn-restart"
+                    class="w-full py-2 rounded-tech border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-mono font-medium transition-colors"
+                  >
+                    ↺ Reiniciar simulación
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Explanations Column (6 cols on lg) -->
+        <div class="lg:col-span-6 space-y-6">
+          <div id="sim-annotation-card" class="p-6 rounded-tech border border-rose-500/40 bg-rose-950/20 text-slate-200 shadow-xl">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+              <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-rose-300" id="annotation-title">
+                Anti-Patrón Activo: Modal Interceptor
+              </h3>
+            </div>
+            <p class="text-sm leading-relaxed text-slate-300 mb-4" id="annotation-desc">
+              El modal de encuesta bloquea el 65% de la pantalla táctil justo sobre los campos necesarios para consultar o pagar. El usuario se ve obligado a cazar una 'X' minúscula antes de poder completar su trámite.
+            </p>
+            <div class="p-3 rounded bg-slate-950/80 border border-slate-800 text-xs font-mono text-slate-400" id="annotation-tip">
+              💡 <strong>Regla de oro:</strong> Nunca pidas feedback de un servicio antes de que el usuario lo haya podido utilizar. Las encuestas de NPS van en la pantalla de éxito post-pago.
+            </div>
+          </div>
+
+          <!-- Feature Matrix Comparison -->
+          <div class="p-6 rounded-tech border border-slate-800 bg-slate-900/60 space-y-4">
+            <h3 class="text-sm font-mono font-semibold text-white uppercase tracking-wider">
+              Comparativa de Arquitectura del Flujo
+            </h3>
+
+            <div class="space-y-3 text-xs">
+              <div class="flex items-start justify-between gap-4 pb-2.5 border-b border-slate-800/80">
+                <span class="text-slate-400">Modal de Encuesta:</span>
+                <span class="font-mono text-rose-400 text-right">Interrumpe al inicio (Antes)</span>
+                <span class="font-mono text-emerald-400 text-right">En pantalla de éxito (Después)</span>
+              </div>
+
+              <div class="flex items-start justify-between gap-4 pb-2.5 border-b border-slate-800/80">
+                <span class="text-slate-400">Requerimiento de Registro:</span>
+                <span class="font-mono text-rose-400 text-right">Obligatorio (Antes)</span>
+                <span class="font-mono text-emerald-400 text-right">Guest Checkout (Después)</span>
+              </div>
+
+              <div class="flex items-start justify-between gap-4 pb-2.5 border-b border-slate-800/80">
+                <span class="text-slate-400">Verificación por SMS (OTP):</span>
+                <span class="font-mono text-rose-400 text-right">Cuello de botella (Antes)</span>
+                <span class="font-mono text-emerald-400 text-right">Innecesario p/ pagar (Después)</span>
+              </div>
+
+              <div class="flex items-start justify-between gap-4">
+                <span class="text-slate-400">Accesibilidad & Skip-link:</span>
+                <span class="font-mono text-rose-400 text-right">Desajustado en móvil (Antes)</span>
+                <span class="font-mono text-emerald-400 text-right">Cumple WCAG 2.2 AA (Después)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: AUDITORÍA HEURÍSTICA Y EVIDENCIA     -->
+    <!-- ========================================== -->
+    <section id="panel-audit" role="tabpanel" aria-labelledby="tab-btn-audit" class="hidden space-y-10">
+      
+      <div class="prose prose-invert max-w-none">
+        <h2 class="text-2xl font-bold text-white mb-2">Desglose de los 5 Defectos Críticos de la Interfaz</h2>
+        <p class="text-sm text-slate-300">
+          A continuación se presenta la evidencia capturada directamente en dispositivos móviles y de escritorio, junto con la justificación técnica de por qué cada defecto degrada la tasa de recaudación.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Hallazgo 1: Skip link -->
+        <article class="p-6 rounded-tech border border-slate-800 bg-slate-900/60 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 font-mono text-xs font-bold flex items-center justify-center">1</span>
+              <h3 class="text-base font-bold text-white">Skip-Link Desnudado (Accesibilidad Incompleta)</h3>
+            </div>
+            <div class="rounded border border-slate-800 bg-slate-950 p-2 flex items-center justify-center min-h-[190px]">
+              <img
+                src="/images/lab/enel-ux/enel-crop-skiplink.png"
+                alt="Enlace Saltar al contenido principal visible en rojo sobre el header de Enel"
+                width="385"
+                height="300"
+                class="w-full max-h-48 object-contain rounded"
+                loading="lazy"
+              />
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              El enlace para lectores de pantalla <em>«Saltar al contenido principal»</em> carece de la clase <code>.sr-only</code>. En navegadores móviles se dibuja como un bloque rojo de 60px antes del header, desplazando el logotipo y dando apariencia de sitio roto.
+            </p>
+          </div>
+        </article>
+
+        <!-- Hallazgo 2: Modal secuestrador -->
+        <article class="p-6 rounded-tech border border-slate-800 bg-slate-900/60 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 font-mono text-xs font-bold flex items-center justify-center">2</span>
+              <h3 class="text-base font-bold text-white">Modal Secuestrador de Pantalla (Content Hostage)</h3>
+            </div>
+            <div class="rounded border border-slate-800 bg-slate-950 p-2 flex items-center justify-center min-h-[190px]">
+              <img
+                src="/images/lab/enel-ux/enel-crop-modal.png"
+                alt="Modal azul de encuesta cubriendo los campos del formulario de pago"
+                width="369"
+                height="500"
+                class="w-full max-h-48 object-contain rounded"
+                loading="lazy"
+              />
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Un diálogo modal de encuesta de satisfacción aparece de forma inmediata al entrar al link de pago, cubriendo el 65% vertical de la pantalla táctil. Tapa el campo del número de cliente y el botón de consulta hasta cerrar una «X» diminuta.
+            </p>
+          </div>
+        </article>
+
+        <!-- Hallazgo 3: Glitch desktop y responsive -->
+        <article class="p-6 rounded-tech border border-slate-800 bg-slate-900/60 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 font-mono text-xs font-bold flex items-center justify-center">3</span>
+              <h3 class="text-base font-bold text-white">Arte Roto & Contraste Pobre en Escritorio</h3>
+            </div>
+            <div class="rounded border border-slate-800 bg-slate-950 p-2 flex items-center justify-center min-h-[190px]">
+              <img
+                src="/images/lab/enel-ux/enel-desktop-glitch.jpg"
+                alt="Ilustración 3D con bandas blancas horizontales y enlaces arcoíris"
+                width="1024"
+                height="512"
+                class="w-full max-h-48 object-contain rounded"
+                loading="lazy"
+              />
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              En monitores de escritorio, la ilustración principal tiene franjas blancas horizontales que cortan al personaje. Además, 4 enlaces usan 4 colores distintos (verde, rosa, naranja, azul) con contraste insuficiente según WCAG AA.
+            </p>
+          </div>
+        </article>
+
+        <!-- Hallazgo 4: Legal Design & Registro Forzado -->
+        <article class="p-6 rounded-tech border border-slate-800 bg-slate-900/60 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 font-mono text-xs font-bold flex items-center justify-center">4</span>
+              <h3 class="text-base font-bold text-white">Muro de Registro Obligatorio & Vacío Legal en ToS</h3>
+            </div>
+
+            <!-- Diagrama de Fricción SMS -->
+            <div class="rounded border border-slate-800 bg-slate-950 p-3 space-y-2">
+              <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">El Deadlock del OTP telefónico:</span>
+              <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-mono">
+                <div class="p-1.5 rounded bg-slate-900 border border-slate-800 text-slate-300">
+                  1. Clic email
+                </div>
+                <div class="p-1.5 rounded bg-rose-950/40 border border-rose-800/40 text-rose-300">
+                  2. Exige crear clave
+                </div>
+                <div class="p-1.5 rounded bg-rose-900/40 border border-rose-500/50 text-rose-200">
+                  3. SMS nunca llega
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed pt-1">
+                Forzar la creación de cuenta para pagar un servicio básico convierte al SMS en un punto único de fallo. Si la pasarela de mensajería se demora, el usuario queda sin opción de pago.
+              </p>
+            </div>
+
+            <!-- Comparativa de Legal Design -->
+            <div class="rounded border border-slate-800 bg-slate-950 p-3 space-y-2">
+              <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Redacción de Consentimiento Legal:</span>
+              <div class="space-y-1.5 text-xs">
+                <div class="flex items-start gap-2 p-2 rounded bg-rose-950/30 border border-rose-900/40 text-rose-300">
+                  <span class="font-bold text-[11px]">Enel:</span>
+                  <span class="text-[11px]">«He leído los Términos» (Solo declara lectura previa; no otorga consentimiento expreso).</span>
+                </div>
+                <div class="flex items-start gap-2 p-2 rounded bg-emerald-950/30 border border-emerald-900/40 text-emerald-300">
+                  <span class="font-bold text-[11px]">Estándar:</span>
+                  <span class="text-[11px]">«He leído y <strong>acepto</strong> los Términos...» (Manifestación voluntaria vinculante).</span>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-400 leading-relaxed pt-1">
+                Bajo la Ley N° 19.628 de protección de datos personales en Chile, "leer" no equivale a manifestar voluntad ni autorización expresa de tratamiento.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: PROBLEMA -> SOLUCIÓN & CONTACTO      -->
+    <!-- ========================================== -->
+    <section id="panel-pitch" role="tabpanel" aria-labelledby="tab-btn-pitch" class="hidden space-y-12">
+      
+      <div class="prose prose-invert max-w-none">
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Matriz de Hallazgos: Problema → Solución</h2>
+        <p class="text-sm text-slate-300 max-w-3xl leading-relaxed">
+          Resumen directo de los 6 puntos críticos detectados durante la experiencia real en el portal de Enel y la solución de diseño implementada en la propuesta limpia.
+        </p>
+      </div>
+
+      <!-- Grid Problema -> Solución -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Punto 1 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>01. Skip-Link Desalineado</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> El enlace para lectores de pantalla aparece en rojo y ocupa el 20% superior de la pantalla antes del logo.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Ocultar visualmente con <code>.sr-only</code> para que solo actúe bajo foco de teclado sin desplazar el viewport.</p>
+          </div>
+        </div>
+
+        <!-- Punto 2 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>02. Modal Secuestrador</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> Un pop-up de encuesta cubre el 65% del teléfono tapando el campo donde se debe escribir para pagar.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Reubicar la solicitud de opinión en la pantalla de comprobante post-transacción (cero interrupción previa).</p>
+          </div>
+        </div>
+
+        <!-- Punto 3 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>03. Layout Móvil Aplastado</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> Se fuerzan 2 columnas de escritorio en móvil, dejando tipografía de 6px y una ilustración cortada con bandas blancas.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Estructura vertical fluida de 1 columna con zonas táctiles amplias (mínimo 48px) y sin elementos decorativos rotos.</p>
+          </div>
+        </div>
+
+        <!-- Punto 4 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>04. Registro Obligatorio</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> Se exige crear cuenta y clave para pagar una deuda básica, aun cuando el enlace del correo ya conocía el número de cliente.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Modo Invitado (<em>Guest Checkout</em>) en 2 pasos: saldo consolidado inmediato y botón directo a Webpay.</p>
+          </div>
+        </div>
+
+        <!-- Punto 5 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>05. Cuello de Botella SMS</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> El código SMS para verificar la cuenta tarda o nunca llega, bloqueando la posibilidad de pago sin ofrecer alternativas.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Eliminar el muro OTP para el pago de boletas regulares; confirmación directa al correo del titular.</p>
+          </div>
+        </div>
+
+        <!-- Punto 6 -->
+        <div class="p-4 rounded-tech border border-slate-800 bg-slate-900/60 space-y-2">
+          <div class="flex items-center gap-2 text-rose-400 font-bold text-xs font-mono uppercase tracking-wider">
+            <span>06. Vacío Legal en ToS</span>
+          </div>
+          <div class="text-xs text-slate-300 space-y-1.5">
+            <p><strong class="text-rose-300 font-mono">Problema:</strong> La casilla dice únicamente «He leído los Términos», lo cual no equivale a consentimiento expreso bajo la Ley 19.628.</p>
+            <p><strong class="text-emerald-300 font-mono">Solución:</strong> Fórmula vinculante: «He leído y <strong>acepto</strong> los Términos de Servicio y Política de Privacidad».</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Buenas Prácticas para Utilities -->
+      <div class="space-y-4 pt-4 border-t border-slate-800">
+        <h3 class="text-xl font-bold text-white">Buenas Prácticas para Checkouts de Servicios Básicos</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-tech border border-slate-800/80 bg-slate-900/40 space-y-1.5">
+            <strong class="text-amber-400 text-xs font-mono uppercase tracking-wider block">1. Guest Checkout First</strong>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              En empresas reguladas, la relación comercial ya existe. Forzar contraseñas para pagar una factura devengada genera morosidad involuntaria y llamadas a soporte.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-tech border border-slate-800/80 bg-slate-900/40 space-y-1.5">
+            <strong class="text-cyan-400 text-xs font-mono uppercase tracking-wider block">2. Feedback Post-Transacción</strong>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              El momento para solicitar calificación o NPS es la pantalla de comprobante. Hacerlo antes interrumpe el embudo de conversión y sesga negativamente la muestra.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-tech border border-slate-800/80 bg-slate-900/40 space-y-1.5">
+            <strong class="text-emerald-400 text-xs font-mono uppercase tracking-wider block">3. Preservación de Estado en Deep Links</strong>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Si el usuario abrió un correo oficial con token de cliente, no le vuelvas a pedir lo que ya tienes. Preséntale el monto y las opciones de pago de inmediato.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-tech border border-slate-800/80 bg-slate-900/40 space-y-1.5">
+            <strong class="text-rose-400 text-xs font-mono uppercase tracking-wider block">4. Accesibilidad Resistente</strong>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Los skip-links y elementos de asistencia deben probarse en móviles reales para evitar que el motor de render los dibuje sobre los elementos visuales principales.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA & Formulario de Contacto -->
+      <div class="p-6 sm:p-8 rounded-tech border border-amber-500/30 bg-slate-900/70 shadow-2xl space-y-6">
+        <div>
+          <span class="text-xs font-mono text-amber-400 uppercase tracking-wider block mb-1">Feedback & Conexión</span>
+          <h3 class="text-2xl font-bold text-white">¿Te fue útil esta experiencia?</h3>
+          <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
+            Diseñé este prototipo como un ejercicio constructivo tras experimentar el flujo como cliente de Enel. Si te pareció valioso el enfoque y quieres que conversemos sobre optimización de canales digitales o futuras colaboraciones, me encantaría conocer tu perspectiva.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
+          
+          <!-- Canales Directos (5 cols) -->
+          <div class="lg:col-span-5 space-y-3">
+            <!-- Email Card con icono y botón copiar -->
+            <div class="p-4 rounded-tech bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-tech bg-slate-900 border border-slate-800 text-amber-400 flex items-center justify-center shrink-0">
+                  <Icon name="envelope-fill" class="w-4 h-4 text-amber-400" />
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
+                  <a href="mailto:f.riquelmesalvo@uandresbello.edu" class="text-xs sm:text-sm font-mono font-bold text-white hover:text-amber-400 transition-colors block truncate">
+                    f.riquelmesalvo@uandresbello.edu
+                  </a>
+                  <span class="text-[11px] text-slate-400 block">Contacto directo profesional</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="copy-direct-email-btn"
+                class="px-2.5 py-1.5 rounded-tech bg-slate-900 border border-slate-800 hover:border-amber-400/50 text-[11px] font-mono text-slate-300 hover:text-white transition-colors shrink-0 flex items-center gap-1.5"
+                aria-label="Copiar correo al portapapeles"
+              >
+                <Icon name="copy" class="w-3.5 h-3.5 text-slate-400" />
+                <span id="copy-direct-email-text">Copiar</span>
+              </button>
+            </div>
+
+            <!-- LinkedIn & GitHub Cards con logos canónicos -->
+            <div class="grid grid-cols-2 gap-3">
+              <a
+                href="https://linkedin.com/in/friquelmes"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-3 rounded-tech bg-slate-950 border border-slate-800 hover:border-[#0a66c2]/50 hover:bg-[#0a66c2]/5 text-slate-200 text-xs font-mono font-medium flex items-center justify-between transition-all group"
+              >
+                <div class="flex items-center gap-2">
+                  <Icon name="linkedin" class="w-4 h-4 text-[#0a66c2] group-hover:scale-110 transition-transform" />
+                  <span class="font-bold">LinkedIn</span>
+                </div>
+                <Icon name="box-arrow-up-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300" />
+              </a>
+
+              <a
+                href="https://github.com/Pipin333"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-3 rounded-tech bg-slate-950 border border-slate-800 hover:border-white/40 hover:bg-white/5 text-slate-200 text-xs font-mono font-medium flex items-center justify-between transition-all group"
+              >
+                <div class="flex items-center gap-2">
+                  <Icon name="github" class="w-4 h-4 text-slate-300 group-hover:text-white group-hover:scale-110 transition-transform" />
+                  <span class="font-bold">GitHub</span>
+                </div>
+                <Icon name="box-arrow-up-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300" />
+              </a>
+            </div>
+
+            <!-- Descargar CV Card -->
+            <a
+              href="/cv-felipe-riquelme.pdf"
+              download="CV-Felipe-Riquelme-Salvo.pdf"
+              class="p-3.5 rounded-tech bg-slate-950 border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900/60 text-slate-200 transition-all flex items-center justify-between group"
+              title="Descargar Curriculum Vitae en formato PDF"
+            >
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-tech bg-slate-900 border border-slate-800 text-amber-400 flex items-center justify-center shrink-0 group-hover:border-amber-400/40 transition-colors">
+                  <Icon name="file-earmark-pdf" class="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                </div>
+                <div>
+                  <span class="text-xs font-mono font-bold text-white group-hover:text-amber-400 transition-colors block">
+                    Descargar CV
+                  </span>
+                  <span class="text-[10px] text-slate-400 block font-mono">CV-Felipe-Riquelme-Salvo.pdf</span>
+                </div>
+              </div>
+              <Icon name="download" class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
+            </a>
+          </div>
+
+          <!-- Formulario Directo (7 cols) -->
+          <div class="lg:col-span-7">
+            <form action="/api/contact" method="POST" class="p-5 rounded-tech bg-slate-950 border border-slate-800 space-y-3">
+              <input type="text" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="contact-name" class="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1">Tu Nombre *</label>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    name="name"
+                    required
+                    placeholder="Ej: Martín González"
+                    class="w-full px-3 py-2 rounded-tech bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  />
+                </div>
+                <div>
+                  <label for="contact-email" class="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1">Correo Electrónico *</label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    name="email"
+                    required
+                    placeholder="tu@correo.com"
+                    class="w-full px-3 py-2 rounded-tech bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="contact-topic" class="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1">Asunto o Proyecto</label>
+                <input
+                  type="text"
+                  id="contact-topic"
+                  name="topic"
+                  value="Auditoría UX / Rediseño de Checkout"
+                  class="w-full px-3 py-2 rounded-tech bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:ring-1 focus:ring-amber-400"
+                />
+              </div>
+
+              <div>
+                <label for="contact-message" class="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1">Mensaje *</label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows="3"
+                  required
+                  placeholder="Cuéntame sobre tu producto, desafío técnico o consulta..."
+                  class="w-full px-3 py-2 rounded-tech bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:ring-1 focus:ring-amber-400 resize-none font-sans"
+                ></textarea>
+              </div>
+
+              <div class="pt-1">
+                <button
+                  type="submit"
+                  class="w-full py-2.5 rounded-tech bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs uppercase tracking-wider shadow transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <span>Enviar mensaje</span>
+                  <Icon name="arrow-right" class="w-3.5 h-3.5 text-slate-950" />
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  function initEnelLab() {
+    // Tab switching logic
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panelSimulator = document.getElementById('panel-simulator');
+    const panelAudit = document.getElementById('panel-audit');
+    const panelPitch = document.getElementById('panel-pitch');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => {
+          b.setAttribute('aria-selected', 'false');
+          b.classList.remove('border-amber-400', 'text-amber-300');
+          b.classList.add('border-transparent', 'text-slate-400');
+        });
+        btn.setAttribute('aria-selected', 'true');
+        btn.classList.add('border-amber-400', 'text-amber-300');
+        btn.classList.remove('border-transparent', 'text-slate-400');
+
+        panelSimulator?.classList.add('hidden');
+        panelAudit?.classList.add('hidden');
+        panelPitch?.classList.add('hidden');
+
+        if (btn.id === 'tab-btn-simulator') panelSimulator?.classList.remove('hidden');
+        if (btn.id === 'tab-btn-audit') panelAudit?.classList.remove('hidden');
+        if (btn.id === 'tab-btn-pitch') panelPitch?.classList.remove('hidden');
+      });
+    });
+
+    // Simulator mode toggling (Before vs After)
+    const btnBefore = document.getElementById('sim-mode-before');
+    const btnAfter = document.getElementById('sim-mode-after');
+    const viewBefore = document.getElementById('sim-view-before');
+    const viewAfter = document.getElementById('sim-view-after');
+    const annotationTitle = document.getElementById('annotation-title');
+    const annotationDesc = document.getElementById('annotation-desc');
+    const annotationCard = document.getElementById('sim-annotation-card');
+
+    btnBefore?.addEventListener('click', () => {
+      btnBefore.classList.add('bg-rose-600/90', 'text-white');
+      btnBefore.classList.remove('text-slate-400');
+      btnBefore.setAttribute('aria-pressed', 'true');
+
+      btnAfter?.classList.remove('bg-emerald-600/90', 'text-white');
+      btnAfter?.classList.add('text-slate-400');
+      btnAfter?.setAttribute('aria-pressed', 'false');
+
+      viewBefore?.classList.remove('hidden');
+      viewAfter?.classList.add('hidden');
+
+      if (annotationCard && annotationTitle && annotationDesc) {
+        annotationCard.className = 'p-6 rounded-tech border border-rose-500/40 bg-rose-950/20 text-slate-200 shadow-xl';
+        annotationTitle.className = 'text-sm font-mono font-bold uppercase tracking-wider text-rose-300';
+        annotationTitle.textContent = 'Anti-Patrón Activo: Modal Interceptor';
+        annotationDesc.textContent = 'El modal de encuesta bloquea el 65% de la pantalla táctil justo sobre los campos necesarios para consultar o pagar. El usuario se ve obligado a cazar una "X" minúscula antes de poder completar su trámite.';
+      }
+    });
+
+    btnAfter?.addEventListener('click', () => {
+      btnAfter.classList.add('bg-[#0055ff]', 'text-white');
+      btnAfter.classList.remove('text-slate-400');
+      btnAfter.setAttribute('aria-pressed', 'true');
+
+      btnBefore?.classList.remove('bg-rose-600/90', 'text-white');
+      btnBefore?.classList.add('text-slate-400');
+      btnBefore?.setAttribute('aria-pressed', 'false');
+
+      viewBefore?.classList.add('hidden');
+      viewAfter?.classList.remove('hidden');
+
+      if (annotationCard && annotationTitle && annotationDesc) {
+        annotationCard.className = 'p-6 rounded-tech border border-blue-500/40 bg-blue-950/20 text-slate-200 shadow-xl';
+        annotationTitle.className = 'text-sm font-mono font-bold uppercase tracking-wider text-blue-300';
+        annotationTitle.textContent = 'Flujo Optimizado: Guest Checkout en 2 Pasos';
+        annotationDesc.textContent = 'El cliente ingresa con su número ya precargado. Ve el monto transparente de forma inmediata ($24.590 CLP), selecciona su medio de pago preferido y confirma con un solo toque.';
+      }
+    });
+
+    // Close survey modal in the "Before" simulator
+    const modalClose = document.getElementById('sim-modal-close');
+    const surveyModal = document.getElementById('sim-modal-survey');
+    modalClose?.addEventListener('click', () => {
+      if (surveyModal) {
+        surveyModal.style.display = 'none';
+      }
+    });
+
+    // Simulated payment in the "After" view
+    const payBtn = document.getElementById('sim-btn-pay');
+    const formAfter = document.getElementById('sim-after-form');
+    const successAfter = document.getElementById('sim-after-success');
+    const restartBtn = document.getElementById('sim-btn-restart');
+
+    payBtn?.addEventListener('click', () => {
+      const originalText = payBtn.innerHTML;
+      payBtn.innerHTML = '<span>Procesando con Webpay...</span>';
+      payBtn.setAttribute('disabled', 'true');
+
+      setTimeout(() => {
+        payBtn.innerHTML = originalText;
+        payBtn.removeAttribute('disabled');
+        formAfter?.classList.add('hidden');
+        successAfter?.classList.remove('hidden');
+      }, 900);
+    });
+
+    restartBtn?.addEventListener('click', () => {
+      successAfter?.classList.add('hidden');
+      formAfter?.classList.remove('hidden');
+    });
+
+    // Interactive rating buttons in post-payment survey
+    const ratingBtns = document.querySelectorAll('#sim-rating-group button');
+    ratingBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        ratingBtns.forEach(b => {
+          b.className = 'py-1.5 rounded border border-slate-200 hover:border-[#0055ff] hover:bg-[#f0f5ff] text-xs font-mono font-bold text-slate-600';
+        });
+        btn.className = 'py-1.5 rounded border-2 border-[#0055ff] bg-[#f0f5ff] text-xs font-mono font-black text-[#0055ff]';
+      });
+    });
+
+    // Copy direct email logic
+    const copyDirectBtn = document.getElementById('copy-direct-email-btn');
+    const copyDirectText = document.getElementById('copy-direct-email-text');
+    copyDirectBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('f.riquelmesalvo@uandresbello.edu');
+        if (copyDirectText) copyDirectText.textContent = '¡Copiado!';
+        setTimeout(() => {
+          if (copyDirectText) copyDirectText.textContent = 'Copiar';
+        }, 2000);
+      } catch (err) {
+        console.error('Error al copiar correo:', err);
+      }
+    });
+  }
+
+  initEnelLab();
+  document.addEventListener('astro:page-load', initEnelLab);
+</script>
