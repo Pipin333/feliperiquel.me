@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { isAuthorized } from './auth';
 import realTendersData from './tenders.json';
-import { getLiveActiveTenders } from '../../../lib/mercadopublico';
+import { getLiveActiveTenders, isTenderOpen } from '../../../lib/mercadopublico';
 
 export const prerender = false;
 
@@ -45,7 +45,6 @@ export interface LicitacionData {
   url_ficha?: string;
 }
 
-// Catálogo base de 152 licitaciones reales de Mercado Público (ChileCompra)
 const REAL_LICITACIONES: LicitacionData[] = realTendersData as LicitacionData[];
 
 /**
@@ -121,14 +120,21 @@ export const POST: APIRoute = async ({ request }) => {
 
     const ticket = process.env.MP_TICKET || '';
     const easytacionesUrl = process.env.EASYTACIONES_API_URL || 'http://localhost:8000';
+    const nowMs = Date.now();
+
+    // Filtrar automáticamente del catálogo local cualquier licitación cerrada o con fecha_cierre vencida
+    const openBaseCatalog = REAL_LICITACIONES.filter(lic =>
+      isTenderOpen(lic.fecha_cierre, lic.codigo_estado, nowMs)
+    );
+    const closedOmittedCount = REAL_LICITACIONES.length - openBaseCatalog.length;
 
     let mergedPool: LicitacionData[] = [];
     let engineType = 'hybrid-nlp-cache';
     let liveFetchedCount = 0;
-    let totalMercadoPublico = 5017;
+    let totalMercadoPublico = 5487;
     let ticketWarning: string | undefined;
 
-    // 1. Si hay ticket configurado, sincronizar licitaciones en vivo desde ChileCompra
+    // 1. Si hay ticket configurado, sincronizar licitaciones TI abiertas en vivo desde ChileCompra
     if (ticket && ticket.length > 5) {
       const liveRes = await getLiveActiveTenders(ticket, forceRefresh);
       if (liveRes.ticketInvalido) {
@@ -138,24 +144,28 @@ export const POST: APIRoute = async ({ request }) => {
         totalMercadoPublico = liveRes.totalCantidad || liveRes.tenders.length;
         engineType = liveRes.source === 'live' ? 'chilecompra-live-api' : 'chilecompra-live-cache';
 
-        // Indexar por código externo para unir el catálogo base con las nuevas en vivo
         const poolMap = new Map<string, LicitacionData>();
 
-        // Agregamos primero las licitaciones en vivo de hoy
         for (const liveLic of liveRes.tenders) {
-          poolMap.set(liveLic.codigo_externo.toLowerCase(), liveLic);
+          if (isTenderOpen(liveLic.fecha_cierre, liveLic.codigo_estado, nowMs)) {
+            poolMap.set(liveLic.codigo_externo.toLowerCase(), liveLic);
+          }
         }
 
-        // Combinamos con las 152 históricas (si ya existía, preservamos los detalles completos)
-        for (const baseLic of REAL_LICITACIONES) {
+        for (const baseLic of openBaseCatalog) {
           const key = baseLic.codigo_externo.toLowerCase();
           if (poolMap.has(key)) {
             const liveVer = poolMap.get(key)!;
-            poolMap.set(key, {
+            const merged = {
               ...baseLic,
               fecha_cierre: liveVer.fecha_cierre || baseLic.fecha_cierre,
               codigo_estado: liveVer.codigo_estado || baseLic.codigo_estado
-            });
+            };
+            if (isTenderOpen(merged.fecha_cierre, merged.codigo_estado, nowMs)) {
+              poolMap.set(key, merged);
+            } else {
+              poolMap.delete(key);
+            }
           } else {
             poolMap.set(key, baseLic);
           }
@@ -165,10 +175,13 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 2. Si no hay ticket o falló la red, usar el catálogo base de 152 licitaciones
+    // 2. Si no hay ticket o falló la red, usar exclusivamente las licitaciones vigentes del catálogo base
     if (mergedPool.length === 0) {
-      mergedPool = [...REAL_LICITACIONES];
+      mergedPool = [...openBaseCatalog];
     }
+
+    // Filtro final de seguridad: cero licitaciones cerradas o vencidas
+    mergedPool = mergedPool.filter(lic => isTenderOpen(lic.fecha_cierre, lic.codigo_estado, nowMs));
 
     // 3. Si el microservicio Python está activo localmente, intentar usarlo para embeddings semánticos
     if (!forceRefresh) {
@@ -200,7 +213,7 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // 4. Calcular scores heurísticos sobre el pool consolidado
+    // 4. Calcular scores heurísticos sobre el pool consolidado de licitaciones 100% vigentes
     const scored = mergedPool.map(lic => ({
       ...lic,
       score_percentage: query ? calculateRelevanceScore(query, lic) : (lic.score_percentage || 50)
@@ -221,8 +234,9 @@ export const POST: APIRoute = async ({ request }) => {
         min_score_percentage: minScore,
         total_encontradas: results.length,
         total_mercado_publico: totalMercadoPublico,
+        total_ti: mergedPool.length,
         total_en_vivo: liveFetchedCount,
-        total_ti_historicas: REAL_LICITACIONES.length,
+        total_cerradas_omitidas: closedOmittedCount,
         tiempo_procesamiento_ms: durationMs,
         motor: engineType,
         ticket_activo: Boolean(ticket),

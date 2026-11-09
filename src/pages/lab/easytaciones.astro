@@ -316,12 +316,27 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       <!-- LISTADO DE LICITACIONES -->
       <section class="space-y-4">
         
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
-            <span>Licitaciones Reales del Estado</span>
-            <span id="resultsCountBadge" class="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">0</span>
-          </h3>
-          <span class="text-xs font-mono text-slate-400">Enlace directo a ficha ChileCompra</span>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <h3 class="text-lg font-bold font-display text-white flex items-center gap-2">
+              <span>Licitaciones Vigentes del Estado</span>
+              <span id="resultsCountBadge" class="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">0</span>
+            </h3>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+              ✓ Cerradas filtradas automáticamente
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              id="btnRestoreDismissed"
+              class="hidden px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[11px] font-mono text-amber-300 transition-colors cursor-pointer"
+            >
+              ↺ Restaurar quitadas (<span id="dismissedCountLabel">0</span>)
+            </button>
+            <span class="text-xs font-mono text-slate-400">Enlace directo a ficha ChileCompra</span>
+          </div>
         </div>
 
         <!-- Estado de Carga (Skeleton) -->
@@ -864,6 +879,45 @@ const pageDescription = "Consola técnica interna para detección semántica, au
   let activeEffectivePresupuesto = 50000000;
   let activeBasesTexto = '';
   let activeBasesArchivos = [];
+  let dismissedCodes = new Set();
+
+  try {
+    const savedDismissed = localStorage.getItem('easytaciones_dismissed_codes');
+    if (savedDismissed) {
+      const arr = JSON.parse(savedDismissed);
+      if (Array.isArray(arr)) dismissedCodes = new Set(arr);
+    }
+  } catch {}
+
+  function saveDismissedCodes() {
+    try {
+      localStorage.setItem('easytaciones_dismissed_codes', JSON.stringify(Array.from(dismissedCodes)));
+    } catch {}
+    updateDismissedBadge();
+  }
+
+  function updateDismissedBadge() {
+    const btn = document.getElementById('btnRestoreDismissed');
+    const lbl = document.getElementById('dismissedCountLabel');
+    if (!btn || !lbl) return;
+    if (dismissedCodes.size > 0) {
+      lbl.textContent = String(dismissedCodes.size);
+      btn.classList.remove('hidden');
+    } else {
+      btn.classList.add('hidden');
+    }
+  }
+
+  function isClientTenderOpen(lic) {
+    if (!lic) return false;
+    if (dismissedCodes.has(lic.codigo_externo)) return false;
+    if (lic.codigo_estado !== undefined && Number(lic.codigo_estado) !== 5) return false;
+    if (lic.fecha_cierre) {
+      const closeMs = new Date(lic.fecha_cierre).getTime();
+      if (!Number.isNaN(closeMs) && closeMs <= Date.now()) return false;
+    }
+    return true;
+  }
 
   // Perfil inicial neutro en cliente (los datos reales se desencriptan en servidor sólo tras autenticar)
   let currentProfile = {
@@ -1056,7 +1110,8 @@ const pageDescription = "Consola técnica interna para detección semántica, au
       skeleton.classList.add('hidden');
 
       if (data.success && Array.isArray(data.licitaciones)) {
-        currentTenders = data.licitaciones;
+        currentTenders = data.licitaciones.filter(isClientTenderOpen);
+        updateDismissedBadge();
 
         const totalMP = document.getElementById('kpiTotalMP');
         const totalTI = document.getElementById('kpiTotalTI');
@@ -1138,7 +1193,9 @@ const pageDescription = "Consola técnica interna para detección semántica, au
     const minScore = parseFloat(slider.value) || 0;
     const sortBy = sortSelect ? sortSelect.value : 'score_desc';
 
+    currentTenders = currentTenders.filter(isClientTenderOpen);
     let list = currentTenders.filter(t => {
+      if (!isClientTenderOpen(t)) return false;
       const score = t.score_percentage || 0;
       if (score < minScore) return false;
       if (activeCategory !== 'all') {
@@ -1212,8 +1269,16 @@ const pageDescription = "Consola técnica interna para detección semántica, au
               </a>
             </div>
 
-            <div class="flex items-center gap-3 text-xs font-mono text-slate-400">
-              <span>Cierre: <strong class="text-slate-200">${fechaCierre}</strong></span>
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span>⏳ Cierre: <strong class="text-slate-200">${fechaCierre}</strong></span>
+              <button
+                type="button"
+                data-dismiss-codigo="${lic.codigo_externo}"
+                class="btn-dismiss-tender px-2 py-1 rounded-md bg-canvas hover:bg-rose-950/60 border border-canvas-border hover:border-rose-500/40 text-slate-400 hover:text-rose-300 text-[11px] transition-colors cursor-pointer"
+                title="Quitar esta licitación de la vista"
+              >
+                ✕ Quitar
+              </button>
             </div>
           </div>
 
@@ -1279,6 +1344,31 @@ const pageDescription = "Consola técnica interna para detección semántica, au
         if (tender) openEvaluationSuite(tender, null, false);
       });
     });
+
+    document.querySelectorAll('.btn-dismiss-tender').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const codigo = e.currentTarget.getAttribute('data-dismiss-codigo');
+        if (!codigo) return;
+        dismissedCodes.add(codigo);
+        saveDismissedCodes();
+        currentTenders = currentTenders.filter(t => t.codigo_externo !== codigo);
+        const totalTI = document.getElementById('kpiTotalTI');
+        const heroTiCount = document.getElementById('heroTiCount');
+        if (totalTI) totalTI.textContent = String(currentTenders.length);
+        if (heroTiCount) heroTiCount.textContent = `${currentTenders.length} licitaciones informáticas reales`;
+        updateCategoryPillCounts();
+        renderTenders();
+      });
+    });
+  }
+
+  const btnRestoreDismissed = document.getElementById('btnRestoreDismissed');
+  if (btnRestoreDismissed) {
+    btnRestoreDismissed.addEventListener('click', () => {
+      dismissedCodes.clear();
+      saveDismissedCodes();
+      runSearch();
+    });
   }
 
   // 5. Suite de Auditoría & Win Probability
@@ -1312,6 +1402,7 @@ const pageDescription = "Consola técnica interna para detección semántica, au
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           codigo_externo: lic.codigo_externo,
+          licitacion: lic,
           perfil: currentProfile,
           monto_ofertado_clp: customOferta,
           bases_texto: activeBasesTexto || undefined,
