@@ -52,7 +52,7 @@ const REAL_LICITACIONES: LicitacionData[] = realTendersData as LicitacionData[];
  */
 function calculateRelevanceScore(query: string, lic: LicitacionData): number {
   if (!query || !query.trim()) {
-    return lic.score_percentage || 50.0;
+    return Math.max(65.0, lic.score_percentage || 72.0);
   }
 
   const normalize = (t: string) =>
@@ -65,7 +65,7 @@ function calculateRelevanceScore(query: string, lic: LicitacionData): number {
       .filter(w => w.length > 2);
 
   const queryTokens = normalize(query);
-  if (queryTokens.length === 0) return lic.score_percentage || 50.0;
+  if (queryTokens.length === 0) return Math.max(65.0, lic.score_percentage || 72.0);
 
   const targetText = [
     lic.nombre,
@@ -90,7 +90,7 @@ function calculateRelevanceScore(query: string, lic: LicitacionData): number {
     }
   }
 
-  const ratio = matched / queryTokens.length;
+  const ratio = Math.min(1.0, matched / Math.min(queryTokens.length, 3.0));
   const computed = Math.round((ratio * 65 + 30) * 10) / 10;
   return Math.min(98.5, Math.max(12.0, computed));
 }
@@ -216,7 +216,7 @@ export const POST: APIRoute = async ({ request }) => {
     // 4. Calcular scores heurísticos sobre el pool consolidado de licitaciones 100% vigentes
     const scored = mergedPool.map(lic => ({
       ...lic,
-      score_percentage: query ? calculateRelevanceScore(query, lic) : (lic.score_percentage || 50)
+      score_percentage: calculateRelevanceScore(query, lic)
     }));
 
     const results = scored
