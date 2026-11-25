@@ -221,6 +221,94 @@ if (/\bfa-solid\b/.test(renderedContent)) {
         ></div>
       </div>
 
+      <section id="estudia-survey-banner" class="estudia-survey-banner no-print" aria-label="Encuesta abierta de estudIA">
+        <div class="estudia-survey-bar">
+          <div class="estudia-survey-copy">
+            <Icon name="chat-square-text" class="w-4 h-4 text-telemetry shrink-0" />
+            <p class="estudia-survey-lead">
+              <strong>¿Probaste estudIA?</strong> Cuéntame qué te pareció, qué mejorarías o si viste algún error.
+            </p>
+          </div>
+          <div class="estudia-survey-actions">
+            <button
+              type="button"
+              id="estudia-survey-toggle"
+              class="estudia-survey-toggle"
+              aria-expanded="false"
+              aria-controls="estudia-survey-panel"
+            >
+              Responder encuesta
+            </button>
+            <button
+              type="button"
+              id="estudia-survey-dismiss"
+              class="estudia-survey-dismiss"
+              aria-label="Ocultar banner de encuesta"
+            >
+              <Icon name="x-lg" class="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+
+        <div id="estudia-survey-panel" class="estudia-survey-panel" hidden>
+          <form id="estudia-survey-form" class="estudia-survey-form" action="/api/contact" method="post" novalidate>
+            <input type="text" name="botcheck" tabindex="-1" autocomplete="off" class="sr-only" aria-hidden="true" />
+            <div class="estudia-survey-grid">
+              <div class="estudia-survey-field">
+                <label for="estudia-survey-name" class="estudia-survey-label">Nombre</label>
+                <input
+                  id="estudia-survey-name"
+                  name="name"
+                  type="text"
+                  class="estudia-survey-input"
+                  required
+                  minlength="2"
+                  maxlength="100"
+                  autocomplete="name"
+                  placeholder="Tu nombre"
+                />
+              </div>
+              <div class="estudia-survey-field">
+                <label for="estudia-survey-email" class="estudia-survey-label">Correo</label>
+                <input
+                  id="estudia-survey-email"
+                  name="email"
+                  type="email"
+                  class="estudia-survey-input"
+                  required
+                  maxlength="150"
+                  autocomplete="email"
+                  placeholder="tu@correo.cl"
+                />
+              </div>
+            </div>
+            <div class="estudia-survey-field">
+              <label for="estudia-survey-message" class="estudia-survey-label">Comentario abierto</label>
+              <textarea
+                id="estudia-survey-message"
+                name="message"
+                rows="3"
+                class="estudia-survey-textarea"
+                required
+                minlength="5"
+                maxlength="4000"
+                placeholder="Escribe libremente: qué te sirvió más, si encontraste algún error en fórmulas/torpedos o qué otro ramo te gustaría ver..."
+              ></textarea>
+            </div>
+            <div class="estudia-survey-footer">
+              <p class="estudia-survey-privacy">
+                Solo se guardan tu nombre, correo y comentario para mejorar el portal (<a href="/privacidad" class="underline underline-offset-4 hover:text-white">privacidad</a>).
+              </p>
+              <button type="submit" id="estudia-survey-submit" class="estudia-survey-submit">
+                <Icon name="send" class="w-3.5 h-3.5" />
+                <span>Enviar respuesta</span>
+              </button>
+            </div>
+            <div id="estudia-survey-status" class="estudia-survey-status" role="status" aria-live="polite" hidden></div>
+          </form>
+        </div>
+      </section>
+
       <Fragment set:html={renderedContent} />
     </div>
   </main>

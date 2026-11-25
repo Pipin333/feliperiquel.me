@@ -40,10 +40,10 @@ const ContactSchema = z.object({
     .min(3, 'Por favor indica un asunto o motivo valido.')
     .max(150, 'Por favor indica un asunto o motivo valido.'),
   message: z
-    .string({ required_error: 'El mensaje debe contener entre 10 y 4000 caracteres.' })
+    .string({ required_error: 'El mensaje debe contener entre 5 y 4000 caracteres.' })
     .trim()
-    .min(10, 'El mensaje debe contener entre 10 y 4000 caracteres.')
-    .max(4000, 'El mensaje debe contener entre 10 y 4000 caracteres.'),
+    .min(5, 'El mensaje debe contener entre 5 y 4000 caracteres.')
+    .max(4000, 'El mensaje debe contener entre 5 y 4000 caracteres.'),
   botcheck: z.string().optional().default('')
 });
 
@@ -211,6 +211,7 @@ export const POST: APIRoute = async ({ request }) => {
     const escapedEmail = escapeHtml(sanitizedEmail);
     const escapedTopic = escapeHtml(sanitizedTopic);
     const escapedMessage = escapeHtml(sanitizedMessage);
+    const isEstudiaSurvey = sanitizedTopic.toLowerCase().includes('encuesta estudia');
 
     // 5. Environment variables
     const supabaseUrl = import.meta.env.SUPABASE_URL || process.env.SUPABASE_URL;
@@ -394,7 +395,9 @@ ${escapedMessage}
         const isNiIdea = sanitizedTopic.toLowerCase().includes('ni idea');
         const autoReplySubject = isNiIdea
           ? '🎟️ Tu pase de acceso para la primera partida de Ni Idea'
-          : 'Mensaje recibido [ACK] | Felipe Riquelme';
+          : isEstudiaSurvey
+            ? 'Gracias por tu feedback sobre estudIA | Felipe Riquelme'
+            : 'Mensaje recibido [ACK] | Felipe Riquelme';
 
         const greetingName = isNiIdea && (sanitizedName === 'Reserva Beta Ni Idea' || sanitizedName.toLowerCase().includes('reserva'))
           ? '¡Hola!'
@@ -531,6 +534,57 @@ ${escapedMessage}
               </table>
             </div>
           `
+          : isEstudiaSurvey
+            ? `
+            <div style="background-color: #05070B; padding: 32px 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
+              <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #090D17; border: 1px solid #1B2338; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+                <tr>
+                  <td style="background-color: #07090E; padding: 12px 18px; border-bottom: 1px solid #1B2338;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td align="left" style="font-family: 'Fira Code', monospace; font-size: 11px; color: #00D2FF; font-weight: 700;">
+                          estudIA // FEEDBACK
+                        </td>
+                        <td align="right" style="font-family: 'Fira Code', monospace; font-size: 10px; color: #34D399;">
+                          [REGISTRADO]
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 32px 26px;">
+                    <h1 style="color: #FFFFFF; font-size: 22px; font-weight: 700; margin: 0 0 16px 0; letter-spacing: -0.02em;">
+                      Gracias por tu comentario sobre estudIA
+                    </h1>
+                    <p style="color: #CBD5E1; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0;">
+                      Hola <strong style="color: #FFFFFF;">${escapedName}</strong>,
+                    </p>
+                    <p style="color: #94A3B8; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
+                      Tu opinión quedó guardada correctamente. Me sirve un montón para detectar errores, priorizar nuevos ramos y pulir los simuladores.
+                    </p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color: #07090E; border: 1px solid #1B2338; border-left: 3px solid #00D2FF; border-radius: 6px; margin-bottom: 24px;">
+                      <tr>
+                        <td style="padding: 14px 16px; font-family: 'Fira Code', monospace; font-size: 12px; color: #94A3B8; line-height: 1.7;">
+                          <div style="color: #00D2FF; font-weight: 700;">[RESUMEN RECIBIDO]</div>
+                          <div>Contexto: ${escapedTopic}</div>
+                          <div>Timestamp UTC: ${new Date().toISOString()}</div>
+                        </td>
+                      </tr>
+                    </table>
+                    <div style="margin-bottom: 24px;">
+                      <a href="https://feliperiquel.me/lab/estudia" target="_blank" style="display: inline-block; background-color: #00D2FF; color: #05070B; font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 700; padding: 10px 18px; border-radius: 6px; text-decoration: none;">
+                        Volver a estudIA &rarr;
+                      </a>
+                    </div>
+                    <div style="border-top: 1px solid #1B2338; padding-top: 16px; font-family: 'Fira Code', monospace; font-size: 11px; color: #64748B;">
+                      Felipe Riquelme &bull; <a href="https://feliperiquel.me" style="color: #64748B; text-decoration: none;">feliperiquel.me</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          `
           : `
             <div style="background-color: #05070B; padding: 32px 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Fira Code', monospace, sans-serif;">
               <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #090D17; border: 1px solid #1B2338; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
@@ -663,7 +717,9 @@ ${escapedMessage}
     return new Response(
       JSON.stringify({
         success: true,
-        message: '¡Mensaje recibido con exito! Se ha registrado y te responderemos a la brevedad.',
+        message: isEstudiaSurvey
+          ? '¡Gracias por tu comentario! Quedó registrado para seguir mejorando estudIA.'
+          : '¡Mensaje recibido con exito! Se ha registrado y te responderemos a la brevedad.',
         details: {
           persisted: dbSaved,
           notified: notificationSent,

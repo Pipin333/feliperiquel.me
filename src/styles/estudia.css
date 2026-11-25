@@ -1129,6 +1129,239 @@
   text-align: center;
 }
 
+.estudia-app .estudia-survey-banner {
+  margin-bottom: 1.5rem;
+  background: rgba(15, 20, 32, 0.92);
+  border: 1px solid rgba(0, 210, 255, 0.28);
+  border-left: 3px solid var(--primary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.estudia-app .estudia-survey-banner[hidden] {
+  display: none;
+}
+
+.estudia-app .estudia-survey-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+.estudia-app .estudia-survey-copy {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1 1 260px;
+}
+
+.estudia-app .estudia-survey-lead {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.estudia-app .estudia-survey-lead strong {
+  color: var(--text-main);
+}
+
+.estudia-app .estudia-survey-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.estudia-app .estudia-survey-toggle {
+  background: rgba(0, 210, 255, 0.14);
+  border: 1px solid rgba(0, 210, 255, 0.45);
+  color: #67e8f9;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.estudia-app .estudia-survey-toggle:hover,
+.estudia-app .estudia-survey-toggle[aria-expanded='true'] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-accent);
+}
+
+.estudia-app .estudia-survey-dismiss {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.estudia-app .estudia-survey-dismiss:hover {
+  border-color: var(--danger);
+  color: var(--text-main);
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.estudia-app .estudia-survey-panel {
+  border-top: 1px solid var(--border-card);
+  padding: 1rem;
+  background: rgba(7, 9, 14, 0.65);
+}
+
+.estudia-app .estudia-survey-panel[hidden] {
+  display: none;
+}
+
+.estudia-app .estudia-survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.estudia-app .estudia-survey-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .estudia-app .estudia-survey-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.estudia-app .estudia-survey-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.estudia-app .estudia-survey-label {
+  font-family: 'Fira Code', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.estudia-app .estudia-survey-input,
+.estudia-app .estudia-survey-textarea {
+  width: 100%;
+  min-width: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  font-family: inherit;
+  transition: border-color 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.estudia-app .estudia-survey-textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.estudia-app .estudia-survey-input:focus-visible,
+.estudia-app .estudia-survey-textarea:focus-visible,
+.estudia-app .estudia-survey-toggle:focus-visible,
+.estudia-app .estudia-survey-dismiss:focus-visible,
+.estudia-app .estudia-survey-submit:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.estudia-app .estudia-survey-input::placeholder,
+.estudia-app .estudia-survey-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.estudia-app .estudia-survey-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.estudia-app .estudia-survey-privacy {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.estudia-app .estudia-survey-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--on-accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.estudia-app .estudia-survey-submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.estudia-app .estudia-survey-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.estudia-app .estudia-survey-status {
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  border: 1px solid var(--border-card);
+  background: rgba(15, 20, 32, 0.85);
+  color: var(--text-main);
+}
+
+.estudia-app .estudia-survey-status[hidden] {
+  display: none;
+}
+
+.estudia-app .estudia-survey-status.is-success {
+  border-color: rgba(52, 211, 153, 0.45);
+  background: rgba(52, 211, 153, 0.12);
+  color: #6ee7b7;
+}
+
+.estudia-app .estudia-survey-status.is-error {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5;
+}
+
 .estudia-app .estudia-jump-highlight {
   border-color: var(--primary) !important;
   box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.35);
@@ -1329,7 +1562,12 @@
   .estudia-app .quiz-opt,
   .estudia-app .estudia-search-field,
   .estudia-app .estudia-search-clear,
-  .estudia-app .estudia-search-item {
+  .estudia-app .estudia-search-item,
+  .estudia-app .estudia-survey-toggle,
+  .estudia-app .estudia-survey-dismiss,
+  .estudia-app .estudia-survey-input,
+  .estudia-app .estudia-survey-textarea,
+  .estudia-app .estudia-survey-submit {
     transition: none !important;
   }
 }
@@ -1352,6 +1590,7 @@
   body:has(.estudia-app) .estudia-nav-bar,
   body:has(.estudia-app) .estudia-search-shell,
   body:has(.estudia-app) .estudia-search-results,
+  body:has(.estudia-app) .estudia-survey-banner,
   body:has(.estudia-app) .quiz-mode-banner,
   body:has(.estudia-app) .sub-nav,
   .estudia-app button,

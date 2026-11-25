@@ -2643,6 +2643,176 @@ function scrollToEstudiaTop(root: HTMLElement): void {
   root.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
 }
 
+const SURVEY_DISMISSED_KEY = 'estudia_survey_dismissed_v1';
+
+interface SurveyApiResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
+/** Wires the expandable open-ended feedback survey banner to /api/contact. */
+function setupSurveyBanner(root: HTMLElement): void {
+  const banner = getScopedEl<HTMLElement>(root, 'estudia-survey-banner');
+  const toggleBtn = getScopedEl<HTMLButtonElement>(root, 'estudia-survey-toggle');
+  const dismissBtn = getScopedEl<HTMLButtonElement>(root, 'estudia-survey-dismiss');
+  const panel = getScopedEl<HTMLElement>(root, 'estudia-survey-panel');
+  const form = getScopedEl<HTMLFormElement>(root, 'estudia-survey-form');
+  const nameInput = getScopedEl<HTMLInputElement>(root, 'estudia-survey-name');
+  const emailInput = getScopedEl<HTMLInputElement>(root, 'estudia-survey-email');
+  const messageInput = getScopedEl<HTMLTextAreaElement>(root, 'estudia-survey-message');
+  const submitBtn = getScopedEl<HTMLButtonElement>(root, 'estudia-survey-submit');
+  const statusEl = getScopedEl<HTMLElement>(root, 'estudia-survey-status');
+
+  if (
+    !banner ||
+    !toggleBtn ||
+    !dismissBtn ||
+    !panel ||
+    !form ||
+    !nameInput ||
+    !emailInput ||
+    !messageInput ||
+    !submitBtn ||
+    !statusEl
+  ) {
+    return;
+  }
+
+  try {
+    if (window.sessionStorage.getItem(SURVEY_DISMISSED_KEY) === '1') {
+      banner.hidden = true;
+      return;
+    }
+  } catch {
+    // Session storage may be unavailable in restricted contexts.
+  }
+
+  const botcheckInput = form.querySelector<HTMLInputElement>('input[name="botcheck"]');
+  const submitLabel = submitBtn.querySelector('span');
+  let hasSubmitted = false;
+
+  function setExpanded(expanded: boolean): void {
+    panel!.hidden = !expanded;
+    toggleBtn!.setAttribute('aria-expanded', String(expanded));
+    toggleBtn!.textContent = expanded
+      ? 'Cerrar'
+      : hasSubmitted
+        ? 'Enviar otro comentario'
+        : 'Responder encuesta';
+  }
+
+  function showStatus(kind: 'loading' | 'success' | 'error', text: string): void {
+    statusEl!.classList.remove('is-loading', 'is-success', 'is-error');
+    statusEl!.classList.add(`is-${kind}`);
+    statusEl!.textContent = text;
+    statusEl!.hidden = false;
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const nextExpanded = panel.hidden;
+    setExpanded(nextExpanded);
+    if (nextExpanded) {
+      if (hasSubmitted) statusEl.hidden = true;
+      nameInput.focus();
+    }
+  });
+
+  dismissBtn.addEventListener('click', () => {
+    banner.hidden = true;
+    try {
+      window.sessionStorage.setItem(SURVEY_DISMISSED_KEY, '1');
+    } catch {
+      // Ignore storage errors on dismiss.
+    }
+  });
+
+  panel.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setExpanded(false);
+      toggleBtn.focus();
+    }
+  });
+
+  form.addEventListener('submit', async (event: SubmitEvent) => {
+    event.preventDefault();
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+    const botcheck = botcheckInput?.value ?? '';
+
+    if (name.length < 2) {
+      showStatus('error', 'Ingresa tu nombre (al menos 2 caracteres).');
+      nameInput.focus();
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showStatus('error', 'Ingresa un correo electrónico válido.');
+      emailInput.focus();
+      return;
+    }
+
+    if (message.length < 5) {
+      showStatus('error', 'Escribe un comentario breve (al menos 5 caracteres).');
+      messageInput.focus();
+      return;
+    }
+
+    submitBtn.disabled = true;
+    if (submitLabel) submitLabel.textContent = 'Enviando...';
+    showStatus('loading', 'Enviando tu respuesta...');
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          topic: `Encuesta estudIA (${getCurrentDomRoute(root).hash})`,
+          message,
+          botcheck
+        })
+      });
+
+      const contentType = response.headers.get('content-type') || '';
+      let data: SurveyApiResponse = {};
+      if (contentType.includes('application/json')) {
+        const parsed: unknown = await response.json();
+        if (typeof parsed === 'object' && parsed !== null) {
+          data = parsed as SurveyApiResponse;
+        }
+      } else {
+        const rawText = await response.text();
+        data = { error: rawText || 'Respuesta no válida del servidor.' };
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'No se pudo enviar tu respuesta. Intenta nuevamente.');
+      }
+
+      hasSubmitted = true;
+      showStatus('success', data.message || '¡Gracias por tu comentario! Quedó registrado.');
+      form.reset();
+      toggleBtn.textContent = 'Cerrar';
+    } catch (err: unknown) {
+      const errMsg =
+        err instanceof Error && err.message
+          ? err.message
+          : 'No se pudo enviar tu respuesta. Intenta nuevamente.';
+      showStatus('error', errMsg);
+    } finally {
+      submitBtn.disabled = false;
+      if (submitLabel) submitLabel.textContent = 'Enviar respuesta';
+    }
+  });
+}
+
 /** Initializes the estudIA hub inside #estudia-root with idempotent event delegation. */
 export function initEstudia(): void {
   const root = document.getElementById('estudia-root');
@@ -2650,6 +2820,7 @@ export function initEstudia(): void {
   root.dataset.initialized = 'true';
 
   setupGlobalSearch(root);
+  setupSurveyBanner(root);
 
   root.addEventListener('click', (event: MouseEvent) => {
     const target = event.target;
