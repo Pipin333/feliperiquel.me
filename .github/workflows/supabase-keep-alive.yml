@@ -6,6 +6,8 @@ on:
     - cron: '0 4 */3 * *'
   workflow_dispatch: # Permite ejecución manual desde la pestaña Actions de GitHub
 
+permissions: {}
+
 jobs:
   keep-alive:
     name: Ping Supabase REST API
@@ -16,24 +18,90 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+          set -euo pipefail
+
+          CLEAN_URL="${SUPABASE_URL:-}"
+          CLEAN_URL="${CLEAN_URL//[[:space:]]/}"
+          CLEAN_URL="${CLEAN_URL%/}"
+          CLEAN_KEY="${SUPABASE_KEY:-}"
+          CLEAN_KEY="${CLEAN_KEY//[[:space:]]/}"
+
+          if [ -z "$CLEAN_URL" ] || [ -z "$CLEAN_KEY" ]; then
             echo "::error::Faltan los secretos SUPABASE_URL o SUPABASE_KEY en GitHub Secrets."
             exit 1
           fi
 
-          echo "Enviando ping de actividad a Supabase..."
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "apikey: $SUPABASE_KEY" \
-            -H "Authorization: Bearer $SUPABASE_KEY" \
-            "$SUPABASE_URL/rest/v1/")
-
-          echo "Código HTTP recibido: $HTTP_STATUS"
-
-          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 400 ]; then
-            echo "✅ Supabase está activo y respondió correctamente. Ping registrado."
-          elif [ "$HTTP_STATUS" -eq 521 ]; then
-            echo "::warning::El proyecto está pausado (HTTP 521). Debes reactivarlo manualmente desde supabase.com/dashboard."
+          if [[ ! "$CLEAN_URL" =~ ^https?:// ]]; then
+            echo "::error::SUPABASE_URL debe comenzar con https:// (o http://)."
             exit 1
-          else
-            echo "::warning::Respuesta inesperada ($HTTP_STATUS), pero la solicitud fue procesada por el gateway."
           fi
+
+          ENDPOINT="${CLEAN_URL}/rest/v1/contact_messages?select=id&limit=1"
+          STRATEGIES=("system" "https://1.1.1.1/dns-query" "https://8.8.8.8/dns-query")
+          LAST_EXIT=0
+          LAST_HTTP="000"
+
+          for STRATEGY in "${STRATEGIES[@]}"; do
+            CURL_ARGS=(
+              -4
+              -s
+              -o /dev/null
+              -w "%{http_code}"
+              --connect-timeout 15
+              --max-time 30
+              -H "apikey: ${CLEAN_KEY}"
+              -H "Authorization: Bearer ${CLEAN_KEY}"
+            )
+
+            if [ "$STRATEGY" != "system" ]; then
+              CURL_ARGS+=(--doh-url "$STRATEGY")
+            fi
+
+            echo "Enviando consulta keep-alive a public.contact_messages (DNS: ${STRATEGY})..."
+            CURL_EXIT=0
+            HTTP_STATUS=$(curl "${CURL_ARGS[@]}" "$ENDPOINT") || CURL_EXIT=$?
+            HTTP_STATUS="${HTTP_STATUS:-000}"
+
+            LAST_EXIT="$CURL_EXIT"
+            LAST_HTTP="$HTTP_STATUS"
+
+            if [ "$CURL_EXIT" -eq 0 ] && [[ "$HTTP_STATUS" =~ ^[0-9]+$ ]]; then
+              echo "Código HTTP recibido (DNS: ${STRATEGY}): ${HTTP_STATUS}"
+
+              if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+                echo "Supabase está activo y respondió HTTP ${HTTP_STATUS} a la consulta SQL."
+                exit 0
+              fi
+
+              if [ "$HTTP_STATUS" -eq 401 ] || [ "$HTTP_STATUS" -eq 403 ]; then
+                echo "::error::Acceso denegado (HTTP ${HTTP_STATUS}). Verifica el secreto SUPABASE_KEY en GitHub Secrets."
+                exit 1
+              fi
+
+              if [ "$HTTP_STATUS" -eq 521 ] || [ "$HTTP_STATUS" -eq 522 ] || [ "$HTTP_STATUS" -eq 523 ] || [ "$HTTP_STATUS" -eq 530 ]; then
+                echo "::warning::Respuesta HTTP ${HTTP_STATUS} vía ${STRATEGY}; reintentando con siguiente estrategia..."
+              else
+                echo "::warning::Respuesta inesperada HTTP ${HTTP_STATUS} vía ${STRATEGY}; reintentando..."
+              fi
+            else
+              echo "::warning::Fallo de curl (exit ${CURL_EXIT}) usando DNS ${STRATEGY}; reintentando..."
+            fi
+          done
+
+          if [ "$LAST_EXIT" -eq 6 ]; then
+            echo "::error::No se pudo resolver el host de SUPABASE_URL tras reintentar con DNS del sistema y DoH 1.1.1.1 / 8.8.8.8 (curl exit 6). Verifica el secreto SUPABASE_URL o si el proyecto fue eliminado."
+            exit 6
+          fi
+
+          if [ "$LAST_EXIT" -ne 0 ]; then
+            echo "::error::Error de red al conectar con Supabase tras todos los reintentos (curl exit ${LAST_EXIT})."
+            exit "$LAST_EXIT"
+          fi
+
+          if [ "$LAST_HTTP" -eq 521 ] || [ "$LAST_HTTP" -eq 522 ] || [ "$LAST_HTTP" -eq 523 ] || [ "$LAST_HTTP" -eq 530 ]; then
+            echo "::error::El proyecto Supabase parece pausado o inalcanzable (HTTP ${LAST_HTTP}). Reactívalo desde supabase.com/dashboard."
+            exit 1
+          fi
+
+          echo "::error::Supabase no devolvió 2xx tras todos los reintentos (último HTTP ${LAST_HTTP})."
+          exit 1
