@@ -1,4 +1,11 @@
+import { navigate, transitionEnabledOnThisPage } from 'astro:transitions/client';
 import renderMathInElement from 'katex/contrib/auto-render';
+import {
+  type EstudiaRoute,
+  isSameEstudiaRoute,
+  resolveEstudiaHash,
+  routeForView
+} from './estudia-router';
 import {
   type BstNode,
   type DijkstraStep,
@@ -1073,48 +1080,125 @@ function renderMath(element: HTMLElement): void {
   });
 }
 
-/** Switches the active top-level course tab inside estudIA. */
-function switchTab(root: HTMLElement, tabId: string): void {
+function getCurrentDomRoute(root: HTMLElement): EstudiaRoute {
+  const activeTab = root.querySelector<HTMLElement>('.tab-content.active');
+  const tabId = activeTab?.id ?? 'tab-home';
+  if (tabId === 'tab-home') {
+    return routeForView('tab-home');
+  }
+  const activeSub = activeTab?.querySelector<HTMLElement>('.sub-panel.active');
+  return routeForView(tabId, activeSub?.id ?? null);
+}
+
+function getPreferredCourseSubId(root: HTMLElement, tabId: string): string | null {
+  const tabEl = getScopedEl<HTMLElement>(root, tabId);
+  if (!tabEl) return null;
+  return tabEl.querySelector<HTMLElement>('.sub-panel.active')?.id ?? null;
+}
+
+/** Applies the visual state and document title for a resolved estudIA route without mutating history. */
+function applyEstudiaRoute(root: HTMLElement, route: EstudiaRoute): void {
+  const alreadyActive = isSameEstudiaRoute(getCurrentDomRoute(root), route);
+
   root.querySelectorAll<HTMLButtonElement>('.nav-btn').forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.tab === tabId);
+    const isActive = btn.dataset.tab === route.tabId;
+    btn.classList.toggle('active', isActive);
+    if (isActive) {
+      btn.setAttribute('aria-current', 'page');
+    } else {
+      btn.removeAttribute('aria-current');
+    }
   });
+
   root.querySelectorAll<HTMLElement>('.tab-content').forEach((section) => {
-    section.classList.remove('active');
+    section.classList.toggle('active', section.id === route.tabId);
   });
-  const target = getScopedEl<HTMLElement>(root, tabId);
-  if (!target) return;
-  target.classList.add('active');
-  renderMath(target);
-}
 
-/** Switches the active sub-panel within a course section. */
-function switchSub(parentEl: HTMLElement, subId: string, btnEl: HTMLButtonElement): void {
-  parentEl.querySelectorAll<HTMLButtonElement>('.sub-btn').forEach((btn) => {
-    btn.classList.remove('active');
-  });
-  btnEl.classList.add('active');
-  parentEl.querySelectorAll<HTMLElement>('.sub-panel').forEach((panel) => {
-    panel.classList.remove('active');
-  });
-  const target = parentEl.querySelector<HTMLElement>(`#${subId}`);
-  if (!target) return;
-  target.classList.add('active');
-  renderMath(target);
-}
+  const targetTab = getScopedEl<HTMLElement>(root, route.tabId);
+  let mathTarget: HTMLElement | null = targetTab;
 
-/** Navigates directly to a course tab and sub-panel from the overview cards or search. */
-function jumpTo(root: HTMLElement, tabId: string, subId: string): void {
-  switchTab(root, tabId);
-  const parent = getScopedEl<HTMLElement>(root, tabId);
-  if (!parent) return;
-  const btn = parent.querySelector<HTMLButtonElement>(`.sub-btn[data-sub-target="${subId}"]`);
-  if (btn) {
-    switchSub(parent, subId, btn);
+  if (targetTab && route.subId) {
+    targetTab.querySelectorAll<HTMLButtonElement>('.sub-btn[data-sub-target]').forEach((btn) => {
+      const isSubActive = btn.dataset.subTarget === route.subId;
+      btn.classList.toggle('active', isSubActive);
+      btn.setAttribute('aria-pressed', String(isSubActive));
+    });
+    targetTab.querySelectorAll<HTMLElement>('.sub-panel').forEach((panel) => {
+      panel.classList.toggle('active', panel.id === route.subId);
+    });
+    const targetSub = targetTab.querySelector<HTMLElement>(`#${route.subId}`);
+    if (targetSub) {
+      mathTarget = targetSub;
+    }
+  }
+
+  document.title = route.title;
+
+  if (!alreadyActive && mathTarget) {
+    renderMath(mathTarget);
   }
 }
 
+/** Navigates to an estudIA route, pushing a browser history entry when the fragment changes. */
+function navigateToEstudiaRoute(
+  root: HTMLElement,
+  route: EstudiaRoute,
+  options?: { scrollToTop?: boolean }
+): void {
+  const sameDomRoute = isSameEstudiaRoute(getCurrentDomRoute(root), route);
+  const hashMatches =
+    window.location.hash === route.hash ||
+    (route.tabId === 'tab-home' && window.location.hash === '');
+
+  if (sameDomRoute && hashMatches) {
+    if (options?.scrollToTop === true) {
+      scrollToEstudiaTop(root);
+    }
+    return;
+  }
+
+  // Push history before mutating scroll so Astro ClientRouter saves the outgoing scroll position.
+  if (window.location.hash !== route.hash) {
+    if (transitionEnabledOnThisPage()) {
+      void navigate(route.hash);
+    } else {
+      window.history.pushState(null, '', route.hash);
+    }
+  }
+
+  applyEstudiaRoute(root, route);
+
+  if (
+    options?.scrollToTop === true ||
+    (options?.scrollToTop !== false && root.getBoundingClientRect().top < 0)
+  ) {
+    scrollToEstudiaTop(root);
+  }
+}
+
+/** Switches the active top-level course tab inside estudIA and records browser history. */
+function switchTab(root: HTMLElement, tabId: string): void {
+  const subId = tabId === 'tab-home' ? null : getPreferredCourseSubId(root, tabId);
+  navigateToEstudiaRoute(root, routeForView(tabId, subId));
+}
+
+/** Switches the active sub-panel within a course section and records browser history. */
+function switchSub(root: HTMLElement, parentId: string, subId: string): void {
+  navigateToEstudiaRoute(root, routeForView(parentId, subId));
+}
+
+/** Navigates directly to a course tab and sub-panel from the overview cards or search. */
+function jumpTo(
+  root: HTMLElement,
+  tabId: string,
+  subId: string,
+  options?: { scrollToTop?: boolean }
+): void {
+  navigateToEstudiaRoute(root, routeForView(tabId, subId), options);
+}
+
 function printCourseTorpedo(root: HTMLElement, tabId: string, subId: string): void {
-  jumpTo(root, tabId, subId);
+  jumpTo(root, tabId, subId, { scrollToTop: false });
   requestAnimationFrame(() => window.print());
 }
 
@@ -2008,7 +2092,7 @@ function setupGlobalSearch(root: HTMLElement): void {
   let highlightTimer: number | null = null;
 
   function jumpToSearchResult(entry: SearchEntry): void {
-    jumpTo(root, entry.tabId, entry.subId);
+    jumpTo(root, entry.tabId, entry.subId, { scrollToTop: false });
     resultsEl!.hidden = true;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     requestAnimationFrame(() => {
@@ -2582,8 +2666,7 @@ export function initEstudia(): void {
       const tabId = jumpBtn.dataset.jumpTab;
       const subId = jumpBtn.dataset.jumpSub;
       if (tabId && subId) {
-        jumpTo(root, tabId, subId);
-        scrollToEstudiaTop(root);
+        jumpTo(root, tabId, subId, { scrollToTop: true });
       }
       return;
     }
@@ -2593,8 +2676,7 @@ export function initEstudia(): void {
       const parentId = subBtn.dataset.subParent;
       const subId = subBtn.dataset.subTarget;
       if (parentId && subId) {
-        const parentEl = getScopedEl<HTMLElement>(root, parentId);
-        if (parentEl) switchSub(parentEl, subId, subBtn);
+        switchSub(root, parentId, subId);
       }
       return;
     }
@@ -2689,7 +2771,36 @@ export function initEstudia(): void {
   updateMistakeControls(root, 'aed');
   updateMistakeControls(root, 'ada');
   updateMistakeControls(root, 'ia');
+  applyEstudiaRoute(root, resolveEstudiaHash(window.location.hash));
+}
+
+function readHistoryScroll(state: unknown): { x: number; y: number } | null {
+  if (typeof state !== 'object' || state === null) return null;
+  const candidate = state as { scrollX?: unknown; scrollY?: unknown };
+  if (typeof candidate.scrollY !== 'number' || !Number.isFinite(candidate.scrollY)) return null;
+  const x = typeof candidate.scrollX === 'number' && Number.isFinite(candidate.scrollX) ? candidate.scrollX : 0;
+  return { x, y: candidate.scrollY };
+}
+
+/** Synchronizes active view and optional scroll position on browser Back/Forward or hash changes. */
+function syncEstudiaFromLocation(restoreScroll: boolean): void {
+  const normalizedPath = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+  if (normalizedPath !== '/lab/estudia') return;
+
+  const root = document.getElementById('estudia-root');
+  if (!root || root.dataset.initialized !== 'true') return;
+
+  applyEstudiaRoute(root, resolveEstudiaHash(window.location.hash));
+
+  if (restoreScroll) {
+    const savedScroll = readHistoryScroll(window.history.state);
+    if (savedScroll) {
+      window.scrollTo({ left: savedScroll.x, top: savedScroll.y, behavior: 'instant' });
+    }
+  }
 }
 
 initEstudia();
 document.addEventListener('astro:page-load', initEstudia);
+window.addEventListener('popstate', () => syncEstudiaFromLocation(true));
+window.addEventListener('hashchange', () => syncEstudiaFromLocation(false));

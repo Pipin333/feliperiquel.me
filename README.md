@@ -163,6 +163,7 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   ├── layouts/
 │   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD (Person + WebSite) y enlace a llms.txt
 │   ├── scripts/
+│   │   ├── estudia-router.ts     # Enrutamiento por hash (#aed/torpedo, #ia/quiz) para historial del navegador
 │   │   ├── estudia-storage.ts    # Persistencia local de errores de cuestionario en localStorage
 │   │   ├── estudia-visuals.ts    # Renderizado SVG de ABO y tablas de matriz DP / traza Dijkstra
 │   │   ├── estudia.ts            # Controlador cliente de simuladores, búsqueda, KaTeX y quizzes
