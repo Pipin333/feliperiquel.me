@@ -18,6 +18,8 @@ El sitio integra un playground de micro-aplicaciones y experimentos que se ejecu
    - Optimizador logístico y presupuestario para eventos y juntas en Chile. Cálculo de destilados, cerveza, mixers y hielo con cuota por persona en \$ CLP y exportación formateada a WhatsApp.
 5. **Ni Idea (`/lab/quiz`):**
    - Motor de trivia interactiva en tiempo real sin anuncios ni paywalls con temporizador de cuenta regresiva, racha de puntos y generador de retos.
+6. **estudIA (`/lab/estudia`):**
+   - Hub interactivo de estudio para AED (`PTEC101`), ADA (`CINF101`) y Fundamentos de IA (`CINF103`). Reúne torpedos imprimibles de 2 planas en formato Carta con renderizado matemático **KaTeX** empaquetado localmente, buscador global de conceptos, 10 simuladores interactivos (con árbol SVG antes/después en ABO F3/F4, traza paso a paso de Dijkstra y matriz DP visible en LCS) y cuestionarios dinámicos con repaso de errores persistido en `localStorage`.
 
 ---
 
@@ -127,6 +129,7 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   ├── Footer.astro          # Navegación, políticas y enlaces de pie de página
 │   │   └── Icon.astro            # Renderizador en build-time de íconos SVG (Bootstrap Icons)
 │   ├── data/
+│   │   ├── estudia-content.html  # Contenido curricular y simuladores del hub estudIA
 │   │   ├── projects.ts           # Catálogo tipado de proyectos y casos de estudio
 │   │   └── tools.ts              # Catálogo tipado de herramientas y specs del Lab
 │   ├── pages/
@@ -151,6 +154,7 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │   └── lab/
 │   │       ├── index.astro       # Hub central del Laboratorio & Playground
 │   │       ├── easytaciones.astro# Consola privada unlisted (no-index) con autenticación por token
+│   │       ├── estudia.astro     # estudIA (Hub de estudio AED, ADA e IA con KaTeX local)
 │   │       ├── retorica.astro    # Transmutador ontológico de prosa técnica (Heurístico + BYOK)
 │   │       ├── copete.astro      # Cuánto Rinde (optimizador de insumos, repo: calculadoracopete)
 │   │       ├── quiz.astro        # Ni Idea Party Game (Teaser interactivo, blueprint y lista de espera VIP)
@@ -158,9 +162,19 @@ El repositorio utiliza una topología de ramas estructurada con integración en 
 │   │       └── sonicrip.astro    # SonicRip Studio (8-band EQ & batch yt-dlp)
 │   ├── layouts/
 │   │   └── Layout.astro          # SEO, OpenGraph, JSON-LD (Person + WebSite) y enlace a llms.txt
-│   └── styles/
-│       ├── fonts.css             # Declaraciones @font-face para fuentes locales
-│       └── global.css            # Tokens de diseño, tipografía fluida y animaciones
+│   ├── scripts/
+│   │   ├── estudia-storage.ts    # Persistencia local de errores de cuestionario en localStorage
+│   │   ├── estudia-visuals.ts    # Renderizado SVG de ABO y tablas de matriz DP / traza Dijkstra
+│   │   ├── estudia.ts            # Controlador cliente de simuladores, búsqueda, KaTeX y quizzes
+│   │   ├── contact-gateway.ts    # Lógica de formulario en /#contacto
+│   │   ├── spotlight.ts          # Controlador de foco interactivo del cursor
+│   │   └── work-showcase.ts      # Controlador del acordeón técnico de proyectos
+│   ├── styles/
+│   │   ├── estudia.css           # Sistema visual aislado y estilos de impresión Carta 2P
+│   │   ├── fonts.css             # Declaraciones @font-face para fuentes locales
+│   │   └── global.css            # Tokens de diseño, tipografía fluida y animaciones
+│   └── types/
+│       └── katex-auto-render.d.ts# Tipado TypeScript estricto para auto-render de KaTeX
 ├── docs/
 │   └── ni-idea/                  # Documentos directores congelados (BRIEF, BRAND y README)
 ├── scripts/

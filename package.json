@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "7.3.8",
+    "katex": "^0.19.1",
     "resend": "^6.34.1",
     "tailwindcss": "^4.0.0"
   },

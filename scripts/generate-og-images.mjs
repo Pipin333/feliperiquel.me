@@ -91,6 +91,26 @@ function renderDecorative(type, accent) {
           <line x1="865" y1="250" x2="825" y2="330" stroke="${accent}" stroke-width="2" />
         </g>
       `;
+    case 'estudia':
+      return `
+        <g opacity="0.25" stroke="${accent}" fill="none" stroke-width="1.5">
+          <line x1="950" y1="160" x2="865" y2="235" stroke="${accent}" stroke-width="2" />
+          <line x1="950" y1="160" x2="1035" y2="235" stroke="${accent}" stroke-width="2" />
+          <line x1="865" y1="235" x2="825" y2="310" stroke="${accent}" />
+          <line x1="865" y1="235" x2="905" y2="310" stroke="${accent}" />
+          <line x1="1035" y1="235" x2="995" y2="310" stroke="${accent}" />
+          <line x1="1035" y1="235" x2="1075" y2="310" stroke="${accent}" />
+          <circle cx="950" cy="160" r="18" stroke="${accent}" stroke-width="2" />
+          <circle cx="865" cy="235" r="14" stroke="${accent}" />
+          <circle cx="1035" cy="235" r="14" stroke="${accent}" />
+          <circle cx="825" cy="310" r="10" stroke="${accent}" />
+          <circle cx="905" cy="310" r="10" stroke="${accent}" />
+          <circle cx="995" cy="310" r="10" stroke="${accent}" />
+          <circle cx="1075" cy="310" r="10" stroke="${accent}" />
+          <path d="M 800 420 Q 920 400 1090 325" stroke="#00F0FF" stroke-width="2.5" />
+          <circle cx="1090" cy="325" r="5" fill="#00F0FF" />
+        </g>
+      `;
     case 'proyectos':
       return `
         <g opacity="0.25" stroke="${accent}" fill="none" stroke-width="1.5">
@@ -308,10 +328,10 @@ const configs = [
     kicker: 'EL LABORATORIO (/LAB)',
     title: 'Suite de Herramientas Web',
     subtitleLines: [
-      'Catálogo de 5 micro-aplicaciones cliente en tiempo real. Procesamiento DSP,',
-      'transmutación lingüística, optimización de eventos, party games y finanzas PWA.'
+      'Catálogo de 6 micro-aplicaciones cliente en tiempo real. Procesamiento DSP,',
+      'transmutación lingüística, logística de eventos, party games, finanzas y estudio.'
     ],
-    tags: ['SonicRip', 'Retórica', 'Cuánto Rinde', 'Ni Idea', 'FinFlow'],
+    tags: ['SonicRip', 'Retórica', 'FinFlow', 'Ni Idea', 'estudIA'],
     decorativeType: 'lab'
   },
   {
@@ -383,6 +403,20 @@ const configs = [
     ],
     tags: ['React 19', 'PWA Offline-First', 'Canvas Compression', 'LocalStorage Privado'],
     decorativeType: 'finflow'
+  },
+  {
+    filename: 'og-estudia.png',
+    badge: 'HUB DE ESTUDIO & SIMULADORES',
+    accent: '#818CF8',
+    accentDim: 'rgba(129, 140, 248, 0.12)',
+    kicker: 'ALGORITMIA, ESTRUCTURAS DE DATOS E IA',
+    title: 'estudIA',
+    subtitleLines: [
+      'Torpedos imprimibles en 2 planas con KaTeX local, 10 simuladores interactivos',
+      '(ABO F3/F4, Dijkstra, Teorema Maestro, Kadane, Bayes) y cuestionarios dinámicos.'
+    ],
+    tags: ['AED (C)', 'ADA', 'IA', 'KaTeX Local', 'Torpedos 2P'],
+    decorativeType: 'estudia'
   }
 ];
 

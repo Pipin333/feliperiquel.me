@@ -5,6 +5,16 @@
       "source": "/lab/finflow",
       "destination": "/lab/finflow/",
       "permanent": true
+    },
+    {
+      "source": "/lab/estudIA",
+      "destination": "/lab/estudia",
+      "permanent": true
+    },
+    {
+      "source": "/lab/estudIA/",
+      "destination": "/lab/estudia",
+      "permanent": true
     }
   ],
   "rewrites": [

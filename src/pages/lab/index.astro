@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
+import EstudiaWatermark from '../../components/watermarks/EstudiaWatermark.astro';
 
 interface Experiment {
   id?: string;
@@ -122,6 +123,24 @@ const experiments: Experiment[] = [
     btnClass: "text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 border border-emerald-300/40 shadow-[0_0_15px_rgba(16,185,129,0.3)]",
     btnIconClass: "text-slate-950",
     btnText: "Abrir en vivo"
+  },
+  {
+    id: "estudia",
+    title: "estudIA",
+    tagline: "Hub Interactivo de Estudio: AED, ADA e IA",
+    description: "Portal interactivo para preparar exámenes de algoritmia e inteligencia artificial. Reúne torpedos imprimibles de 2 planas con KaTeX, 10 simuladores paso a paso y bancos de cuestionarios dinámicos.",
+    tags: ["KaTeX Local", "AED (C)", "ADA", "Fundamentos IA", "10 Simuladores"],
+    href: "/lab/estudia",
+    badge: "Interactivo",
+    badgeColor: "text-indigo-300 border-indigo-500/40 bg-indigo-950/40",
+    isInteractive: true,
+    icon: "mortarboard",
+    cardHoverClass: "group-hover:border-indigo-400/50 hover:shadow-[0_0_25px_rgba(99,102,241,0.22)]",
+    iconColorClass: "text-indigo-400 group-hover:border-indigo-400/50",
+    taglineClass: "font-mono text-indigo-300",
+    btnClass: "text-white bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 hover:from-indigo-600 hover:to-violet-600 border border-indigo-300/40 shadow-[0_0_15px_rgba(99,102,241,0.3)]",
+    btnIconClass: "text-white",
+    btnText: "Abrir Hub"
   }
 ];
 ---
@@ -130,7 +149,7 @@ const experiments: Experiment[] = [
   title="El Laboratorio | Felipe Riquelme"
   description="Playground interactivo de herramientas experimentales, procesamiento de lenguaje natural, modelos logísticos y proyectos de código abierto de Felipe Riquelme."
   image="/og/og-lab.png"
-  imageAlt="El Laboratorio de Felipe Riquelme - Suite de 5 Micro-aplicaciones Web"
+  imageAlt="El Laboratorio de Felipe Riquelme - Suite de 6 Micro-aplicaciones Web"
 >
   <Header />
 
@@ -166,7 +185,7 @@ const experiments: Experiment[] = [
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {experiments.filter(e => e.isInteractive).map((exp) => (
           <article class={`spotlight-card group p-7 flex flex-col justify-between relative overflow-hidden transition-all duration-200 ${exp.cardHoverClass ?? ''}`}>
             <!-- Auras ambientales tenues en esquina superior -->
@@ -184,6 +203,9 @@ const experiments: Experiment[] = [
             )}
             {exp.id === "finflow" && (
               <div class="absolute -top-12 -right-12 w-44 h-44 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-500/20 transition-all duration-300"></div>
+            )}
+            {exp.id === "estudia" && (
+              <div class="absolute -top-12 -right-12 w-44 h-44 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none group-hover:bg-indigo-500/20 transition-all duration-300"></div>
             )}
 
             <!-- Marcas de Agua Técnicas a Toda la Altura (Sección Transversal / Blueprint Industrial) cortadas al 50% en el borde derecho -->
@@ -391,6 +413,10 @@ const experiments: Experiment[] = [
                 <text x="20" y="395" font-family="monospace" font-size="6.5" fill="currentColor" class="text-emerald-400/50">DURABLE OBJECTS • LATENCY &lt; 20ms</text>
                 <text x="20" y="408" font-family="monospace" font-size="6.5" fill="currentColor" class="text-teal-300/40">SANTIAGO SCL • ZERO-LOGINS</text>
               </svg>
+            )}
+
+            {exp.id === "estudia" && (
+              <EstudiaWatermark class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[46%] group-hover:translate-x-[40%] h-[115%] w-[280px] pointer-events-none select-none z-0 text-indigo-400 opacity-[0.07] group-hover:opacity-[0.22] transition-all duration-300" />
             )}
 
             <!-- Contenido Frontal de la Tarjeta (Garantiza WCAG AA) -->

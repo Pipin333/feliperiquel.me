@@ -1,0 +1,68 @@
+---
+// src/components/watermarks/EstudiaWatermark.astro
+interface Props {
+  class?: string;
+}
+
+const {
+  class: className =
+    'absolute right-0 top-1/2 -translate-y-1/2 translate-x-[45%] group-hover:translate-x-[40%] h-[125%] w-[340px] pointer-events-none select-none z-0 text-indigo-400 opacity-[0.08] group-hover:opacity-[0.24] transition-all duration-300'
+} = Astro.props;
+---
+
+<svg class={className} viewBox="0 0 240 420" fill="none" stroke="currentColor" aria-hidden="true">
+  <!-- Eje vertical central de referencia -->
+  <line x1="120" y1="10" x2="120" y2="410" stroke-width="0.75" stroke-dasharray="3,3" class="text-indigo-500/30" />
+
+  <!-- Arbol Binario Ordenado (ABO) superior -->
+  <g transform="translate(120, 42)">
+    <line x1="0" y1="0" x2="-48" y2="46" stroke-width="1.1" class="text-indigo-300" />
+    <line x1="0" y1="0" x2="48" y2="46" stroke-width="1.1" class="text-indigo-300" />
+    <line x1="-48" y1="46" x2="-74" y2="92" stroke-width="0.9" class="text-cyan-300/80" />
+    <line x1="-48" y1="46" x2="-22" y2="92" stroke-width="0.9" class="text-cyan-300/80" />
+    <line x1="48" y1="46" x2="22" y2="92" stroke-width="0.9" class="text-cyan-300/80" />
+    <line x1="48" y1="46" x2="74" y2="92" stroke-width="0.9" class="text-cyan-300/80" />
+
+    <circle cx="0" cy="0" r="14" stroke-width="1.4" class="text-cyan-300" />
+    <circle cx="-48" cy="46" r="11" stroke-width="1.2" class="text-indigo-300" />
+    <circle cx="48" cy="46" r="11" stroke-width="1.2" class="text-indigo-300" />
+    <circle cx="-74" cy="92" r="8.5" stroke-width="1" class="text-cyan-400/80" />
+    <circle cx="-22" cy="92" r="8.5" stroke-width="1" class="text-cyan-400/80" />
+    <circle cx="22" cy="92" r="8.5" stroke-width="1" class="text-cyan-400/80" />
+    <circle cx="74" cy="92" r="8.5" stroke-width="1" class="text-cyan-400/80" />
+
+    <text x="-6" y="3" font-family="monospace" font-size="7.5" fill="currentColor" class="text-cyan-200">50</text>
+    <text x="-53" y="49" font-family="monospace" font-size="6.5" fill="currentColor" class="text-indigo-200">25</text>
+    <text x="43" y="49" font-family="monospace" font-size="6.5" fill="currentColor" class="text-indigo-200">70</text>
+  </g>
+
+  <!-- Grafo ponderado y curva de complejidad asintotica O(n log n) -->
+  <g transform="translate(26, 165)">
+    <rect x="0" y="0" width="188" height="106" rx="8" stroke-width="1.2" class="text-indigo-400/60" />
+    <line x1="20" y1="86" x2="170" y2="86" stroke-width="0.8" class="text-indigo-400/50" />
+    <line x1="20" y1="86" x2="20" y2="18" stroke-width="0.8" class="text-indigo-400/50" />
+    <path d="M22,82 Q75,74 162,22" stroke-width="1.4" class="text-cyan-300" />
+    <path d="M22,83 Q88,68 164,56" stroke-width="1" stroke-dasharray="3,2" class="text-indigo-300" />
+
+    <circle cx="55" cy="52" r="7" stroke-width="1.1" class="text-cyan-300" />
+    <circle cx="110" cy="36" r="7" stroke-width="1.1" class="text-indigo-200" />
+    <circle cx="136" cy="68" r="7" stroke-width="1.1" class="text-cyan-300" />
+    <line x1="62" y1="50" x2="103" y2="38" stroke-width="0.9" class="text-cyan-400/70" />
+    <line x1="115" y1="42" x2="132" y2="62" stroke-width="0.9" class="text-cyan-400/70" />
+    <line x1="61" y1="55" x2="129" y2="67" stroke-width="0.75" stroke-dasharray="2,2" class="text-indigo-300/60" />
+    <text x="115" y="24" font-family="monospace" font-size="6.5" fill="currentColor" class="text-cyan-200">O(n log n)</text>
+  </g>
+
+  <!-- Nodo Bayesiano / Arbol de decision ID3 -->
+  <g transform="translate(30, 290)">
+    <rect x="0" y="0" width="180" height="54" rx="6" stroke-width="1" class="text-indigo-400/50" />
+    <text x="12" y="17" font-family="monospace" font-size="6.8" fill="currentColor" class="text-cyan-300">P(H|+) = w(H) / P(+)</text>
+    <text x="12" y="32" font-family="monospace" font-size="6.2" fill="currentColor" class="text-indigo-200">H(E) = -p log2(p) - q log2(q)</text>
+    <text x="12" y="45" font-family="monospace" font-size="6" fill="currentColor" class="text-indigo-300/70">DIJKSTRA · KADANE · LCS · F3/F4</text>
+  </g>
+
+  <!-- Pie de plano tecnico -->
+  <text x="20" y="368" font-family="monospace" font-size="7.5" fill="currentColor" class="text-indigo-300/70">FIG. V : ARBOR BINARIA &amp; GRAPHUS</text>
+  <text x="20" y="383" font-family="monospace" font-size="6.5" fill="currentColor" class="text-cyan-300/50">AED · ADA · IA // KATEX ENGINE</text>
+  <text x="20" y="398" font-family="monospace" font-size="6.5" fill="currentColor" class="text-indigo-400/50">100% CLIENT-SIDE // PRINT 2P</text>
+</svg>

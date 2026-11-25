@@ -134,5 +134,29 @@ export const featuredTools: LabTool[] = [
       { label: "Moneda & Formato", value: "$ CLP exacto redondeado" },
       { label: "Integración", value: "Exportador de cuota para WhatsApp" }
     ]
+  },
+  {
+    id: "estudia",
+    title: "estudIA",
+    tagline: "Hub Interactivo de Estudio: AED, ADA e IA",
+    description: "Portal de preparación intensiva para algoritmia e inteligencia artificial. Integra torpedos imprimibles de 2 planas con KaTeX, 10 simuladores interactivos (ABO F3/F4, Dijkstra, Teorema Maestro, Kadane, LCS, Bayes y Entropía) y bancos de cuestionarios dinámicos.",
+    icon: "mortarboard",
+    tags: ["KaTeX Local", "AED (C)", "ADA", "Fundamentos IA", "Torpedos 2P"],
+    href: "/lab/estudia",
+    accentColor: "text-indigo-300 border-indigo-500/40 bg-indigo-950/40",
+    badge: "EdTech & Algoritmos",
+    highlightBadge: "Destacado del Día: Algoritmia e IA",
+    cardGlowClass: "border-indigo-400/50 shadow-[0_0_35px_rgba(99,102,241,0.22)]",
+    iconColorClass: "text-indigo-400 bg-indigo-950/60 border-indigo-500/40",
+    taglineClass: "font-mono text-indigo-300",
+    btnClass: "text-white bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-700 hover:from-indigo-600 hover:to-violet-600 border border-indigo-300/40 shadow-[0_0_20px_rgba(99,102,241,0.35)]",
+    btnIconClass: "text-white",
+    gridColor: "rgba(99, 102, 241, 0.22)",
+    ambientAuraClass: "from-indigo-500/15 via-indigo-950/5 to-transparent",
+    specs: [
+      { label: "Cobertura Curricular", value: "AED (PTEC101), ADA (CINF101) e IA (CINF103)" },
+      { label: "Motor Matemático", value: "KaTeX local con 10 simuladores interactivos" },
+      { label: "Práctica & Impresión", value: "Torpedos Letter 2P + 72 preguntas base y dinámicas" }
+    ]
   }
 ];

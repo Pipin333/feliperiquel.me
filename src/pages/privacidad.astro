@@ -26,7 +26,7 @@ import Icon from '../components/Icon.astro';
         Política de Privacidad
       </h1>
       <p class="font-mono text-xs text-slate-400">
-        Última actualización: 24 de octubre de 2026 // Versión 1.3
+        Última actualización: 25 de noviembre de 2026 // Versión 1.4
       </p>
     </header>
 
@@ -52,9 +52,10 @@ import Icon from '../components/Icon.astro';
           2. Procesamiento Cliente en El Laboratorio (/lab)
         </h2>
         <p class="mb-3">
-          Las herramientas interactivas alojadas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">El Laboratorio</a> (como SonicRip Studio, Retórica y Descalabro, Ni Idea y Cuánto Rinde) han sido concebidas para ejecutarse prioritariamente del lado del cliente (<em class="text-slate-200">client-side</em>) a través de las APIs nativas del navegador (Web Audio API, WebSockets, JavaScript y TypeScript).
+          Las herramientas interactivas alojadas en <a href="/lab" class="text-telemetry underline underline-offset-4 hover:text-white">El Laboratorio</a> (como SonicRip Studio, Retórica y Descalabro, Ni Idea, Cuánto Rinde y estudIA) han sido concebidas para ejecutarse prioritariamente del lado del cliente (<em class="text-slate-200">client-side</em>) a través de las APIs nativas del navegador (Web Audio API, WebSockets, JavaScript y TypeScript).
         </p>
         <ul class="list-disc pl-5 space-y-2.5 text-xs sm:text-sm text-slate-300 font-mono">
+          <li><strong>Hub de Estudio (estudIA):</strong> Funciona íntegramente en el navegador del usuario con renderizado matemático KaTeX local y cero llamadas a servidores externos o trackers. Las simulaciones de algoritmos y cálculos de notas se procesan en memoria volátil, y tus preguntas falladas de cuestionario se guardan localmente en el <code>localStorage</code> de tu dispositivo (clave <code>estudia_mistakes_v1</code>) para habilitar rondas de repaso de errores con opción de limpieza en un clic.</li>
           <li><strong>Terminal Financiero &amp; Presupuestos (FinFlow):</strong> Funciona bajo el paradigma 100% offline-first. Tus cuentas bancarias, tarjetas de crédito, gastos, cuotas y fotografías de boletas comprimidas en Canvas se guardan de forma aislada y privada en el localStorage de tu dispositivo. Ningún dato contable ni documento tributario se transmite a servidores remotos ni a terceros.</li>
           <li><strong>Audio DSP (SonicRip Studio):</strong> Los archivos de audio que cargas para ecualización o análisis FFT se procesan estrictamente en la memoria RAM de tu dispositivo mediante Web Audio API. No son subidos ni almacenados en servidores externos.</li>
           <li><strong>Party Game &amp; Salas Multijugador (Ni Idea):</strong> La sincronización en tiempo real se canaliza mediante WebSockets y memoria volátil. Las sesiones no requieren registro previo ni conservan identificadores personales persistentes tras la desconexión.</li>

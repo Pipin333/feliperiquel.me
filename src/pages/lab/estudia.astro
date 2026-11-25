@@ -1,0 +1,231 @@
+---
+// src/pages/lab/estudia.astro
+import fs from 'node:fs';
+import path from 'node:path';
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Icon from '../../components/Icon.astro';
+import rawContent from '../../data/estudia-content.html?raw';
+import 'katex/dist/katex.min.css';
+import '../../styles/estudia.css';
+
+const FA_TO_BI_MAP: Record<string, string> = {
+  'book-open': 'book',
+  brain: 'cpu',
+  calculator: 'calculator',
+  'chart-area': 'graph-up',
+  'chart-line': 'graph-up-arrow',
+  'chart-simple': 'bar-chart',
+  'check-double': 'check2-all',
+  chess: 'grid-3x3',
+  'chess-board': 'grid-3x3-gap',
+  'circle-check': 'check-circle',
+  'circle-exclamation': 'exclamation-circle',
+  'circle-nodes': 'diagram-3',
+  code: 'code-slash',
+  cubes: 'boxes',
+  'diagram-project': 'diagram-3',
+  dice: 'dice-5',
+  divide: 'slash-circle',
+  dna: 'bezier2',
+  'file-lines': 'file-earmark-text',
+  gears: 'gear-wide-connected',
+  'graduation-cap': 'mortarboard',
+  'hand-holding-dollar': 'cash-coin',
+  'layer-group': 'layers',
+  link: 'link-45deg',
+  'list-check': 'list-check',
+  lock: 'lock',
+  'magnifying-glass': 'search',
+  memory: 'memory',
+  minus: 'dash-circle',
+  mountain: 'graph-up-arrow',
+  'network-wired': 'hdd-network',
+  print: 'printer',
+  'puzzle-piece': 'puzzle',
+  robot: 'robot',
+  route: 'signpost-split',
+  'ruler-combined': 'rulers',
+  'scale-balanced': 'sliders2',
+  'share-nodes': 'share',
+  sitemap: 'diagram-2',
+  'square-root-variable': 'braces',
+  stopwatch: 'stopwatch',
+  'table-cells': 'table',
+  'table-columns': 'columns-gap',
+  'temperature-high': 'thermometer-high',
+  tree: 'tree',
+  'triangle-exclamation': 'exclamation-triangle'
+};
+
+const iconCache = new Map<string, string>();
+
+function loadBootstrapIconSvg(biName: string, styleAttr?: string): string {
+  let baseSvg = iconCache.get(biName);
+  if (!baseSvg) {
+    const iconPath = path.resolve(process.cwd(), 'node_modules/bootstrap-icons/icons', `${biName}.svg`);
+    if (!fs.existsSync(iconPath)) {
+      throw new Error(`Bootstrap Icon no encontrado para estudIA: ${biName}`);
+    }
+    baseSvg = fs.readFileSync(iconPath, 'utf-8').trim();
+    iconCache.set(biName, baseSvg);
+  }
+
+  const styleChunk = styleAttr ? ` style="${styleAttr}"` : '';
+  return baseSvg.replace(/<svg\b([^>]*)>/, (_match, attrs: string) => {
+    const cleanedAttrs = attrs.replace(/\s*class="[^"]*"/g, '');
+    return `<svg${cleanedAttrs} class="estudia-icon" aria-hidden="true" focusable="false"${styleChunk}>`;
+  });
+}
+
+const renderedContent = rawContent.replace(
+  /<i class="fa-solid fa-([a-z0-9-]+)"(?:\s+style="([^"]*)")?\s*><\/i>/g,
+  (_fullMatch, faName: string, styleAttr?: string) => {
+    const biName = FA_TO_BI_MAP[faName];
+    if (!biName) {
+      throw new Error(`Icono Font Awesome sin mapeo en estudIA: fa-${faName}`);
+    }
+    return loadBootstrapIconSvg(biName, styleAttr);
+  }
+);
+
+if (/\bfa-solid\b/.test(renderedContent)) {
+  throw new Error('Quedaron iconos Font Awesome sin transformar en estudIA.');
+}
+---
+
+<Layout
+  title="estudIA | Hub de Estudio AED, ADA e IA"
+  description="Portal interactivo de estudio para Algoritmos y Estructuras de Datos (AED), Análisis y Diseño de Algoritmos (ADA) y Fundamentos de IA: torpedos imprimibles con KaTeX, 10 simuladores y cuestionarios dinámicos."
+  image="/og/og-estudia.png"
+  imageAlt="estudIA - Hub Interactivo de Estudio para AED, ADA e IA"
+>
+  <Header />
+
+  <!-- Fondo Ambiental Periférico: Diagramas de Árboles, Grafos y Complejidad Asintótica -->
+  <div class="estudia-ambient fixed inset-0 pointer-events-none overflow-hidden z-0 select-none no-print" aria-hidden="true">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-indigo-950/35 via-cyan-950/15 to-transparent blur-3xl"></div>
+    <div class="absolute bottom-0 inset-x-0 h-[380px] bg-gradient-to-t from-indigo-950/20 via-transparent to-transparent blur-2xl"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(0,210,255,0.025)_1px,transparent_1px)] bg-[size:36px_36px]"></div>
+
+    <!-- Flanco Izquierdo: Árbol Binario Ordenado (ABO) -->
+    <div class="hidden xl:block absolute left-0 top-16 bottom-0 w-72 overflow-hidden opacity-25">
+      <svg class="w-full h-full text-indigo-400/50" viewBox="0 0 280 820" preserveAspectRatio="xMinYMin meet" fill="none" stroke="currentColor">
+        <text x="20" y="34" font-family="monospace" font-size="8" fill="currentColor" class="text-cyan-300/60">FIG. I : ARBOR BINARIA (ABO)</text>
+        <line x1="120" y1="80" x2="65" y2="155" stroke-width="1" />
+        <line x1="120" y1="80" x2="180" y2="155" stroke-width="1" />
+        <line x1="65" y1="155" x2="35" y2="230" stroke-width="0.85" />
+        <line x1="65" y1="155" x2="95" y2="230" stroke-width="0.85" />
+        <line x1="180" y1="155" x2="145" y2="230" stroke-width="0.85" />
+        <line x1="180" y1="155" x2="215" y2="230" stroke-width="0.85" />
+        <circle cx="120" cy="80" r="16" stroke-width="1.25" class="text-cyan-300" />
+        <circle cx="65" cy="155" r="13" stroke-width="1" />
+        <circle cx="180" cy="155" r="13" stroke-width="1" />
+        <circle cx="35" cy="230" r="11" stroke-width="0.85" />
+        <circle cx="95" cy="230" r="11" stroke-width="0.85" />
+        <circle cx="145" cy="230" r="11" stroke-width="0.85" />
+        <circle cx="215" cy="230" r="11" stroke-width="0.85" />
+        <text x="114" y="83" font-family="monospace" font-size="8" fill="currentColor">50</text>
+        <text x="59" y="158" font-family="monospace" font-size="7.5" fill="currentColor">25</text>
+        <text x="174" y="158" font-family="monospace" font-size="7.5" fill="currentColor">70</text>
+        <line x1="20" y1="275" x2="230" y2="275" stroke-width="0.6" stroke-dasharray="3,4" class="text-indigo-500/40" />
+        <text x="20" y="295" font-family="monospace" font-size="7" fill="currentColor" class="text-indigo-300/60">2n + 1 CALLS :: BFS / INORDEN</text>
+      </svg>
+    </div>
+
+    <!-- Flanco Derecho: Grafo Ponderado y Curvas Asintóticas -->
+    <div class="hidden xl:block absolute right-0 top-16 bottom-0 w-72 overflow-hidden opacity-25">
+      <svg class="w-full h-full text-cyan-400/50" viewBox="0 0 280 820" preserveAspectRatio="xMaxYMin meet" fill="none" stroke="currentColor">
+        <text x="65" y="34" font-family="monospace" font-size="8" fill="currentColor" class="text-indigo-300/60">FIG. II : GRAPHUS &amp; O(n log n)</text>
+        <line x1="110" y1="90" x2="210" y2="120" stroke-width="1" />
+        <line x1="110" y1="90" x2="125" y2="200" stroke-width="1" />
+        <line x1="210" y1="120" x2="125" y2="200" stroke-width="1" stroke-dasharray="3,3" />
+        <line x1="210" y1="120" x2="225" y2="225" stroke-width="1" />
+        <line x1="125" y1="200" x2="225" y2="225" stroke-width="1" />
+        <circle cx="110" cy="90" r="14" stroke-width="1.25" class="text-indigo-300" />
+        <circle cx="210" cy="120" r="14" stroke-width="1.25" />
+        <circle cx="125" cy="200" r="14" stroke-width="1.25" />
+        <circle cx="225" cy="225" r="14" stroke-width="1.25" class="text-indigo-300" />
+        <path d="M 60 390 L 60 280 M 60 390 L 245 390" stroke-width="0.85" class="text-slate-500/60" />
+        <path d="M 65 385 Q 150 375 235 290" stroke-width="1.25" class="text-cyan-300" />
+        <path d="M 65 386 Q 160 365 240 345" stroke-width="0.9" stroke-dasharray="3,3" class="text-indigo-300" />
+      </svg>
+    </div>
+  </div>
+
+  <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+    <!-- Breadcrumb -->
+    <nav class="no-print flex items-center gap-2 font-mono text-xs text-slate-400 mb-6" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-white transition-colors">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <a href="/lab" class="hover:text-white transition-colors">Lab</a>
+      <span aria-hidden="true">/</span>
+      <span class="text-telemetry font-medium" aria-current="page">estudIA</span>
+    </nav>
+
+    <div id="estudia-root" class="estudia-app">
+      <div class="estudia-nav-bar no-print">
+        <div class="estudia-brand">
+          <Icon name="mortarboard" class="w-5 h-5 text-telemetry" />
+          <span class="estudia-brand-title">estudIA</span>
+        </div>
+        <nav class="estudia-nav-links" aria-label="Navegación de ramos en estudIA">
+          <button type="button" class="nav-btn active" data-tab="tab-home">
+            <Icon name="diagram-3" class="w-4 h-4" />
+            <span>Mapa de Ramos</span>
+          </button>
+          <button type="button" class="nav-btn" data-tab="tab-aed">
+            <Icon name="boxes" class="w-4 h-4" />
+            <span>1. AED</span>
+          </button>
+          <button type="button" class="nav-btn" data-tab="tab-ada">
+            <Icon name="gear-wide-connected" class="w-4 h-4" />
+            <span>2. ADA</span>
+          </button>
+          <button type="button" class="nav-btn" data-tab="tab-ia">
+            <Icon name="cpu" class="w-4 h-4" />
+            <span>3. IA</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="estudia-search-shell no-print">
+        <div class="estudia-search-field">
+          <label for="estudia-global-search" class="sr-only">Buscar concepto en AED, ADA e IA</label>
+          <Icon name="search" class="w-4 h-4 text-slate-400 shrink-0" />
+          <input
+            id="estudia-global-search"
+            type="search"
+            class="estudia-search-input"
+            placeholder="Buscar concepto en AED, ADA e IA (ej: malloc, Dijkstra, Amdahl, Prolog, DBSCAN)..."
+            autocomplete="off"
+          />
+          <button
+            type="button"
+            id="estudia-search-clear"
+            class="estudia-search-clear"
+            hidden
+            aria-label="Limpiar búsqueda"
+          >
+            Limpiar
+          </button>
+        </div>
+        <div
+          id="estudia-search-results"
+          class="estudia-search-results"
+          role="region"
+          aria-label="Resultados de búsqueda"
+          aria-live="polite"
+          hidden
+        ></div>
+      </div>
+
+      <Fragment set:html={renderedContent} />
+    </div>
+  </main>
+
+  <Footer />
+
+  <script src="../../scripts/estudia.ts"></script>
+</Layout>
