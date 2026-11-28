@@ -266,6 +266,7 @@ a{color:inherit}
   position:sticky;
   top:0;
   z-index:20;
+  overflow:visible;
   background:var(--ink);
   color:#FFFFFF;
   border-bottom:2px solid #000000;
@@ -301,6 +302,7 @@ body.mode-legacy .top-in{max-width:720px}
 .dots i:first-child{background:var(--red)}
 .dots i:last-child{background:var(--blue)}
 .mode-tag{
+  display:none;
   font-size:12px;
   font-weight:700;
   color:#CBD5E1;
@@ -309,11 +311,15 @@ body.mode-legacy .top-in{max-width:720px}
   border-radius:8px;
   white-space:nowrap;
 }
+@media (min-width:768px){
+  .mode-tag{display:inline-flex}
+}
 .top-actions{
   margin-left:auto;
   display:inline-flex;
   align-items:center;
   gap:var(--s2);
+  flex-shrink:0;
 }
 .top-icon-btn{
   position:relative;
@@ -368,7 +374,19 @@ body.mode-legacy .top-in{max-width:720px}
   font-size:13px;
   font-weight:700;
   min-height:36px;
+  flex-shrink:0;
+  white-space:nowrap;
   transition:border-color .2s var(--ease), background-color .2s var(--ease);
+}
+@media (max-width:520px){
+  .top-in{gap:var(--s2);padding:var(--s2) var(--s3)}
+  .brand b{font-size:14px}
+  .top-actions{gap:6px}
+  .top-icon-btn{width:34px;height:34px}
+  .nav-bd{top:-5px;right:-5px;min-width:16px;height:16px;font-size:10px;line-height:16px;padding:0 4px}
+  .who-btn{padding:3px 8px 3px 4px;font-size:12px;gap:6px;min-height:34px}
+  .who-btn .chip{padding:2px 6px;font-size:10px}
+  .concept-sub{display:none}
 }
 .who-btn:hover{
   border-color:#FFFFFF;
