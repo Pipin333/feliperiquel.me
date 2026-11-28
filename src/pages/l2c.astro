@@ -14,17 +14,24 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="concept-bar" role="region" aria-label="Controles de propuesta UX">
   <div class="concept-in">
     <div class="concept-label">
-      <span class="concept-dot" aria-hidden="true"></span>
-      <a href="/" class="concept-back">feliperiquel.me</a>
-      <span aria-hidden="true">/</span>
-      <span>Propuesta UX/UI · Los2Chile <span class="concept-sub">(Mock interactivo · Sin indexar)</span></span>
+      <a href="/" class="fp-brand">
+        <span class="fp-iso" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 7 10 12 4 17"></polyline>
+            <line x1="12" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </span>
+        <span class="fp-wordmark">feliperiquel<span class="fp-tld">.me</span></span>
+      </a>
+      <span class="concept-sep" aria-hidden="true">/</span>
+      <span class="concept-title">Propuesta UX/UI · Los2Chile <span class="concept-sub">(Mock interactivo · Sin indexar)</span></span>
     </div>
     <div class="mode-switch" role="group" aria-label="Comparar vista actual y propuesta UX">
       <button type="button" class="mode-btn" id="btnModeProp" aria-pressed="true">Propuesta UX</button>
@@ -196,12 +203,16 @@ a{color:inherit}
   outline-offset:2px;
 }
 
-/* Concept Bar */
+/* Concept Bar (Marca oficial feliperiquel.me) */
 .concept-bar{
-  background:#111216;
-  color:#E5E7EB;
-  border-bottom:1px solid #2A2C34;
+  background:#07090E;
+  color:#EBF1F5;
+  border-bottom:1px solid #1B2338;
   font-size:13px;
+}
+.concept-bar :focus-visible{
+  outline:none;
+  box-shadow:0 0 0 2px #07090E, 0 0 0 4px #00D2FF;
 }
 .concept-in{
   max-width:1180px;
@@ -216,49 +227,83 @@ a{color:inherit}
 .concept-label{
   display:flex;
   align-items:center;
-  gap:var(--s2);
-  font-weight:600;
+  gap:10px;
   flex-wrap:wrap;
 }
-.concept-back{
-  color:#FFFFFF;
-  text-decoration:underline;
-  text-underline-offset:3px;
-  font-weight:700;
+.fp-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  border-radius:6px;
 }
-.concept-sub{color:#94A3B8;font-weight:500}
-.concept-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#F5B700;
+.fp-iso{
+  width:30px;
+  height:30px;
+  border-radius:6px;
+  background:#0F1420;
+  border:1px solid #1B2338;
+  color:#00D2FF;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   flex:none;
+  transition:border-color 140ms var(--ease), box-shadow 140ms var(--ease), transform 140ms var(--ease);
 }
+.fp-wordmark{
+  font-family:"Space Grotesk",Inter,sans-serif;
+  font-weight:700;
+  font-size:15px;
+  letter-spacing:-0.02em;
+  color:#FFFFFF;
+  white-space:nowrap;
+  transition:color 140ms var(--ease);
+}
+.fp-tld{color:#00D2FF}
+.fp-brand:hover .fp-iso{
+  border-color:#00D2FF;
+  box-shadow:0 0 14px rgba(0,210,255,.28);
+  transform:scale(1.03);
+}
+.fp-brand:hover .fp-wordmark{color:#00D2FF}
+.concept-sep{
+  color:#475569;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+}
+.concept-title{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  font-size:12px;
+  font-weight:500;
+  color:#CBD5E1;
+}
+.concept-sub{color:#94A3B8}
 .mode-switch{
   display:inline-flex;
-  background:#1F2128;
-  border:1px solid #353844;
-  border-radius:12px;
-  padding:var(--s1);
-  gap:var(--s1);
+  background:#0F1420;
+  border:1px solid #1B2338;
+  border-radius:6px;
+  padding:3px;
+  gap:4px;
 }
 .mode-btn{
-  min-height:36px;
-  padding:0 var(--s3);
+  min-height:34px;
+  padding:0 12px;
   border:0;
-  border-radius:8px;
+  border-radius:4px;
   background:transparent;
-  color:#CBD5E1;
+  color:#94A3B8;
+  font-family:"JetBrains Mono",ui-monospace,monospace;
   font-weight:700;
-  font-size:13px;
+  font-size:12px;
   cursor:pointer;
   white-space:nowrap;
-  transition:background-color .22s var(--ease), color .22s var(--ease);
+  transition:background-color 140ms var(--ease), color 140ms var(--ease), box-shadow 140ms var(--ease);
 }
-.mode-btn:hover{color:#FFFFFF;background:rgba(255,255,255,.08)}
+.mode-btn:hover{color:#EBF1F5;background:#161D2E}
 .mode-btn[aria-pressed="true"]{
-  background:#FFFFFF;
-  color:var(--ink);
+  background:#00D2FF;
+  color:#021824;
+  box-shadow:0 0 12px rgba(0,210,255,.25);
 }
 
 /* Top App Bar */
