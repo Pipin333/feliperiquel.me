@@ -5,6 +5,7 @@ Disallow: /api/
 Disallow: /lab/easytaciones
 Disallow: /easytaciones
 Disallow: /lab/enel-ux
+Disallow: /l2c
 
 Sitemap: https://feliperiquel.me/sitemap-index.xml
 
